@@ -44,13 +44,48 @@ def latest_period_from_status(path: Path = SOURCE_STATUS_PATH) -> str:
     return f"{int(year_text):04d}-{month:02d}"
 
 
-def is_queryable_commodity(item: dict[str, Any]) -> tuple[bool, str | None]:
+def _period_in_range(period: str, start: str | None, through: str | None) -> bool:
+    if start and period < start:
+        return False
+    if through and period > through:
+        return False
+    return True
+
+
+def hs_codes_for_period(item: dict[str, Any], period: str) -> tuple[list[str], str | None]:
+    transitions = set(item.get("classification_transition_periods", []))
+    if period in transitions:
+        return [], f"classification transition month intentionally skipped: {period}"
+
+    eras = item.get("classification_eras") or []
+    if eras:
+        for era in eras:
+            if _period_in_range(period, era.get("from"), era.get("through")):
+                return list(era.get("hs_codes", [])), era.get("note")
+        return [], f"no classification mapping defined for {period}"
+
+    return list(item.get("hs_codes", [])), None
+
+
+def is_queryable_commodity(
+    item: dict[str, Any],
+    value_type: str = "usd",
+    hs_codes: list[str] | None = None,
+) -> tuple[bool, str | None]:
     status = item.get("mapping_status", "")
     if re.search(r"needs|sensitive|partial", status, flags=re.I):
         return False, f"mapping status requires review: {status}"
-    bad = [code for code in item.get("hs_codes", []) if len(code) not in VALID_HS_LENGTHS]
+
+    codes = list(hs_codes if hs_codes is not None else item.get("hs_codes", []))
+    if not codes:
+        return False, "no HS codes are mapped for this period"
+    bad = [code for code in codes if len(code) not in VALID_HS_LENGTHS]
     if bad:
         return False, f"unsupported HS code length: {', '.join(bad)}"
+    if value_type == "quantity":
+        non_hs8 = [code for code in codes if len(code) != 8]
+        if non_hs8:
+            return False, f"quantity requires HS8 mappings; got {', '.join(non_hs8)}"
     return True, None
 
 
@@ -59,15 +94,17 @@ def ingest_one(
     commodity: dict[str, Any],
     *,
     period: str,
+    hs_codes: list[str],
     value_type: str,
     year_type: str,
     trade_types: list[str],
+    classification_note: str | None = None,
 ) -> dict[str, Any]:
     year, month = map(int, period.split("-"))
     reports: list[dict[str, Any]] = []
     failures: list[dict[str, str]] = []
 
-    for hs_code in commodity["hs_codes"]:
+    for hs_code in hs_codes:
         for trade_type in trade_types:
             try:
                 report = client.fetch_commodity_all_countries(
@@ -84,10 +121,11 @@ def ingest_one(
                 failures.append({"trade_type": trade_type, "hs_code": hs_code, "error": str(exc)})
                 print(f"FAIL {period} {commodity['id']} {trade_type} HS {hs_code}: {exc}", file=sys.stderr)
 
-    expected = len(commodity["hs_codes"]) * len(trade_types)
+    expected = len(hs_codes) * len(trade_types)
     status = "ok" if len(reports) == expected else "partial" if reports else "failed"
+    metrics = aggregate_commodity(reports) if reports and value_type == "usd" else {}
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "period": period,
         "value_type": value_type,
         "year_type": year_type,
@@ -96,12 +134,14 @@ def ingest_one(
             "name": commodity["name"],
             "category": commodity["category"],
             "priority": commodity["priority"],
-            "hs_codes": commodity["hs_codes"],
+            "hs_codes": hs_codes,
+            "canonical_hs_codes": commodity.get("hs_codes", hs_codes),
             "mapping_status": commodity["mapping_status"],
+            "classification_note": classification_note,
         },
         "status": status,
         "reports": reports,
-        "metrics": aggregate_commodity(reports) if reports else {},
+        "metrics": metrics,
         "failures": failures,
     }
 
@@ -150,9 +190,6 @@ def main() -> int:
             raise SystemExit(f"Unknown commodity id(s): {', '.join(missing)}")
         commodities = [c for c in commodities if c["id"] in selected_ids]
 
-    if args.value_type == "quantity":
-        commodities = [c for c in commodities if all(len(code) == 8 for code in c.get("hs_codes", []))]
-
     trade_types = ["import", "export"] if args.trade_type == "both" else [args.trade_type]
     client = TradeStatClient(delay_seconds=args.delay)
     written = 0
@@ -160,18 +197,30 @@ def main() -> int:
     skipped = 0
 
     for commodity in commodities:
-        queryable, reason = is_queryable_commodity(commodity)
+        hs_codes, classification_note = hs_codes_for_period(commodity, period)
+        queryable, reason = is_queryable_commodity(
+            commodity,
+            value_type=args.value_type,
+            hs_codes=hs_codes,
+        )
         if not queryable and not args.include_review_mappings:
             print(f"SKIP {commodity['id']}: {reason}")
             skipped += 1
             continue
+        if not hs_codes:
+            print(f"SKIP {commodity['id']}: {reason or 'no HS codes for period'}")
+            skipped += 1
+            continue
+
         doc = ingest_one(
             client,
             commodity,
             period=period,
+            hs_codes=hs_codes,
             value_type=args.value_type,
             year_type=args.year_type,
             trade_types=trade_types,
+            classification_note=classification_note,
         )
         if doc["status"] == "failed" or (doc["status"] == "partial" and not args.allow_partial):
             print(f"NOT WRITING {commodity['id']}: status={doc['status']}", file=sys.stderr)

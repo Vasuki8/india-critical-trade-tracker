@@ -37,38 +37,69 @@ jobs:
         run: cp data/source_status.json /tmp/source_status_before.json
       - name: Check official TradeStat source
         run: uv run python scripts/check_source.py
-      - name: Decide whether data ingestion is needed
+      - name: Decide which ingestion layers are needed
         id: decision
         shell: bash
         run: |
           uv run python - <<'PY'
-          import json, os
+          import json, os, re
           from pathlib import Path
 
           before = json.loads(Path('/tmp/source_status_before.json').read_text())
           after = json.loads(Path('data/source_status.json').read_text())
           dashboard = json.loads(Path('data/dashboard.json').read_text())
+          master = json.loads(Path('data/commodities.json').read_text())
+
           fields = ['data_available', 'last_updated', 'final_through', 'revised_final_through']
-          changed = any(before.get(k) != after.get(k) for k in fields)
-          awaiting = not dashboard.get('as_of') or dashboard.get('status') == 'awaiting_trade_ingestion'
-          ingest = changed or awaiting
+          source_changed = any(before.get(k) != after.get(k) for k in fields)
+          awaiting_usd = not dashboard.get('as_of') or dashboard.get('status') == 'awaiting_trade_ingestion'
+
+          as_of = dashboard.get('as_of')
+          quantity_missing = []
+          if as_of:
+              for commodity in master.get('commodities', []):
+                  status = commodity.get('mapping_status', '')
+                  codes = commodity.get('hs_codes', [])
+                  quantity_ready = (
+                      codes
+                      and all(len(code) == 8 for code in codes)
+                      and not re.search(r'needs|sensitive|partial', status, flags=re.I)
+                  )
+                  if quantity_ready:
+                      path = Path('data/observations') / as_of / f"{commodity['id']}.quantity.json"
+                      if not path.exists():
+                          quantity_missing.append(commodity['id'])
+
+          ingest_usd = source_changed or awaiting_usd
+          ingest_quantity = source_changed or awaiting_usd or bool(quantity_missing)
+
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
-              f.write(f"source_changed={'true' if changed else 'false'}\n")
-              f.write(f"ingest={'true' if ingest else 'false'}\n")
-          print({'source_changed': changed, 'awaiting_first_ingestion': awaiting, 'ingest': ingest})
+              f.write(f"source_changed={'true' if source_changed else 'false'}\n")
+              f.write(f"ingest_usd={'true' if ingest_usd else 'false'}\n")
+              f.write(f"ingest_quantity={'true' if ingest_quantity else 'false'}\n")
+
+          print({
+              'source_changed': source_changed,
+              'awaiting_usd': awaiting_usd,
+              'quantity_missing': quantity_missing,
+              'ingest_usd': ingest_usd,
+              'ingest_quantity': ingest_quantity,
+          })
           PY
-      - name: Ingest latest critical-commodity month
-        if: steps.decision.outputs.ingest == 'true'
-        run: uv run python scripts/ingest_tradestat.py --latest --trade-type both --value-type usd --year-type calendar
+      - name: Ingest latest critical-commodity USD month
+        if: steps.decision.outputs.ingest_usd == 'true'
+        run: uv run python scripts/ingest_tradestat.py --latest --trade-type both --value-type usd --year-type calendar --no-build-dashboard
+      - name: Ingest latest HS8 quantity month
+        if: steps.decision.outputs.ingest_quantity == 'true'
+        run: uv run python scripts/ingest_tradestat.py --latest --trade-type both --value-type quantity --year-type calendar --no-build-dashboard
       - name: Rebuild dashboard from stored observations
         run: uv run python scripts/build_dashboard.py
       - name: Validate generated data
-        if: steps.decision.outputs.ingest == 'true'
         run: |
           uv run python scripts/validate_data.py
           uv run pytest -q
       - name: Ignore timestamp-only source check
-        if: steps.decision.outputs.ingest != 'true'
+        if: steps.decision.outputs.ingest_usd != 'true' && steps.decision.outputs.ingest_quantity != 'true'
         run: git checkout -- data/source_status.json
       - name: Commit official data changes
         run: |
