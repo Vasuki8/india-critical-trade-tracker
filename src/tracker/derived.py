@@ -72,6 +72,11 @@ def _parent_value_child_quantity_rollup(
     Component-level unit values remain unavailable because value is not observed
     separately for each child; only the aggregate parent-heading unit value is
     derived.
+
+    TradeStat can leave the source unit blank when a child line has exactly zero
+    quantity. Such a zero line contributes no physical amount, so it may omit its
+    unit without blocking the aggregate. Every positive child quantity must still
+    report a verified common physical unit.
     """
     if not _rollup_requested(quantity_observation):
         return None
@@ -130,17 +135,6 @@ def _parent_value_child_quantity_rollup(
                 "unit_value_usd_per_source_unit": None,
                 "rollup_method": "parent_value_child_hs8_quantity",
             }
-        unit = _quantity_unit(report)
-        if unit is None:
-            return {
-                "status": "missing_quantity_unit",
-                "usd_million": round(usd_million, 6),
-                "raw_quantity_source_units": None,
-                "quantity": None,
-                "quantity_unit": None,
-                "unit_value_usd_per_source_unit": None,
-                "rollup_method": "parent_value_child_hs8_quantity",
-            }
         scale = _quantity_scale(report)
         if scale <= 0:
             return {
@@ -152,10 +146,35 @@ def _parent_value_child_quantity_rollup(
                 "unit_value_usd_per_source_unit": None,
                 "rollup_method": "parent_value_child_hs8_quantity",
             }
-        units.add(unit.upper())
+
         total_raw_quantity += raw_quantity
         total_quantity += raw_quantity * scale
+        if raw_quantity == 0:
+            continue
 
+        unit = _quantity_unit(report)
+        if unit is None:
+            return {
+                "status": "missing_quantity_unit",
+                "usd_million": round(usd_million, 6),
+                "raw_quantity_source_units": round(total_raw_quantity, 6),
+                "quantity": None,
+                "quantity_unit": None,
+                "unit_value_usd_per_source_unit": None,
+                "rollup_method": "parent_value_child_hs8_quantity",
+            }
+        units.add(unit.upper())
+
+    if total_quantity <= 0:
+        return {
+            "status": "quantity_not_available",
+            "usd_million": round(usd_million, 6),
+            "raw_quantity_source_units": round(total_raw_quantity, 6),
+            "quantity": round(total_quantity, 6),
+            "quantity_unit": next(iter(units)) if len(units) == 1 else None,
+            "unit_value_usd_per_source_unit": None,
+            "rollup_method": "parent_value_child_hs8_quantity",
+        }
     if len(units) != 1:
         return {
             "status": "mixed_quantity_units",
@@ -165,16 +184,6 @@ def _parent_value_child_quantity_rollup(
             "quantity_unit": None,
             "unit_value_usd_per_source_unit": None,
             "component_units": sorted(units),
-            "rollup_method": "parent_value_child_hs8_quantity",
-        }
-    if total_quantity <= 0:
-        return {
-            "status": "quantity_not_available",
-            "usd_million": round(usd_million, 6),
-            "raw_quantity_source_units": round(total_raw_quantity, 6),
-            "quantity": round(total_quantity, 6),
-            "quantity_unit": next(iter(units)),
-            "unit_value_usd_per_source_unit": None,
             "rollup_method": "parent_value_child_hs8_quantity",
         }
 
