@@ -45,6 +45,8 @@ jobs:
           import json, os, re
           from pathlib import Path
 
+          from src.tracker.releases import revision_refresh_range
+
           before = json.loads(Path('/tmp/source_status_before.json').read_text())
           after = json.loads(Path('data/source_status.json').read_text())
           dashboard = json.loads(Path('data/dashboard.json').read_text())
@@ -52,6 +54,7 @@ jobs:
 
           fields = ['data_available', 'last_updated', 'final_through', 'revised_final_through']
           source_changed = any(before.get(k) != after.get(k) for k in fields)
+          revision_range = revision_refresh_range(before, after)
           awaiting_usd = not dashboard.get('as_of') or dashboard.get('status') == 'awaiting_trade_ingestion'
 
           def load_observation(path: Path):
@@ -109,11 +112,16 @@ jobs:
 
           ingest_usd = source_changed or awaiting_usd or bool(usd_missing_or_stale)
           ingest_quantity = source_changed or awaiting_usd or bool(quantity_missing_or_stale)
+          refresh_revisions = revision_range is not None
+          revision_start, revision_end = revision_range or ('', '')
 
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
               f.write(f"source_changed={'true' if source_changed else 'false'}\n")
               f.write(f"ingest_usd={'true' if ingest_usd else 'false'}\n")
               f.write(f"ingest_quantity={'true' if ingest_quantity else 'false'}\n")
+              f.write(f"refresh_revisions={'true' if refresh_revisions else 'false'}\n")
+              f.write(f"revision_start={revision_start}\n")
+              f.write(f"revision_end={revision_end}\n")
 
           print({
               'source_changed': source_changed,
@@ -122,6 +130,7 @@ jobs:
               'quantity_missing_or_stale': quantity_missing_or_stale,
               'ingest_usd': ingest_usd,
               'ingest_quantity': ingest_quantity,
+              'revision_range': revision_range,
           })
           PY
       - name: Ingest latest critical-commodity USD month
@@ -130,14 +139,29 @@ jobs:
       - name: Ingest latest HS8 quantity month
         if: steps.decision.outputs.ingest_quantity == 'true'
         run: uv run python scripts/ingest_tradestat.py --latest --trade-type both --value-type quantity --year-type calendar --no-build-dashboard
+      - name: Refresh revised-final USD history
+        if: steps.decision.outputs.refresh_revisions == 'true'
+        run: |
+          uv run python scripts/backfill_tradestat.py \
+            --start-period "${{ steps.decision.outputs.revision_start }}" \
+            --end-period "${{ steps.decision.outputs.revision_end }}" \
+            --value-type usd --trade-type both --force --no-build-dashboard
+      - name: Refresh revised-final HS8 quantity history
+        if: steps.decision.outputs.refresh_revisions == 'true'
+        run: |
+          uv run python scripts/backfill_tradestat.py \
+            --start-period "${{ steps.decision.outputs.revision_start }}" \
+            --end-period "${{ steps.decision.outputs.revision_end }}" \
+            --value-type quantity --trade-type both --force --no-build-dashboard
       - name: Rebuild dashboard from stored observations
         run: uv run python scripts/build_dashboard.py
       - name: Validate generated data
         run: |
           uv run python scripts/validate_data.py
           uv run pytest -q
+          node --check assets/js/app.js
       - name: Ignore timestamp-only source check
-        if: steps.decision.outputs.ingest_usd != 'true' && steps.decision.outputs.ingest_quantity != 'true'
+        if: steps.decision.outputs.ingest_usd != 'true' && steps.decision.outputs.ingest_quantity != 'true' && steps.decision.outputs.refresh_revisions != 'true'
         run: git checkout -- data/source_status.json
       - name: Commit official data changes
         shell: bash
