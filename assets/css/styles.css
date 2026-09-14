@@ -46,6 +46,15 @@ select { background: #091524; color: var(--text); border: 1px solid var(--line);
 .source-list { display: grid; grid-template-columns: 160px 1fr; gap: 10px; font-size: 13px; }
 .source-list div:nth-child(odd) { color: var(--muted); }
 .warning { border-left: 3px solid var(--warn); padding: 12px 14px; background: rgba(251,191,36,.07); color: #fde68a; border-radius: 10px; font-size: 13px; }
+.trade-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.trade-stat { padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: rgba(2,6,23,.24); }
+.trade-stat span { display: block; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+.trade-stat strong { display: block; margin-top: 3px; font-size: 13px; }
+.commodity-foot { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; color: var(--muted); font-size: 11px; }
+.risk { display: inline-flex; width: fit-content; padding: 4px 7px; border-radius: 999px; border: 1px solid var(--line); }
+.risk.high { color: var(--negative); border-color: rgba(251,113,133,.28); }
+.risk.moderate { color: var(--warn); border-color: rgba(251,191,36,.28); }
+.risk.low { color: var(--positive); border-color: rgba(74,222,128,.28); }
 footer { color: var(--muted); font-size: 12px; margin-top: 24px; text-align: center; }
 @media (max-width: 1050px) { .commodity-grid { grid-template-columns: repeat(3, 1fr); } .summary-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 720px) { .shell { width: min(100% - 20px, 1440px); padding-top: 18px; } .topbar { flex-direction: column; } .commodity-grid, .summary-grid, .source-grid { grid-template-columns: 1fr; } .source-list { grid-template-columns: 1fr; gap: 4px; } }
