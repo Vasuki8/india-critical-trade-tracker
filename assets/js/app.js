@@ -48,20 +48,30 @@ function quantityBlock(metrics) {
 
   if (imports?.status === 'ok') {
     rows.push(`
-      <div class="quantity-row" title="TradeStat quantities are normalized from thousand source units to physical source units before unit-value calculation.">
+      <div class="quantity-row" title="TradeStat quantity is used directly in the displayed source unit before implied unit-value calculation.">
         <span>Import quantity <strong>${physicalQuantity(imports)}</strong></span>
         <span>Implied import unit <strong>${impliedUnitValue(imports)}</strong></span>
       </div>`);
   }
   if (exports?.status === 'ok') {
     rows.push(`
-      <div class="quantity-row" title="TradeStat quantities are normalized from thousand source units to physical source units before unit-value calculation.">
+      <div class="quantity-row" title="TradeStat quantity is used directly in the displayed source unit before implied unit-value calculation.">
         <span>Export quantity <strong>${physicalQuantity(exports)}</strong></span>
         <span>Implied export unit <strong>${impliedUnitValue(exports)}</strong></span>
       </div>`);
   }
 
   return rows.join('');
+}
+
+function bindCommodityIntelligenceButtons() {
+  document.querySelectorAll('.intelligence-button').forEach(button => {
+    button.addEventListener('click', () => {
+      if (typeof window.openCommodityIntelligence === 'function') {
+        window.openCommodityIntelligence(button.dataset.commodityId, button.dataset.commodityName);
+      }
+    });
+  });
 }
 
 function renderCommodities(master, dashboard) {
@@ -96,7 +106,8 @@ function renderCommodities(master, dashboard) {
       <div class="commodity-foot">
         <span class="${riskClass(dependency.risk)}">${dependency.score ?? '—'} dependency · ${dependency.risk || 'n/a'}</span>
         <span>${topSupplier ? `Top supplier: ${topSupplier.partner_country} ${topSupplier.share_pct}%` : 'Supplier data unavailable'}</span>
-      </div>` : '<div class="empty-data">Trade series: awaiting validated official ingestion</div>';
+      </div>
+      <button class="intelligence-button" type="button" data-commodity-id="${c.id}" data-commodity-name="${c.name}">Explore intelligence</button>` : '<div class="empty-data">Trade series: awaiting validated official ingestion</div>';
 
     return `
       <article class="card commodity-card">
@@ -109,6 +120,7 @@ function renderCommodities(master, dashboard) {
     `;
   }).join('');
   document.querySelector('#visible-count').textContent = items.length;
+  bindCommodityIntelligenceButtons();
 }
 
 function initFilters(master, dashboard) {
@@ -144,6 +156,8 @@ async function main() {
     document.querySelector('#exports-foot').textContent = `YoY ${pct(dashboard.summary.export_yoy_pct)} · YTD ${usdMillions(dashboard.summary.ytd_exports)} · overlap-adjusted`;
     document.querySelector('#balance-foot').textContent = `YTD balance ${usdMillions(dashboard.summary.ytd_balance)} · exports minus imports`;
     document.querySelector('#as-of').textContent = dashboard.as_of || 'Awaiting first ingestion';
+    window.trackerDashboard = dashboard;
+    if (typeof window.renderPortfolioHistory === 'function') window.renderPortfolioHistory(dashboard);
     initFilters(master, dashboard);
     renderCommodities(master, dashboard);
     renderSource(source);
