@@ -18,9 +18,13 @@ jobs:
         run: uv python install 3.12
       - name: Sync dependencies
         run: uv sync --dev
+      - name: Build commodity intelligence
+        run: uv run python scripts/build_intelligence.py
       - name: Validate commodity master
         run: uv run python scripts/validate_data.py
       - name: Run tests
         run: uv run pytest -q
       - name: Check dashboard JavaScript syntax
-        run: node --check assets/js/app.js
+        run: |
+          node --check assets/js/app.js
+          node --check assets/js/intelligence.js
