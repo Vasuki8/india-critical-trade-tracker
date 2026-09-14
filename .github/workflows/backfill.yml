@@ -35,6 +35,11 @@ on:
           - both
           - import
           - export
+      force:
+        description: "Refetch observations that are already current"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -56,67 +61,69 @@ jobs:
         run: uv python install 3.12
       - name: Sync dependencies
         run: uv sync --dev
-      - name: Validate range and generate months
+      - name: Preview resumable backfill plan
         env:
           START_PERIOD: ${{ inputs.start_period }}
           END_PERIOD: ${{ inputs.end_period }}
           COMMODITY: ${{ inputs.commodity }}
           VALUE_TYPE: ${{ inputs.value_type }}
-        run: |
-          uv run python - <<'PY' > /tmp/backfill-periods.txt
-          import os, re
-
-          start = os.environ['START_PERIOD']
-          end = os.environ['END_PERIOD']
-          commodity = os.environ['COMMODITY']
-          value_type = os.environ['VALUE_TYPE']
-
-          pattern = re.compile(r'^\d{4}-(0[1-9]|1[0-2])$')
-          if not pattern.fullmatch(start) or not pattern.fullmatch(end):
-              raise SystemExit('start_period and end_period must be YYYY-MM')
-          if start > end:
-              raise SystemExit('start_period must be <= end_period')
-
-          sy, sm = map(int, start.split('-'))
-          ey, em = map(int, end.split('-'))
-          span = (ey - sy) * 12 + em - sm + 1
-          limit = 36 if commodity != 'all' or value_type == 'quantity' else 12
-          if span > limit:
-              raise SystemExit(
-                  f'range is {span} months; limit is {limit} months for this request. '
-                  'Run historical backfill in smaller batches.'
-              )
-
-          year, month = sy, sm
-          while (year, month) <= (ey, em):
-              print(f'{year:04d}-{month:02d}')
-              month += 1
-              if month == 13:
-                  month = 1
-                  year += 1
-          PY
-          cat /tmp/backfill-periods.txt
-      - name: Backfill official observations
-        env:
-          COMMODITY: ${{ inputs.commodity }}
-          VALUE_TYPE: ${{ inputs.value_type }}
           TRADE_TYPE: ${{ inputs.trade_type }}
+          FORCE: ${{ inputs.force }}
         shell: bash
         run: |
-          args=(--trade-type "$TRADE_TYPE" --value-type "$VALUE_TYPE" --year-type calendar --no-build-dashboard)
+          args=(
+            --start-period "$START_PERIOD"
+            --end-period "$END_PERIOD"
+            --value-type "$VALUE_TYPE"
+            --trade-type "$TRADE_TYPE"
+            --dry-run
+          )
           if [[ "$COMMODITY" != "all" ]]; then
             args+=(--commodity "$COMMODITY")
           fi
-          while IFS= read -r period; do
-            echo "=== Backfilling $period ==="
-            uv run python scripts/ingest_tradestat.py --period "$period" "${args[@]}"
-          done < /tmp/backfill-periods.txt
-      - name: Rebuild dashboard
-        run: uv run python scripts/build_dashboard.py
+          if [[ "$FORCE" == "true" ]]; then
+            args+=(--force)
+          fi
+          uv run python scripts/backfill_tradestat.py "${args[@]}" | tee /tmp/backfill-plan.log
+          {
+            echo "### TradeStat backfill plan"
+            echo '```text'
+            tail -n 40 /tmp/backfill-plan.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Backfill missing or stale official observations
+        env:
+          START_PERIOD: ${{ inputs.start_period }}
+          END_PERIOD: ${{ inputs.end_period }}
+          COMMODITY: ${{ inputs.commodity }}
+          VALUE_TYPE: ${{ inputs.value_type }}
+          TRADE_TYPE: ${{ inputs.trade_type }}
+          FORCE: ${{ inputs.force }}
+        shell: bash
+        run: |
+          args=(
+            --start-period "$START_PERIOD"
+            --end-period "$END_PERIOD"
+            --value-type "$VALUE_TYPE"
+            --trade-type "$TRADE_TYPE"
+          )
+          if [[ "$COMMODITY" != "all" ]]; then
+            args+=(--commodity "$COMMODITY")
+          fi
+          if [[ "$FORCE" == "true" ]]; then
+            args+=(--force)
+          fi
+          uv run python scripts/backfill_tradestat.py "${args[@]}" | tee /tmp/backfill-run.log
+          summary=$(grep '^BACKFILL_SUMMARY ' /tmp/backfill-run.log | tail -n 1 || true)
+          if [[ -n "$summary" ]]; then
+            echo "### Backfill result" >> "$GITHUB_STEP_SUMMARY"
+            echo "\`$summary\`" >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Validate generated data
         run: |
           uv run python scripts/validate_data.py
           uv run pytest -q
+          node --check assets/js/app.js
       - name: Commit historical data
         env:
           START_PERIOD: ${{ inputs.start_period }}
