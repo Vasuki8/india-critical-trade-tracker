@@ -34,6 +34,13 @@ VALUE_TYPES = {"usd": "1", "inr": "2", "quantity": "3"}
 YEAR_TYPES = {"financial": "1", "calendar": "2"}
 VALUE_UNITS = {"usd": "USD million", "inr": "INR crore", "quantity": "source unit"}
 VALID_HS_LENGTHS = {2, 4, 6, 8}
+NO_DATA_MARKERS = (
+    "no result found",
+    "no results found",
+    "no data found",
+    "no record found",
+    "no records found",
+)
 
 
 class TradeStatError(RuntimeError):
@@ -130,6 +137,11 @@ def _extract_commodity(text: str, hscode: str) -> tuple[str | None, str | None]:
     return None, None
 
 
+def _is_explicit_no_data(page_text: str) -> bool:
+    lowered = page_text.lower()
+    return any(marker in lowered for marker in NO_DATA_MARKERS)
+
+
 def parse_commodity_all_countries(
     html: str,
     *,
@@ -150,66 +162,89 @@ def parse_commodity_all_countries(
     soup = BeautifulSoup(html, "html.parser")
     page_text = soup.get_text(" ", strip=True)
     table = _find_result_table(soup)
-    if table is None:
-        raise TradeStatError("TradeStat result table not found")
 
     rows: list[dict[str, Any]] = []
     totals: dict[str, float | None] | None = None
     headers: list[str] = []
+    data_status = "ok"
 
-    first_row = table.find("tr")
-    if first_row is not None:
-        headers = [c.get_text(" ", strip=True) for c in first_row.find_all(["th", "td"])]
+    if table is None:
+        if not _is_explicit_no_data(page_text):
+            raise TradeStatError("TradeStat result table not found and response was not an explicit no-data result")
+        data_status = "no_data"
+        totals = {
+            "previous_year_value": None,
+            "value": 0.0,
+            "yoy_pct": None,
+            "cumulative_previous_year_value": None,
+            "cumulative_value": None,
+            "cumulative_yoy_pct": None,
+        }
+    else:
+        first_row = table.find("tr")
+        if first_row is not None:
+            headers = [c.get_text(" ", strip=True) for c in first_row.find_all(["th", "td"])]
 
-    for tr in table.find_all("tr"):
-        cells = [c.get_text(" ", strip=True) for c in tr.find_all("td")]
-        if len(cells) < 4:
-            continue
-        row_text = " ".join(cells)
-        if "total" in row_text.lower():
-            totals = {
+        for tr in table.find_all("tr"):
+            cells = [c.get_text(" ", strip=True) for c in tr.find_all("td")]
+            if len(cells) < 4:
+                continue
+            row_text = " ".join(cells)
+            if "total" in row_text.lower():
+                totals = {
+                    "previous_year_value": _number(cells[2]) if len(cells) > 2 else None,
+                    "value": _number(cells[3]) if len(cells) > 3 else None,
+                    "yoy_pct": _number(cells[4]) if len(cells) > 4 else None,
+                    "cumulative_previous_year_value": _number(cells[5]) if len(cells) > 5 else None,
+                    "cumulative_value": _number(cells[6]) if len(cells) > 6 else None,
+                    "cumulative_yoy_pct": _number(cells[7]) if len(cells) > 7 else None,
+                }
+                continue
+            if not cells[0].isdigit():
+                continue
+            rows.append({
+                "rank": int(cells[0]),
+                "partner_country": cells[1],
                 "previous_year_value": _number(cells[2]) if len(cells) > 2 else None,
                 "value": _number(cells[3]) if len(cells) > 3 else None,
                 "yoy_pct": _number(cells[4]) if len(cells) > 4 else None,
                 "cumulative_previous_year_value": _number(cells[5]) if len(cells) > 5 else None,
                 "cumulative_value": _number(cells[6]) if len(cells) > 6 else None,
                 "cumulative_yoy_pct": _number(cells[7]) if len(cells) > 7 else None,
+            })
+
+        if not rows and totals is None:
+            if _is_explicit_no_data(page_text):
+                data_status = "no_data"
+                totals = {
+                    "previous_year_value": None,
+                    "value": 0.0,
+                    "yoy_pct": None,
+                    "cumulative_previous_year_value": None,
+                    "cumulative_value": None,
+                    "cumulative_yoy_pct": None,
+                }
+            else:
+                raise TradeStatError("TradeStat table contained no parseable records")
+
+        if totals is None:
+            current_values = [r["value"] for r in rows if r["value"] is not None]
+            previous_values = [r["previous_year_value"] for r in rows if r["previous_year_value"] is not None]
+            totals = {
+                "previous_year_value": round(sum(previous_values), 6) if previous_values else None,
+                "value": round(sum(current_values), 6) if current_values else None,
+                "yoy_pct": None,
+                "cumulative_previous_year_value": None,
+                "cumulative_value": None,
+                "cumulative_yoy_pct": None,
             }
-            continue
-        if not cells[0].isdigit():
-            continue
-        rows.append({
-            "rank": int(cells[0]),
-            "partner_country": cells[1],
-            "previous_year_value": _number(cells[2]) if len(cells) > 2 else None,
-            "value": _number(cells[3]) if len(cells) > 3 else None,
-            "yoy_pct": _number(cells[4]) if len(cells) > 4 else None,
-            "cumulative_previous_year_value": _number(cells[5]) if len(cells) > 5 else None,
-            "cumulative_value": _number(cells[6]) if len(cells) > 6 else None,
-            "cumulative_yoy_pct": _number(cells[7]) if len(cells) > 7 else None,
-        })
-
-    if not rows and totals is None:
-        raise TradeStatError("TradeStat table contained no parseable records")
-
-    if totals is None:
-        current_values = [r["value"] for r in rows if r["value"] is not None]
-        previous_values = [r["previous_year_value"] for r in rows if r["previous_year_value"] is not None]
-        totals = {
-            "previous_year_value": round(sum(previous_values), 6) if previous_values else None,
-            "value": round(sum(current_values), 6) if current_values else None,
-            "yoy_pct": None,
-            "cumulative_previous_year_value": None,
-            "cumulative_value": None,
-            "cumulative_yoy_pct": None,
-        }
 
     description, source_unit = _extract_commodity(page_text, hscode)
     endpoint = source_url or BASE_URL + ENDPOINTS[trade_type]
     period = f"{year:04d}-{month:02d}"
     payload_for_hash = "|".join(
         f"{r['partner_country']}:{r['value']}" for r in sorted(rows, key=lambda x: x["partner_country"])
-    )
+    ) + f"|status:{data_status}"
     checksum = hashlib.sha256(payload_for_hash.encode("utf-8")).hexdigest()
 
     return {
@@ -221,6 +256,7 @@ def parse_commodity_all_countries(
         "value_type": value_type,
         "value_unit": VALUE_UNITS[value_type],
         "year_type": year_type,
+        "data_status": data_status,
         "commodity_description": description,
         "source_quantity_unit": source_unit,
         "headers": headers,
