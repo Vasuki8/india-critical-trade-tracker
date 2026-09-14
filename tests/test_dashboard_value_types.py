@@ -4,19 +4,22 @@ from pathlib import Path
 from src.tracker.dashboard import _is_usd_observation, build_dashboard
 
 
-def _report(*, trade_type="import", hs_code="28252000", value=2.5, value_type="usd", unit=None):
+def _report(*, trade_type="import", hs_code="28252000", value=2.5, value_type="usd", unit=None, selector=None):
+    if selector is None:
+        selector = "2" if value_type == "quantity" else "1"
     return {
         "trade_type": trade_type,
         "hs_code": hs_code,
         "value_type": value_type,
+        "value_selector_code": selector,
         "source_quantity_unit": unit,
         "rows": [],
         "totals": {"value": value},
     }
 
 
-def _doc(*, period, value_type, value, unit=None):
-    reports = [_report(value=value, value_type=value_type, unit=unit)]
+def _doc(*, period, value_type, value, unit=None, selector=None):
+    reports = [_report(value=value, value_type=value_type, unit=unit, selector=selector)]
     metrics = {}
     if value_type == "usd":
         metrics = {
@@ -30,6 +33,7 @@ def _doc(*, period, value_type, value, unit=None):
         "schema_version": 3,
         "period": period,
         "value_type": value_type,
+        "quantity_scale_to_source_unit": 1 if value_type == "quantity" else None,
         "commodity": {
             "id": "lithium",
             "name": "Lithium & Compounds",
@@ -74,7 +78,7 @@ def test_quantity_only_newer_month_does_not_advance_dashboard_as_of(tmp_path: Pa
     _write(observations, _doc(period="2026-06", value_type="usd", value=2.5), "lithium.usd.json")
     _write(
         observations,
-        _doc(period="2026-07", value_type="quantity", value=500, unit="KGS"),
+        _doc(period="2026-07", value_type="quantity", value=500_000, unit="KGS"),
         "lithium.quantity.json",
     )
 
@@ -84,13 +88,13 @@ def test_quantity_only_newer_month_does_not_advance_dashboard_as_of(tmp_path: Pa
     assert [row["period"] for row in dashboard["monthly"]] == ["2026-06"]
 
 
-def test_same_month_quantity_adds_implied_unit_value(tmp_path: Path):
+def test_same_month_quantity_adds_implied_unit_value_from_direct_units(tmp_path: Path):
     observations = tmp_path / "observations"
     _write(observations, _doc(period="2026-06", value_type="usd", value=2.5), "lithium.usd.json")
-    # TradeStat quantity 500 means 500 thousand KGS.
+    # MEIDB quantity is already expressed directly in KGS.
     _write(
         observations,
-        _doc(period="2026-06", value_type="quantity", value=500, unit="KGS"),
+        _doc(period="2026-06", value_type="quantity", value=500_000, unit="KGS"),
         "lithium.quantity.json",
     )
 
@@ -99,8 +103,26 @@ def test_same_month_quantity_adds_implied_unit_value(tmp_path: Path):
 
     assert dashboard["schema_version"] == 3
     assert unit_values["aggregate"]["import"]["quantity"] == 500_000
+    assert unit_values["aggregate"]["import"]["raw_quantity_source_units"] == 500_000
     assert unit_values["aggregate"]["import"]["unit_value_usd_per_source_unit"] == 5.0
     assert dashboard["commodity_history"]["lithium"][0]["unit_values"]["import"]["quantity_unit"] == "KGS"
+
+
+def test_unverified_quantity_selector_is_not_used_for_unit_value(tmp_path: Path):
+    observations = tmp_path / "observations"
+    _write(observations, _doc(period="2026-06", value_type="usd", value=2.5), "lithium.usd.json")
+    _write(
+        observations,
+        _doc(period="2026-06", value_type="quantity", value=500_000, unit="KGS", selector="3"),
+        "lithium.quantity.json",
+    )
+
+    dashboard = build_dashboard(observations, tmp_path / "dashboard.json")
+    unit_values = dashboard["commodities"][0]["unit_values"]
+
+    assert unit_values["status"] == "not_available"
+    assert unit_values["aggregate"]["import"]["unit_value_usd_per_source_unit"] is None
+    assert unit_values["by_hs_code"][0]["status"] == "unverified_quantity_selector"
 
 
 def test_explicit_usd_file_wins_over_legacy_duplicate(tmp_path: Path):

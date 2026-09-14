@@ -67,13 +67,14 @@ class _QuantityClient:
             "trade_type": kwargs["trade_type"],
             "hs_code": kwargs["hscode"],
             "value_type": kwargs["value_type"],
+            "value_selector_code": "2",
             "source_quantity_unit": "KGS",
             "rows": [],
             "totals": {"value": 12.5},
         }
 
 
-def test_quantity_ingestion_persists_thousand_unit_scale_metadata():
+def test_quantity_ingestion_persists_direct_unit_scale_metadata():
     commodity = {
         "id": "lithium",
         "name": "Lithium & Compounds",
@@ -93,7 +94,7 @@ def test_quantity_ingestion_persists_thousand_unit_scale_metadata():
         trade_types=["import"],
     )
 
-    assert doc["quantity_scale_to_source_unit"] == QUANTITY_SCALE_TO_SOURCE_UNIT == 1000
-    assert "thousands" in doc["quantity_scale_note"]
-    assert doc["reports"][0]["quantity_scale_to_source_unit"] == 1000
-    assert "thousands" in doc["reports"][0]["quantity_scale_note"]
+    assert doc["quantity_scale_to_source_unit"] == QUANTITY_SCALE_TO_SOURCE_UNIT == 1
+    assert "already expressed" in doc["quantity_scale_note"]
+    assert doc["reports"][0]["quantity_scale_to_source_unit"] == 1
+    assert "already expressed" in doc["reports"][0]["quantity_scale_note"]

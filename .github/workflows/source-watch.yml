@@ -78,13 +78,13 @@ jobs:
               stored_codes = commodity.get('canonical_hs_codes') or commodity.get('hs_codes') or []
               if list(stored_codes) != list(expected_codes):
                   return True
-              if doc.get('quantity_scale_to_source_unit') != 1000:
+              # MEIDB quantity values are already in the displayed source unit.
+              if doc.get('quantity_scale_to_source_unit') != 1:
                   return True
               reports = doc.get('reports', [])
-              if any(report.get('quantity_scale_to_source_unit') != 1000 for report in reports):
+              if any(report.get('quantity_scale_to_source_unit') != 1 for report in reports):
                   return True
               # TradeStat live form contract: selector code 2 is Quantity.
-              # Older observations were accidentally produced with selector 3 (INR Crore).
               return any(report.get('value_selector_code') != '2' for report in reports)
 
           as_of = dashboard.get('as_of')

@@ -25,8 +25,8 @@ MONTHS = {
     "aug": 8, "august": 8, "sep": 9, "sept": 9, "september": 9, "oct": 10,
     "october": 10, "nov": 11, "november": 11, "dec": 12, "december": 12,
 }
-QUANTITY_SCALE_TO_SOURCE_UNIT = 1_000
-QUANTITY_SCALE_NOTE = "TradeStat quantity values are thousands of the displayed source unit (for example KGS or NOS)."
+QUANTITY_SCALE_TO_SOURCE_UNIT = 1
+QUANTITY_SCALE_NOTE = "TradeStat MEIDB quantity values are already expressed in the displayed source unit (for example KGS or NOS)."
 
 
 def load_json(path: Path) -> dict[str, Any]:
