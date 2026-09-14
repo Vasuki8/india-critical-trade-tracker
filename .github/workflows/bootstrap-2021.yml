@@ -1,0 +1,65 @@
+name: Bootstrap 2021 TradeStat history
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/bootstrap-2021.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tradestat-history-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill-2021:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync dependencies
+        run: uv sync --dev
+      - name: Preview 2021 resumable plan
+        run: |
+          uv run python scripts/backfill_tradestat.py --start-period 2021-01 --end-period 2021-12 --value-type usd --trade-type both --dry-run
+          uv run python scripts/backfill_tradestat.py --start-period 2021-01 --end-period 2021-12 --value-type quantity --trade-type both --dry-run
+      - name: Backfill 2021 USD observations
+        run: uv run python scripts/backfill_tradestat.py --start-period 2021-01 --end-period 2021-12 --value-type usd --trade-type both --no-build-dashboard
+      - name: Backfill 2021 HS8 quantity observations
+        run: uv run python scripts/backfill_tradestat.py --start-period 2021-01 --end-period 2021-12 --value-type quantity --trade-type both --no-build-dashboard
+      - name: Rebuild dashboard from stored observations
+        run: uv run python scripts/build_dashboard.py
+      - name: Rebuild revision comparison summary
+        run: uv run python scripts/build_revision_summary.py
+      - name: Validate generated data
+        run: |
+          uv run python scripts/validate_data.py
+          uv run pytest -q
+          node --check assets/js/app.js
+      - name: Commit 2021 official history
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No repository data change"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/dashboard.json data/revision_summary.json data/observations/
+          if [[ -d data/revisions ]]; then
+            git add data/revisions/
+          fi
+          if git diff --cached --quiet; then
+            echo "No tracked data change"
+            exit 0
+          fi
+          git commit -m "data: backfill TradeStat history for 2021"
+          git pull --rebase origin main
+          git push origin HEAD:main
