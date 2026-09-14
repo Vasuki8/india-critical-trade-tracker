@@ -34,12 +34,15 @@ VALUE_TYPES = {"usd": "1", "inr": "2", "quantity": "3"}
 YEAR_TYPES = {"financial": "1", "calendar": "2"}
 VALUE_UNITS = {"usd": "USD million", "inr": "INR crore", "quantity": "source unit"}
 VALID_HS_LENGTHS = {2, 4, 6, 8}
-NO_DATA_MARKERS = (
-    "no result found",
-    "no results found",
-    "no data found",
-    "no record found",
-    "no records found",
+FATAL_RESPONSE_MARKERS = (
+    "internal server error",
+    "server error",
+    "csrf token mismatch",
+    "page expired",
+    "access denied",
+    "forbidden",
+    "service unavailable",
+    "gateway timeout",
 )
 
 
@@ -137,9 +140,23 @@ def _extract_commodity(text: str, hscode: str) -> tuple[str | None, str | None]:
     return None, None
 
 
-def _is_explicit_no_data(page_text: str) -> bool:
+def _has_fatal_response_marker(page_text: str) -> str | None:
     lowered = page_text.lower()
-    return any(marker in lowered for marker in NO_DATA_MARKERS)
+    for marker in FATAL_RESPONSE_MARKERS:
+        if marker in lowered:
+            return marker
+    return None
+
+
+def _empty_totals() -> dict[str, float | None]:
+    return {
+        "previous_year_value": None,
+        "value": 0.0,
+        "yoy_pct": None,
+        "cumulative_previous_year_value": None,
+        "cumulative_value": None,
+        "cumulative_yoy_pct": None,
+    }
 
 
 def parse_commodity_all_countries(
@@ -163,23 +180,21 @@ def parse_commodity_all_countries(
     page_text = soup.get_text(" ", strip=True)
     table = _find_result_table(soup)
 
+    fatal_marker = _has_fatal_response_marker(page_text)
+    if fatal_marker:
+        raise TradeStatError(f"TradeStat returned a fatal response marker: {fatal_marker}")
+
     rows: list[dict[str, Any]] = []
     totals: dict[str, float | None] | None = None
     headers: list[str] = []
     data_status = "ok"
 
+    # TradeStat's successful POST can legitimately return the report page with no
+    # result table when a requested HS/trade/period combination has no rows.
+    # The upstream/public parser uses this same table-presence rule for NO_DATA.
     if table is None:
-        if not _is_explicit_no_data(page_text):
-            raise TradeStatError("TradeStat result table not found and response was not an explicit no-data result")
         data_status = "no_data"
-        totals = {
-            "previous_year_value": None,
-            "value": 0.0,
-            "yoy_pct": None,
-            "cumulative_previous_year_value": None,
-            "cumulative_value": None,
-            "cumulative_yoy_pct": None,
-        }
+        totals = _empty_totals()
     else:
         first_row = table.find("tr")
         if first_row is not None:
@@ -214,18 +229,8 @@ def parse_commodity_all_countries(
             })
 
         if not rows and totals is None:
-            if _is_explicit_no_data(page_text):
-                data_status = "no_data"
-                totals = {
-                    "previous_year_value": None,
-                    "value": 0.0,
-                    "yoy_pct": None,
-                    "cumulative_previous_year_value": None,
-                    "cumulative_value": None,
-                    "cumulative_yoy_pct": None,
-                }
-            else:
-                raise TradeStatError("TradeStat table contained no parseable records")
+            data_status = "no_data"
+            totals = _empty_totals()
 
         if totals is None:
             current_values = [r["value"] for r in rows if r["value"] is not None]
