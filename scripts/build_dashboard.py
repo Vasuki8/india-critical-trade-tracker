@@ -9,5 +9,9 @@ sys.path.insert(0, str(ROOT))
 from src.tracker.dashboard import build_dashboard
 
 if __name__ == "__main__":
-    doc = build_dashboard(ROOT / "data" / "observations", ROOT / "data" / "dashboard.json")
+    doc = build_dashboard(
+        ROOT / "data" / "observations",
+        ROOT / "data" / "dashboard.json",
+        ROOT / "data" / "commodities.json",
+    )
     print(f"dashboard: status={doc['status']} as_of={doc['as_of']}")
