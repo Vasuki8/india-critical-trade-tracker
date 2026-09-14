@@ -8,6 +8,7 @@ from src.tracker.tradestat import (
     parse_commodity_all_countries,
     parse_csrf_token,
     validate_query,
+    validate_value_type_contract,
 )
 
 FIXTURE = Path(__file__).parent / "fixtures" / "meidb_all_countries_sample.html"
@@ -38,12 +39,49 @@ def test_export_payload_uses_current_meidb_contract():
     assert payload["cwacexMonth"] == "6"
 
 
+def test_quantity_and_inr_selector_codes_match_live_form():
+    quantity = build_payload(
+        trade_type="import", token="t", hscode="28252000", month=6, year=2026,
+        value_type="quantity", year_type="calendar",
+    )
+    inr = build_payload(
+        trade_type="export", token="t", hscode="28252000", month=6, year=2026,
+        value_type="inr", year_type="calendar",
+    )
+    assert quantity["cwacimReportVal"] == "2"
+    assert inr["cwacexReportVal"] == "3"
+
+
+def test_value_selector_contract_accepts_verified_live_mapping():
+    html = """
+    <select name="cwacimReportVal" id="cwacimReportVal">
+      <option value="1">US $ Million</option>
+      <option value="3">₹ Crore</option>
+      <option value="2">Quantity</option>
+    </select>
+    """
+    validate_value_type_contract(html, "import")
+
+
+def test_value_selector_contract_rejects_swapped_mapping():
+    html = """
+    <select name="cwacimReportVal" id="cwacimReportVal">
+      <option value="1">US $ Million</option>
+      <option value="2">₹ Crore</option>
+      <option value="3">Quantity</option>
+    </select>
+    """
+    with pytest.raises(TradeStatError):
+        validate_value_type_contract(html, "import")
+
+
 def test_parser_extracts_month_value_and_partner_rows():
     doc = parse_commodity_all_countries(
         HTML, hscode="2709", month=6, year=2026, trade_type="import", retrieved_at="2026-09-14T00:00:00+00:00"
     )
     assert doc["period"] == "2026-06"
     assert doc["data_status"] == "ok"
+    assert doc["value_selector_code"] == "1"
     assert doc["totals"]["value"] == 1600.0
     assert doc["rows"][0]["partner_country"] == "RUSSIA"
     assert doc["rows"][0]["value"] == 1200.0
