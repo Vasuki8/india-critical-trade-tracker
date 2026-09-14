@@ -4,6 +4,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src.tracker.mapping_quality import mapping_status_counts, validate_mapping_quality
 from src.tracker.validation import load_json, validate_commodity_master, validate_dashboard
 
 
@@ -13,6 +14,7 @@ def main() -> int:
 
     errors = []
     errors.extend(validate_commodity_master(master))
+    errors.extend(validate_mapping_quality(master))
     errors.extend(validate_dashboard(dashboard))
     if errors:
         print("Validation failed:")
@@ -21,8 +23,11 @@ def main() -> int:
         return 1
 
     history_rows = sum(len(rows) for rows in dashboard.get("commodity_history", {}).values())
+    status_counts = mapping_status_counts(master)
+    exact_hs8 = status_counts.get("hs8_validated", 0)
     print(
         f"OK: {len(master['commodities'])} critical commodity groups validated; "
+        f"exact_hs8={exact_hs8}/{len(master['commodities'])}; "
         f"dashboard as_of={dashboard.get('as_of')} history_rows={history_rows}"
     )
     return 0
