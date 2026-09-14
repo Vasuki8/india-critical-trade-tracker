@@ -11,6 +11,16 @@ def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _is_usd_observation(doc: dict[str, Any]) -> bool:
+    value_type = doc.get("value_type")
+    if value_type is not None:
+        return value_type == "usd"
+    reports = doc.get("reports", [])
+    if not reports:
+        return True
+    return all(report.get("value_type", "usd") == "usd" for report in reports)
+
+
 def build_dashboard(observations_root: Path, out_path: Path) -> dict[str, Any]:
     period_dirs = sorted(p for p in observations_root.glob("????-??") if p.is_dir())
     if not period_dirs:
@@ -33,6 +43,7 @@ def build_dashboard(observations_root: Path, out_path: Path) -> dict[str, Any]:
 
     for period_dir in period_dirs:
         docs = [_load(path) for path in sorted(period_dir.glob("*.json"))]
+        docs = [doc for doc in docs if _is_usd_observation(doc)]
         reports = [report for doc in docs for report in doc.get("reports", [])]
         summary = portfolio_summary(reports)
         monthly.append({"period": period_dir.name, **summary})
