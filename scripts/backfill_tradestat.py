@@ -235,7 +235,7 @@ def main() -> int:
             summary["written"] += 1
 
     if not args.dry_run and not args.no_build_dashboard:
-        dashboard = build_dashboard(OBS_ROOT, DASHBOARD_PATH)
+        dashboard = build_dashboard(OBS_ROOT, DASHBOARD_PATH, MASTER_PATH)
         print(f"Dashboard status={dashboard['status']} as_of={dashboard['as_of']}")
 
     print("BACKFILL_SUMMARY " + json.dumps(summary, sort_keys=True))
