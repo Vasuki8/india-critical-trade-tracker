@@ -35,8 +35,9 @@
         "enabled":true,
         "mode":"separate",
         "mapping_status":"hs8_validated",
+        "rollup_to_value_mapping":true,
         "hs_codes":["28461010","28461090","28469010","28469020","28469030","28469090"],
-        "note":"Exact ITC-HS8 tariff items that exhaust heading 2846. Kept separate so the validated USD heading series remains unchanged while quantity is fetched only at HS8."
+        "note":"Exact ITC-HS8 tariff items that exhaust heading 2846. Kept separate so the validated USD heading series remains unchanged while quantity is fetched only at HS8; aggregate unit value may roll up to the parent heading when units agree."
       }
     },
     {
