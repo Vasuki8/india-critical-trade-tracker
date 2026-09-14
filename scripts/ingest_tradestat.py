@@ -87,8 +87,10 @@ def ingest_one(
     expected = len(commodity["hs_codes"]) * len(trade_types)
     status = "ok" if len(reports) == expected else "partial" if reports else "failed"
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "period": period,
+        "value_type": value_type,
+        "year_type": year_type,
         "commodity": {
             "id": commodity["id"],
             "name": commodity["name"],
@@ -107,7 +109,8 @@ def ingest_one(
 def write_observation(doc: dict[str, Any]) -> Path:
     out_dir = OBS_ROOT / doc["period"]
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"{doc['commodity']['id']}.json"
+    value_type = doc.get("value_type", "usd")
+    path = out_dir / f"{doc['commodity']['id']}.{value_type}.json"
     path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
     return path
 
@@ -146,6 +149,9 @@ def main() -> int:
         if missing:
             raise SystemExit(f"Unknown commodity id(s): {', '.join(missing)}")
         commodities = [c for c in commodities if c["id"] in selected_ids]
+
+    if args.value_type == "quantity":
+        commodities = [c for c in commodities if all(len(code) == 8 for code in c.get("hs_codes", []))]
 
     trade_types = ["import", "export"] if args.trade_type == "both" else [args.trade_type]
     client = TradeStatClient(delay_seconds=args.delay)
