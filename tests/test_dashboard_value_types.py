@@ -74,7 +74,7 @@ def test_quantity_only_newer_month_does_not_advance_dashboard_as_of(tmp_path: Pa
     _write(observations, _doc(period="2026-06", value_type="usd", value=2.5), "lithium.usd.json")
     _write(
         observations,
-        _doc(period="2026-07", value_type="quantity", value=500_000, unit="KGS"),
+        _doc(period="2026-07", value_type="quantity", value=500, unit="KGS"),
         "lithium.quantity.json",
     )
 
@@ -87,9 +87,10 @@ def test_quantity_only_newer_month_does_not_advance_dashboard_as_of(tmp_path: Pa
 def test_same_month_quantity_adds_implied_unit_value(tmp_path: Path):
     observations = tmp_path / "observations"
     _write(observations, _doc(period="2026-06", value_type="usd", value=2.5), "lithium.usd.json")
+    # TradeStat quantity 500 means 500 thousand KGS.
     _write(
         observations,
-        _doc(period="2026-06", value_type="quantity", value=500_000, unit="KGS"),
+        _doc(period="2026-06", value_type="quantity", value=500, unit="KGS"),
         "lithium.quantity.json",
     )
 
@@ -97,6 +98,7 @@ def test_same_month_quantity_adds_implied_unit_value(tmp_path: Path):
     unit_values = dashboard["commodities"][0]["unit_values"]
 
     assert dashboard["schema_version"] == 3
+    assert unit_values["aggregate"]["import"]["quantity"] == 500_000
     assert unit_values["aggregate"]["import"]["unit_value_usd_per_source_unit"] == 5.0
     assert dashboard["commodity_history"]["lithium"][0]["unit_values"]["import"]["quantity_unit"] == "KGS"
 
