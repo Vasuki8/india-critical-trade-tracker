@@ -78,13 +78,11 @@ jobs:
               stored_codes = commodity.get('canonical_hs_codes') or commodity.get('hs_codes') or []
               if list(stored_codes) != list(expected_codes):
                   return True
-              # MEIDB quantity values are already in the displayed source unit.
               if doc.get('quantity_scale_to_source_unit') != 1:
                   return True
               reports = doc.get('reports', [])
               if any(report.get('quantity_scale_to_source_unit') != 1 for report in reports):
                   return True
-              # TradeStat live form contract: selector code 2 is Quantity.
               return any(report.get('value_selector_code') != '2' for report in reports)
 
           as_of = dashboard.get('as_of')
@@ -142,6 +140,7 @@ jobs:
         if: steps.decision.outputs.ingest_usd != 'true' && steps.decision.outputs.ingest_quantity != 'true'
         run: git checkout -- data/source_status.json
       - name: Commit official data changes
+        shell: bash
         run: |
           if git diff --quiet; then
             echo "No repository data change"
@@ -149,7 +148,10 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/source_status.json data/dashboard.json data/observations/ data/revisions/ 2>/dev/null || true
+          git add data/source_status.json data/dashboard.json data/observations/
+          if [[ -d data/revisions ]]; then
+            git add data/revisions/
+          fi
           if git diff --cached --quiet; then
             echo "No tracked data change"
             exit 0
