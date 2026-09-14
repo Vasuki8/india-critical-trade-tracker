@@ -55,7 +55,7 @@ Solar cell and module unit values are kept at HS8 level because a bare photovolt
 - Mappings marked `needs`, `partial` or `sensitive` are skipped by automatic ingestion until reviewed.
 - A commodity observation is not written if one of its required import/export requests fails, unless partial persistence is explicitly allowed.
 - Dashboard portfolio totals deduplicate parent/child HS mappings using a shortest-prefix union, preventing double counting such as HS 85 plus HS 8541/8517.
-- Stored observations are automatically refreshed when their canonical HS mapping differs from the commodity master.
+- Stored observations are automatically refreshed when their active HS mapping differs from the commodity master or the period's classification era.
 - Quantity observations are refreshed when selector provenance or direct-unit scale metadata is stale.
 - Quantity-only months cannot advance the dashboard's headline `as_of` period.
 - The April 2026 TradeStat ITC-HS reallocation/unit warning remains a classification guardrail.
@@ -93,7 +93,31 @@ This prevents the history layer from pretending the current solar codes existed 
 
 ### Historical backfill
 
-A controlled backfill workflow is available in `.github/workflows/backfill-history.yml`. It is intentionally separate from the lightweight daily updater so historical loads can be bounded and reviewed. Classification eras are resolved per period before requests are made.
+A controlled workflow is available at `.github/workflows/backfill.yml`. It is intentionally separate from the lightweight daily updater.
+
+The backfill is **resumable**. Before any request, `scripts/backfill_tradestat.py` checks each period/commodity observation for:
+
+- active period-specific HS mapping;
+- requested import/export coverage;
+- value type;
+- successful stored status; and
+- for quantity, selector code `2` plus direct-unit scale `1`.
+
+Current observations are skipped automatically. Missing, incomplete or stale observations are fetched. This lets interrupted or partially completed backfills be rerun without repeating every official-site request.
+
+Safety limits remain in place: all-commodity USD runs are limited to 12 months per workflow run; single-commodity or quantity runs may cover up to 36 months.
+
+You can preview a local backfill without network writes:
+
+```powershell
+uv run python scripts/backfill_tradestat.py --start-period 2025-01 --end-period 2025-12 --value-type usd --trade-type both --dry-run
+```
+
+Run the same resumable batch:
+
+```powershell
+uv run python scripts/backfill_tradestat.py --start-period 2025-01 --end-period 2025-12 --value-type usd --trade-type both
+```
 
 ## Local setup with uv
 
@@ -143,7 +167,7 @@ uv run python scripts/build_dashboard.py
 ```text
 .
 ├── .github/workflows/
-│   ├── backfill-history.yml
+│   ├── backfill.yml
 │   ├── source-watch.yml
 │   └── validate.yml
 ├── assets/
@@ -155,6 +179,7 @@ uv run python scripts/build_dashboard.py
 │   ├── source_status.json
 │   └── observations/YYYY-MM/*.json
 ├── scripts/
+│   ├── backfill_tradestat.py
 │   ├── build_dashboard.py
 │   ├── check_source.py
 │   ├── ingest_tradestat.py
@@ -186,7 +211,7 @@ GitHub Pages is enabled for the repository. Updates committed to `main` trigger 
 
 ## Next build priorities
 
-1. Backfill monthly USD history from 2018 using the bounded workflow and classification-era rules.
+1. Backfill monthly USD history from 2018 in bounded resumable batches.
 2. Backfill HS8 quantity history for validated quantity-capable groups and calculate historical implied unit values.
 3. Add interactive historical charts and country drill-downs from the stored monthly history.
 4. Separate first-release and revised observations so revisions can be measured rather than silently replacing prior values.
