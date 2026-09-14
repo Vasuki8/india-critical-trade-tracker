@@ -124,6 +124,48 @@ def test_parent_heading_rollup_derives_only_aggregate_unit_value():
     assert all(item["status"] != "ok" for item in result["by_hs_code"])
 
 
+def test_parent_heading_rollup_allows_blank_unit_only_for_zero_quantity_child():
+    usd = {"reports": [_report("export", "2846", 3.51, value_type="usd")]}
+    quantity = {
+        "commodity": {
+            "canonical_hs_codes": ["28461010", "28469020", "28469090"],
+            "quantity_rollup_to_value_mapping": True,
+        },
+        "reports": [
+            _report("export", "28461010", 4, value_type="quantity", unit="KGS", scale=1),
+            _report("export", "28469020", 0, value_type="quantity", unit=None, scale=1),
+            _report("export", "28469090", 162_989, value_type="quantity", unit="KGS", scale=1),
+        ],
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    aggregate = result["aggregate"]["export"]
+    assert aggregate["status"] == "ok"
+    assert aggregate["quantity"] == 162_993
+    assert aggregate["quantity_unit"] == "KGS"
+    assert aggregate["unit_value_usd_per_source_unit"] == 21.534667
+
+
+def test_parent_heading_rollup_rejects_blank_unit_for_positive_quantity_child():
+    usd = {"reports": [_report("export", "2846", 3.51, value_type="usd")]}
+    quantity = {
+        "commodity": {
+            "canonical_hs_codes": ["28461010", "28469020"],
+            "quantity_rollup_to_value_mapping": True,
+        },
+        "reports": [
+            _report("export", "28461010", 4, value_type="quantity", unit="KGS", scale=1),
+            _report("export", "28469020", 1, value_type="quantity", unit=None, scale=1),
+        ],
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    assert result["aggregate"]["export"]["status"] == "missing_quantity_unit"
+    assert result["aggregate"]["export"]["unit_value_usd_per_source_unit"] is None
+
+
 def test_parent_heading_rollup_requires_explicit_provenance():
     usd = {"reports": [_report("import", "2846", 6.0, value_type="usd")]}
     quantity = {
