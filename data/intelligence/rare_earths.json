@@ -10,9 +10,9 @@
     "mapping_status": "heading_validated"
   },
   "coverage": {
-    "first_period": "2019-01",
+    "first_period": "2018-01",
     "last_period": "2026-06",
-    "months_observed": 90,
+    "months_observed": 102,
     "history_gaps": []
   },
   "latest": {
@@ -90,6 +90,2105 @@
     }
   },
   "monthly": [
+    {
+      "period": "2018-01",
+      "imports": 1.05,
+      "exports": 1.42,
+      "balance": 0.37,
+      "import_yoy_pct": 54.41,
+      "export_yoy_pct": 32.71,
+      "ytd_imports": 1.05,
+      "ytd_exports": 1.42,
+      "dependency": {
+        "score": 20.7,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 59.05,
+        "hhi": 3968.3,
+        "top_partners": [
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.62,
+            "share_pct": 59.05
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.16,
+            "share_pct": 15.24
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.13,
+            "share_pct": 12.38
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.1,
+            "share_pct": 9.52
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.02,
+            "share_pct": 1.9
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 33.8,
+        "hhi": 3030.2,
+        "top_partners": [
+          {
+            "partner_country": "SPAIN",
+            "value": 0.48,
+            "share_pct": 33.8
+          },
+          {
+            "partner_country": "MALAYSIA",
+            "value": 0.44,
+            "share_pct": 30.99
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.43,
+            "share_pct": 30.28
+          },
+          {
+            "partner_country": "NETHERLAND",
+            "value": 0.04,
+            "share_pct": 2.82
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.02,
+            "share_pct": 1.41
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.62,
+          "share_pct": 59.05
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.16,
+          "share_pct": 15.24
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.13,
+          "share_pct": 12.38
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.1,
+          "share_pct": 9.52
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.02,
+          "share_pct": 1.9
+        },
+        {
+          "partner_country": "AUSTRIA",
+          "value": 0.01,
+          "share_pct": 0.95
+        },
+        {
+          "partner_country": "SWEDEN",
+          "value": 0.01,
+          "share_pct": 0.95
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "SPAIN",
+          "value": 0.48,
+          "share_pct": 33.8
+        },
+        {
+          "partner_country": "MALAYSIA",
+          "value": 0.44,
+          "share_pct": 30.99
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.43,
+          "share_pct": 30.28
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.04,
+          "share_pct": 2.82
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.02,
+          "share_pct": 1.41
+        },
+        {
+          "partner_country": "PAKISTAN IR",
+          "value": 0.01,
+          "share_pct": 0.7
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.05,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.42,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-02",
+      "imports": 0.64,
+      "exports": 1.11,
+      "balance": 0.47,
+      "import_yoy_pct": -4.48,
+      "export_yoy_pct": 4.72,
+      "ytd_imports": 1.69,
+      "ytd_exports": 2.53,
+      "dependency": {
+        "score": 15.4,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 42.19,
+        "hhi": 3237.3,
+        "top_partners": [
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.27,
+            "share_pct": 42.19
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.23,
+            "share_pct": 35.94
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.07,
+            "share_pct": 10.94
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.03,
+            "share_pct": 4.69
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.03,
+            "share_pct": 4.69
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 40.54,
+        "hhi": 3146.7,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.45,
+            "share_pct": 40.54
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.34,
+            "share_pct": 30.63
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 0.26,
+            "share_pct": 23.42
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.04,
+            "share_pct": 3.6
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.02,
+            "share_pct": 1.8
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.27,
+          "share_pct": 42.19
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.23,
+          "share_pct": 35.94
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.07,
+          "share_pct": 10.94
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.03,
+          "share_pct": 4.69
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.03,
+          "share_pct": 4.69
+        },
+        {
+          "partner_country": "AUSTRIA",
+          "value": 0.01,
+          "share_pct": 1.56
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.45,
+          "share_pct": 40.54
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.34,
+          "share_pct": 30.63
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.26,
+          "share_pct": 23.42
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.04,
+          "share_pct": 3.6
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.02,
+          "share_pct": 1.8
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 0.64,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.11,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-03",
+      "imports": 1.17,
+      "exports": 1.86,
+      "balance": 0.69,
+      "import_yoy_pct": 216.22,
+      "export_yoy_pct": 16.25,
+      "ytd_imports": 2.86,
+      "ytd_exports": 4.4,
+      "dependency": {
+        "score": 28.8,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 77.78,
+        "hhi": 6218.9,
+        "top_partners": [
+          {
+            "partner_country": "JAPAN",
+            "value": 0.91,
+            "share_pct": 77.78
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.11,
+            "share_pct": 9.4
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.1,
+            "share_pct": 8.55
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.03,
+            "share_pct": 2.56
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.01,
+            "share_pct": 0.85
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 49.73,
+        "hhi": 3253.5,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.92,
+            "share_pct": 49.73
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.43,
+            "share_pct": 23.24
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 0.26,
+            "share_pct": 14.05
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.09,
+            "share_pct": 4.86
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.06,
+            "share_pct": 3.24
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "JAPAN",
+          "value": 0.91,
+          "share_pct": 77.78
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.11,
+          "share_pct": 9.4
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.1,
+          "share_pct": 8.55
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.03,
+          "share_pct": 2.56
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.01,
+          "share_pct": 0.85
+        },
+        {
+          "partner_country": "U K",
+          "value": 0.01,
+          "share_pct": 0.85
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.92,
+          "share_pct": 49.73
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.43,
+          "share_pct": 23.24
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.26,
+          "share_pct": 14.05
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.09,
+          "share_pct": 4.86
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.06,
+          "share_pct": 3.24
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.04,
+          "share_pct": 2.16
+        },
+        {
+          "partner_country": "ITALY",
+          "value": 0.03,
+          "share_pct": 1.62
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.02,
+          "share_pct": 1.08
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.17,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.86,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-04",
+      "imports": 0.62,
+      "exports": 1.73,
+      "balance": 1.11,
+      "import_yoy_pct": -47.9,
+      "export_yoy_pct": 179.03,
+      "ytd_imports": 3.48,
+      "ytd_exports": 6.12,
+      "dependency": {
+        "score": 15.4,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 44.44,
+        "hhi": 2839.5,
+        "top_partners": [
+          {
+            "partner_country": "JAPAN",
+            "value": 0.28,
+            "share_pct": 44.44
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.14,
+            "share_pct": 22.22
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.1,
+            "share_pct": 15.87
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.06,
+            "share_pct": 9.52
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.03,
+            "share_pct": 4.76
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 54.65,
+        "hhi": 3905.5,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.94,
+            "share_pct": 54.65
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.47,
+            "share_pct": 27.33
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 0.22,
+            "share_pct": 12.79
+          },
+          {
+            "partner_country": "NETHERLAND",
+            "value": 0.04,
+            "share_pct": 2.33
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.02,
+            "share_pct": 1.16
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "JAPAN",
+          "value": 0.28,
+          "share_pct": 44.44
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.14,
+          "share_pct": 22.22
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.1,
+          "share_pct": 15.87
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.06,
+          "share_pct": 9.52
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.03,
+          "share_pct": 4.76
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.01,
+          "share_pct": 1.59
+        },
+        {
+          "partner_country": "SINGAPORE",
+          "value": 0.01,
+          "share_pct": 1.59
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.94,
+          "share_pct": 54.65
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.47,
+          "share_pct": 27.33
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.22,
+          "share_pct": 12.79
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.04,
+          "share_pct": 2.33
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.02,
+          "share_pct": 1.16
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.02,
+          "share_pct": 1.16
+        },
+        {
+          "partner_country": "KENYA",
+          "value": 0.01,
+          "share_pct": 0.58
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 0.62,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.73,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-05",
+      "imports": 0.62,
+      "exports": 1.53,
+      "balance": 0.91,
+      "import_yoy_pct": -30.34,
+      "export_yoy_pct": -7.27,
+      "ytd_imports": 4.11,
+      "ytd_exports": 7.65,
+      "dependency": {
+        "score": 11.3,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 31.25,
+        "hhi": 2319.3,
+        "top_partners": [
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.2,
+            "share_pct": 31.25
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.2,
+            "share_pct": 31.25
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.1,
+            "share_pct": 15.62
+          },
+          {
+            "partner_country": "U K",
+            "value": 0.06,
+            "share_pct": 9.38
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.02,
+            "share_pct": 3.12
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 57.52,
+        "hhi": 4034.8,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.88,
+            "share_pct": 57.52
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.38,
+            "share_pct": 24.84
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 0.13,
+            "share_pct": 8.5
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.09,
+            "share_pct": 5.88
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.02,
+            "share_pct": 1.31
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.2,
+          "share_pct": 31.25
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.2,
+          "share_pct": 31.25
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.1,
+          "share_pct": 15.62
+        },
+        {
+          "partner_country": "U K",
+          "value": 0.06,
+          "share_pct": 9.38
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.02,
+          "share_pct": 3.12
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.02,
+          "share_pct": 3.12
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.02,
+          "share_pct": 3.12
+        },
+        {
+          "partner_country": "AUSTRIA",
+          "value": 0.01,
+          "share_pct": 1.56
+        },
+        {
+          "partner_country": "HONG KONG",
+          "value": 0.01,
+          "share_pct": 1.56
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.88,
+          "share_pct": 57.52
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.38,
+          "share_pct": 24.84
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.13,
+          "share_pct": 8.5
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.09,
+          "share_pct": 5.88
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.02,
+          "share_pct": 1.31
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.01,
+          "share_pct": 0.65
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.01,
+          "share_pct": 0.65
+        },
+        {
+          "partner_country": "SWITZERLAND",
+          "value": 0.01,
+          "share_pct": 0.65
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 0.62,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.53,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-06",
+      "imports": 1.35,
+      "exports": 1.48,
+      "balance": 0.13,
+      "import_yoy_pct": 87.5,
+      "export_yoy_pct": 4.96,
+      "ytd_imports": 5.45,
+      "ytd_exports": 9.13,
+      "dependency": {
+        "score": 12.4,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 36.09,
+        "hhi": 2223.4,
+        "top_partners": [
+          {
+            "partner_country": "JAPAN",
+            "value": 0.48,
+            "share_pct": 36.09
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.28,
+            "share_pct": 21.05
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.2,
+            "share_pct": 15.04
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.19,
+            "share_pct": 14.29
+          },
+          {
+            "partner_country": "AUSTRIA",
+            "value": 0.06,
+            "share_pct": 4.51
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 58.11,
+        "hhi": 3965.5,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.86,
+            "share_pct": 58.11
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.26,
+            "share_pct": 17.57
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 0.22,
+            "share_pct": 14.86
+          },
+          {
+            "partner_country": "NETHERLAND",
+            "value": 0.11,
+            "share_pct": 7.43
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.03,
+            "share_pct": 2.03
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "JAPAN",
+          "value": 0.48,
+          "share_pct": 36.09
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.28,
+          "share_pct": 21.05
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.2,
+          "share_pct": 15.04
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.19,
+          "share_pct": 14.29
+        },
+        {
+          "partner_country": "AUSTRIA",
+          "value": 0.06,
+          "share_pct": 4.51
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.06,
+          "share_pct": 4.51
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.03,
+          "share_pct": 2.26
+        },
+        {
+          "partner_country": "KOREA RP",
+          "value": 0.01,
+          "share_pct": 0.75
+        },
+        {
+          "partner_country": "SINGAPORE",
+          "value": 0.01,
+          "share_pct": 0.75
+        },
+        {
+          "partner_country": "SWEDEN",
+          "value": 0.01,
+          "share_pct": 0.75
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.86,
+          "share_pct": 58.11
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.26,
+          "share_pct": 17.57
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.22,
+          "share_pct": 14.86
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.11,
+          "share_pct": 7.43
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.03,
+          "share_pct": 2.03
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.35,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.48,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-07",
+      "imports": 1.16,
+      "exports": 1.54,
+      "balance": 0.38,
+      "import_yoy_pct": 43.21,
+      "export_yoy_pct": 24.19,
+      "ytd_imports": 6.61,
+      "ytd_exports": 10.67,
+      "dependency": {
+        "score": 10.3,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 30.7,
+        "hhi": 1719.0,
+        "top_partners": [
+          {
+            "partner_country": "JAPAN",
+            "value": 0.35,
+            "share_pct": 30.7
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.19,
+            "share_pct": 16.67
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.17,
+            "share_pct": 14.91
+          },
+          {
+            "partner_country": "AUSTRIA",
+            "value": 0.11,
+            "share_pct": 9.65
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.1,
+            "share_pct": 8.77
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 57.52,
+        "hhi": 4015.1,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.88,
+            "share_pct": 57.52
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.37,
+            "share_pct": 24.18
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 0.13,
+            "share_pct": 8.5
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.09,
+            "share_pct": 5.88
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.06,
+            "share_pct": 3.92
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "JAPAN",
+          "value": 0.35,
+          "share_pct": 30.7
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.19,
+          "share_pct": 16.67
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.17,
+          "share_pct": 14.91
+        },
+        {
+          "partner_country": "AUSTRIA",
+          "value": 0.11,
+          "share_pct": 9.65
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.1,
+          "share_pct": 8.77
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.08,
+          "share_pct": 7.02
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.07,
+          "share_pct": 6.14
+        },
+        {
+          "partner_country": "U K",
+          "value": 0.04,
+          "share_pct": 3.51
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.03,
+          "share_pct": 2.63
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.88,
+          "share_pct": 57.52
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.37,
+          "share_pct": 24.18
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.13,
+          "share_pct": 8.5
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.09,
+          "share_pct": 5.88
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.06,
+          "share_pct": 3.92
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.16,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.54,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-08",
+      "imports": 1.6,
+      "exports": 1.65,
+      "balance": 0.05,
+      "import_yoy_pct": 39.13,
+      "export_yoy_pct": -5.71,
+      "ytd_imports": 8.21,
+      "ytd_exports": 12.32,
+      "dependency": {
+        "score": 19.0,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 54.66,
+        "hhi": 3526.5,
+        "top_partners": [
+          {
+            "partner_country": "JAPAN",
+            "value": 0.88,
+            "share_pct": 54.66
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.28,
+            "share_pct": 17.39
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.2,
+            "share_pct": 12.42
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.11,
+            "share_pct": 6.83
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.09,
+            "share_pct": 5.59
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 48.78,
+        "hhi": 3160.3,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.8,
+            "share_pct": 48.78
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 0.35,
+            "share_pct": 21.34
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.27,
+            "share_pct": 16.46
+          },
+          {
+            "partner_country": "ITALY",
+            "value": 0.08,
+            "share_pct": 4.88
+          },
+          {
+            "partner_country": "KOREA RP",
+            "value": 0.08,
+            "share_pct": 4.88
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "JAPAN",
+          "value": 0.88,
+          "share_pct": 54.66
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.28,
+          "share_pct": 17.39
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.2,
+          "share_pct": 12.42
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.11,
+          "share_pct": 6.83
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.09,
+          "share_pct": 5.59
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.03,
+          "share_pct": 1.86
+        },
+        {
+          "partner_country": "AUSTRIA",
+          "value": 0.01,
+          "share_pct": 0.62
+        },
+        {
+          "partner_country": "SWEDEN",
+          "value": 0.01,
+          "share_pct": 0.62
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.8,
+          "share_pct": 48.78
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.35,
+          "share_pct": 21.34
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.27,
+          "share_pct": 16.46
+        },
+        {
+          "partner_country": "ITALY",
+          "value": 0.08,
+          "share_pct": 4.88
+        },
+        {
+          "partner_country": "KOREA RP",
+          "value": 0.08,
+          "share_pct": 4.88
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.04,
+          "share_pct": 2.44
+        },
+        {
+          "partner_country": "KENYA",
+          "value": 0.01,
+          "share_pct": 0.61
+        },
+        {
+          "partner_country": "SUDAN",
+          "value": 0.01,
+          "share_pct": 0.61
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.6,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.65,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-09",
+      "imports": 1.52,
+      "exports": 1.95,
+      "balance": 0.43,
+      "import_yoy_pct": 28.81,
+      "export_yoy_pct": -22.62,
+      "ytd_imports": 9.73,
+      "ytd_exports": 14.28,
+      "dependency": {
+        "score": 12.1,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 33.55,
+        "hhi": 2469.7,
+        "top_partners": [
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.51,
+            "share_pct": 33.55
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.45,
+            "share_pct": 29.61
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.27,
+            "share_pct": 17.76
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.17,
+            "share_pct": 11.18
+          },
+          {
+            "partner_country": "MEXICO",
+            "value": 0.07,
+            "share_pct": 4.61
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 40.82,
+        "hhi": 3412.1,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.8,
+            "share_pct": 40.82
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 0.79,
+            "share_pct": 40.31
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.19,
+            "share_pct": 9.69
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.08,
+            "share_pct": 4.08
+          },
+          {
+            "partner_country": "KOREA RP",
+            "value": 0.06,
+            "share_pct": 3.06
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.51,
+          "share_pct": 33.55
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.45,
+          "share_pct": 29.61
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.27,
+          "share_pct": 17.76
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.17,
+          "share_pct": 11.18
+        },
+        {
+          "partner_country": "MEXICO",
+          "value": 0.07,
+          "share_pct": 4.61
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.03,
+          "share_pct": 1.97
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.02,
+          "share_pct": 1.32
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.8,
+          "share_pct": 40.82
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.79,
+          "share_pct": 40.31
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.19,
+          "share_pct": 9.69
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.08,
+          "share_pct": 4.08
+        },
+        {
+          "partner_country": "KOREA RP",
+          "value": 0.06,
+          "share_pct": 3.06
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.02,
+          "share_pct": 1.02
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.01,
+          "share_pct": 0.51
+        },
+        {
+          "partner_country": "U K",
+          "value": 0.01,
+          "share_pct": 0.51
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.52,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.95,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-10",
+      "imports": 1.26,
+      "exports": 2.15,
+      "balance": 0.89,
+      "import_yoy_pct": 20.0,
+      "export_yoy_pct": 3.37,
+      "ytd_imports": 11.0,
+      "ytd_exports": 16.43,
+      "dependency": {
+        "score": 14.1,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 41.27,
+        "hhi": 2499.4,
+        "top_partners": [
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.52,
+            "share_pct": 41.27
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.25,
+            "share_pct": 19.84
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.21,
+            "share_pct": 16.67
+          },
+          {
+            "partner_country": "AUSTRIA",
+            "value": 0.09,
+            "share_pct": 7.14
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.09,
+            "share_pct": 7.14
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 37.67,
+        "hhi": 2854.9,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.81,
+            "share_pct": 37.67
+          },
+          {
+            "partner_country": "MALAYSIA",
+            "value": 0.58,
+            "share_pct": 26.98
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.56,
+            "share_pct": 26.05
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.08,
+            "share_pct": 3.72
+          },
+          {
+            "partner_country": "ITALY",
+            "value": 0.06,
+            "share_pct": 2.79
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.52,
+          "share_pct": 41.27
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.25,
+          "share_pct": 19.84
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.21,
+          "share_pct": 16.67
+        },
+        {
+          "partner_country": "AUSTRIA",
+          "value": 0.09,
+          "share_pct": 7.14
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.09,
+          "share_pct": 7.14
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.05,
+          "share_pct": 3.97
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.03,
+          "share_pct": 2.38
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.01,
+          "share_pct": 0.79
+        },
+        {
+          "partner_country": "SINGAPORE",
+          "value": 0.01,
+          "share_pct": 0.79
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.81,
+          "share_pct": 37.67
+        },
+        {
+          "partner_country": "MALAYSIA",
+          "value": 0.58,
+          "share_pct": 26.98
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.56,
+          "share_pct": 26.05
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.08,
+          "share_pct": 3.72
+        },
+        {
+          "partner_country": "ITALY",
+          "value": 0.06,
+          "share_pct": 2.79
+        },
+        {
+          "partner_country": "KOREA RP",
+          "value": 0.06,
+          "share_pct": 2.79
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.26,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 2.15,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-11",
+      "imports": 1.28,
+      "exports": 1.85,
+      "balance": 0.57,
+      "import_yoy_pct": -4.48,
+      "export_yoy_pct": 17.83,
+      "ytd_imports": 12.28,
+      "ytd_exports": 18.28,
+      "dependency": {
+        "score": 10.9,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 31.78,
+        "hhi": 1982.5,
+        "top_partners": [
+          {
+            "partner_country": "JAPAN",
+            "value": 0.41,
+            "share_pct": 31.78
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.26,
+            "share_pct": 20.16
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.19,
+            "share_pct": 14.73
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.17,
+            "share_pct": 13.18
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.16,
+            "share_pct": 12.4
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 38.25,
+        "hhi": 2672.2,
+        "top_partners": [
+          {
+            "partner_country": "MALAYSIA",
+            "value": 0.7,
+            "share_pct": 38.25
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.56,
+            "share_pct": 30.6
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.26,
+            "share_pct": 14.21
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.1,
+            "share_pct": 5.46
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.09,
+            "share_pct": 4.92
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "JAPAN",
+          "value": 0.41,
+          "share_pct": 31.78
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.26,
+          "share_pct": 20.16
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.19,
+          "share_pct": 14.73
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.17,
+          "share_pct": 13.18
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.16,
+          "share_pct": 12.4
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.05,
+          "share_pct": 3.88
+        },
+        {
+          "partner_country": "AUSTRIA",
+          "value": 0.03,
+          "share_pct": 2.33
+        },
+        {
+          "partner_country": "SWEDEN",
+          "value": 0.01,
+          "share_pct": 0.78
+        },
+        {
+          "partner_country": "U K",
+          "value": 0.01,
+          "share_pct": 0.78
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "MALAYSIA",
+          "value": 0.7,
+          "share_pct": 38.25
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.56,
+          "share_pct": 30.6
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.26,
+          "share_pct": 14.21
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.1,
+          "share_pct": 5.46
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.09,
+          "share_pct": 4.92
+        },
+        {
+          "partner_country": "ITALY",
+          "value": 0.06,
+          "share_pct": 3.28
+        },
+        {
+          "partner_country": "MACEDONIA",
+          "value": 0.04,
+          "share_pct": 2.19
+        },
+        {
+          "partner_country": "KOREA RP",
+          "value": 0.02,
+          "share_pct": 1.09
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.28,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.85,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2018-12",
+      "imports": 1.76,
+      "exports": 1.9,
+      "balance": 0.14,
+      "import_yoy_pct": 47.9,
+      "export_yoy_pct": 45.04,
+      "ytd_imports": 14.04,
+      "ytd_exports": 20.18,
+      "dependency": {
+        "score": 10.9,
+        "risk": "low",
+        "import_reliance_pct": 0.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 30.11,
+        "hhi": 2257.2,
+        "top_partners": [
+          {
+            "partner_country": "U S A",
+            "value": 0.53,
+            "share_pct": 30.11
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.49,
+            "share_pct": 27.84
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.26,
+            "share_pct": 14.77
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.24,
+            "share_pct": 13.64
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.23,
+            "share_pct": 13.07
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 41.58,
+        "hhi": 2954.6,
+        "top_partners": [
+          {
+            "partner_country": "JAPAN",
+            "value": 0.79,
+            "share_pct": 41.58
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.55,
+            "share_pct": 28.95
+          },
+          {
+            "partner_country": "MALAYSIA",
+            "value": 0.36,
+            "share_pct": 18.95
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 0.07,
+            "share_pct": 3.68
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.06,
+            "share_pct": 3.16
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "U S A",
+          "value": 0.53,
+          "share_pct": 30.11
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.49,
+          "share_pct": 27.84
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.26,
+          "share_pct": 14.77
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.24,
+          "share_pct": 13.64
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.23,
+          "share_pct": 13.07
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.01,
+          "share_pct": 0.57
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "JAPAN",
+          "value": 0.79,
+          "share_pct": 41.58
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.55,
+          "share_pct": 28.95
+        },
+        {
+          "partner_country": "MALAYSIA",
+          "value": 0.36,
+          "share_pct": 18.95
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 0.07,
+          "share_pct": 3.68
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.06,
+          "share_pct": 3.16
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.03,
+          "share_pct": 1.58
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 0.03,
+          "share_pct": 1.58
+        },
+        {
+          "partner_country": "ITALY",
+          "value": 0.01,
+          "share_pct": 0.53
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.76,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "2846",
+          "description": null,
+          "value": 1.9,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "not_available"
+      },
+      "status": "ok"
+    },
     {
       "period": "2019-01",
       "imports": 1.49,
@@ -14787,6 +16886,132 @@
     }
   ],
   "annual": [
+    {
+      "year": "2018",
+      "months_observed": 12,
+      "coverage_status": "complete",
+      "imports": 14.03,
+      "exports": 20.17,
+      "balance": 6.14,
+      "average_monthly_imports": 1.169167,
+      "average_monthly_exports": 1.680833,
+      "supplier_concentration": {
+        "top_partner_share_pct": 33.76,
+        "hhi": 1999.8,
+        "top_partners": [
+          {
+            "partner_country": "JAPAN",
+            "value": 4.74,
+            "share_pct": 33.76
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 2.46,
+            "share_pct": 17.52
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 2.3,
+            "share_pct": 16.38
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 2.02,
+            "share_pct": 14.39
+          },
+          {
+            "partner_country": "U S A",
+            "value": 1.04,
+            "share_pct": 7.41
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 42.0,
+        "hhi": 2647.4,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 8.45,
+            "share_pct": 42.0
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 4.75,
+            "share_pct": 23.61
+          },
+          {
+            "partner_country": "SPAIN",
+            "value": 2.87,
+            "share_pct": 14.26
+          },
+          {
+            "partner_country": "MALAYSIA",
+            "value": 2.08,
+            "share_pct": 10.34
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.58,
+            "share_pct": 2.88
+          }
+        ]
+      },
+      "top_import_partners": [
+        {
+          "partner_country": "JAPAN",
+          "value": 4.74,
+          "share_pct": 33.76
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 2.46,
+          "share_pct": 17.52
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 2.3,
+          "share_pct": 16.38
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 2.02,
+          "share_pct": 14.39
+        },
+        {
+          "partner_country": "U S A",
+          "value": 1.04,
+          "share_pct": 7.41
+        }
+      ],
+      "top_export_partners": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 8.45,
+          "share_pct": 42.0
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 4.75,
+          "share_pct": 23.61
+        },
+        {
+          "partner_country": "SPAIN",
+          "value": 2.87,
+          "share_pct": 14.26
+        },
+        {
+          "partner_country": "MALAYSIA",
+          "value": 2.08,
+          "share_pct": 10.34
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.58,
+          "share_pct": 2.88
+        }
+      ]
+    },
     {
       "year": "2019",
       "months_observed": 12,
