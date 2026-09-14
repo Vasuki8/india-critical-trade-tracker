@@ -18,6 +18,34 @@ jobs:
         run: uv python install 3.12
       - name: Sync dependencies
         run: uv sync --dev
+      - name: Probe live TradeStat value selectors
+        run: |
+          uv run python - <<'PY'
+          import requests
+          from bs4 import BeautifulSoup
+
+          endpoints = {
+              'import': ('https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import', 'cwacimReportVal'),
+              'export': ('https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export', 'cwacexReportVal'),
+          }
+          headers = {'User-Agent': 'india-critical-trade-tracker/diagnostic'}
+          for label, (url, expected_name) in endpoints.items():
+              r = requests.get(url, timeout=90, headers=headers)
+              r.raise_for_status()
+              soup = BeautifulSoup(r.text, 'html.parser')
+              print(f'=== {label.upper()} {r.status_code} ===')
+              select = soup.find('select', attrs={'name': expected_name})
+              if select is None:
+                  print(f'Expected select {expected_name!r} not found. Available selects:')
+                  for s in soup.find_all('select'):
+                      print('SELECT', 'name=', repr(s.get('name')), 'id=', repr(s.get('id')))
+                      for opt in s.find_all('option'):
+                          print('  OPTION', 'value=', repr(opt.get('value')), 'text=', repr(opt.get_text(' ', strip=True)))
+                  continue
+              print('SELECT', 'name=', repr(select.get('name')), 'id=', repr(select.get('id')))
+              for opt in select.find_all('option'):
+                  print('OPTION', 'value=', repr(opt.get('value')), 'text=', repr(opt.get_text(' ', strip=True)))
+          PY
       - name: Validate commodity master
         run: uv run python scripts/validate_data.py
       - name: Run tests
