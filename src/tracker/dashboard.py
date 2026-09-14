@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .aggregation import portfolio_summary
+from .aggregation import aggregate_commodity, portfolio_summary
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -48,18 +48,18 @@ def build_dashboard(observations_root: Path, out_path: Path) -> dict[str, Any]:
         summary = portfolio_summary(reports)
         monthly.append({"period": period_dir.name, **summary})
         if period_dir.name == latest_period:
-            latest_commodities = [
-                {
+            latest_commodities = []
+            for doc in docs:
+                live_metrics = aggregate_commodity(doc.get("reports", [])) if doc.get("reports") else doc.get("metrics", {})
+                latest_commodities.append({
                     "id": doc["commodity"]["id"],
                     "name": doc["commodity"]["name"],
                     "category": doc["commodity"]["category"],
                     "hs_codes": doc["commodity"]["hs_codes"],
                     "mapping_status": doc["commodity"]["mapping_status"],
-                    **doc.get("metrics", {}),
+                    **live_metrics,
                     "status": doc.get("status", "ok"),
-                }
-                for doc in docs
-            ]
+                })
 
     latest_summary = monthly[-1].copy()
     latest_summary.pop("period", None)
