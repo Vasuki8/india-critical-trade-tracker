@@ -54,6 +54,18 @@ jobs:
           source_changed = any(before.get(k) != after.get(k) for k in fields)
           awaiting_usd = not dashboard.get('as_of') or dashboard.get('status') == 'awaiting_trade_ingestion'
 
+          def quantity_observation_needs_refresh(path: Path) -> bool:
+              if not path.exists():
+                  return True
+              try:
+                  doc = json.loads(path.read_text(encoding='utf-8'))
+              except (OSError, json.JSONDecodeError):
+                  return True
+              if doc.get('quantity_scale_to_source_unit') != 1000:
+                  return True
+              reports = doc.get('reports', [])
+              return any(report.get('quantity_scale_to_source_unit') != 1000 for report in reports)
+
           as_of = dashboard.get('as_of')
           quantity_missing = []
           if as_of:
@@ -67,7 +79,7 @@ jobs:
                   )
                   if quantity_ready:
                       path = Path('data/observations') / as_of / f"{commodity['id']}.quantity.json"
-                      if not path.exists():
+                      if quantity_observation_needs_refresh(path):
                           quantity_missing.append(commodity['id'])
 
           ingest_usd = source_changed or awaiting_usd
@@ -81,7 +93,7 @@ jobs:
           print({
               'source_changed': source_changed,
               'awaiting_usd': awaiting_usd,
-              'quantity_missing': quantity_missing,
+              'quantity_missing_or_stale': quantity_missing,
               'ingest_usd': ingest_usd,
               'ingest_quantity': ingest_quantity,
           })
