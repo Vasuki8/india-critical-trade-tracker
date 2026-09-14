@@ -5,7 +5,7 @@ from src.tracker.releases import parse_release_month, revision_refresh_range
 
 def test_parse_release_month():
     assert parse_release_month("Mar 2026") == (2026, 3)
-    assert parse_release_month(" december 2025 ") == (2025, 12)
+    assert parse_release_month(" dec 2025 ") == (2025, 12)
     assert parse_release_month("2026-03") is None
     assert parse_release_month(None) is None
 
