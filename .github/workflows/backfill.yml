@@ -6,12 +6,12 @@ on:
       start_period:
         description: "First calendar month (YYYY-MM)"
         required: true
-        default: "2025-01"
+        default: "2024-01"
         type: string
       end_period:
         description: "Last calendar month (YYYY-MM)"
         required: true
-        default: "2025-12"
+        default: "2024-12"
         type: string
       commodity:
         description: "Commodity id, or 'all'"
@@ -41,12 +41,6 @@ on:
         required: true
         default: false
         type: boolean
-  # Temporary bootstrap trigger for the bounded 2025 historical batch.
-  # Remove after the resulting data commit lands; manual dispatch remains canonical.
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/backfill.yml"
 
 permissions:
   contents: write
@@ -60,12 +54,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      START_PERIOD: ${{ github.event_name == 'workflow_dispatch' && inputs.start_period || '2025-01' }}
-      END_PERIOD: ${{ github.event_name == 'workflow_dispatch' && inputs.end_period || '2025-12' }}
-      COMMODITY: ${{ github.event_name == 'workflow_dispatch' && inputs.commodity || 'all' }}
-      VALUE_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.value_type || 'both' }}
-      TRADE_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.trade_type || 'both' }}
-      FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force || false }}
+      START_PERIOD: ${{ inputs.start_period }}
+      END_PERIOD: ${{ inputs.end_period }}
+      COMMODITY: ${{ inputs.commodity }}
+      VALUE_TYPE: ${{ inputs.value_type }}
+      TRADE_TYPE: ${{ inputs.trade_type }}
+      FORCE: ${{ inputs.force }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -151,7 +145,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/dashboard.json data/observations/
+          git add data/dashboard.json data/observations/ data/revisions/
           if git diff --cached --quiet; then
             echo "No tracked data change"
             exit 0
