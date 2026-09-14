@@ -1,7 +1,11 @@
 import json
 from pathlib import Path
 
-from scripts.ingest_tradestat import is_queryable_commodity, latest_period_from_status
+from scripts.ingest_tradestat import (
+    hs_codes_for_period,
+    is_queryable_commodity,
+    latest_period_from_status,
+)
 
 
 def test_latest_period_from_source_status(tmp_path: Path):
@@ -11,6 +15,44 @@ def test_latest_period_from_source_status(tmp_path: Path):
 
 
 def test_review_mapping_is_skipped():
-    ok, reason = is_queryable_commodity({"mapping_status": "version_sensitive_needs_hs8_review", "hs_codes": ["85414"]})
+    ok, reason = is_queryable_commodity(
+        {"mapping_status": "version_sensitive_needs_hs8_review", "hs_codes": ["85414200"]}
+    )
     assert not ok
     assert "review" in reason
+
+
+def test_quantity_accepts_only_hs8():
+    ok, reason = is_queryable_commodity(
+        {"mapping_status": "hs8_validated", "hs_codes": ["28252000", "28369100"]},
+        value_type="quantity",
+    )
+    assert ok
+    assert reason is None
+
+    ok, reason = is_queryable_commodity(
+        {"mapping_status": "heading_validated", "hs_codes": ["2709"]},
+        value_type="quantity",
+    )
+    assert not ok
+    assert "HS8" in reason
+
+
+def test_solar_classification_eras_do_not_stitch_transition_month():
+    solar = {
+        "hs_codes": ["85414200", "85414300"],
+        "classification_transition_periods": ["2022-02"],
+        "classification_eras": [
+            {"from": "2018-01", "through": "2022-01", "hs_codes": ["85414011", "85414012"]},
+            {"from": "2022-03", "through": None, "hs_codes": ["85414200", "85414300"]},
+        ],
+    }
+
+    old_codes, _ = hs_codes_for_period(solar, "2022-01")
+    transition_codes, transition_note = hs_codes_for_period(solar, "2022-02")
+    new_codes, _ = hs_codes_for_period(solar, "2022-03")
+
+    assert old_codes == ["85414011", "85414012"]
+    assert transition_codes == []
+    assert "transition" in transition_note
+    assert new_codes == ["85414200", "85414300"]
