@@ -52,6 +52,11 @@ def _validate_quantity_mapping(item: dict, *, prefix: str) -> list[str]:
             f"{prefix}.quantity_mapping: enabled quantity mappings must use mapping_status 'hs8_validated'"
         )
 
+    rollup = quantity.get("rollup_to_value_mapping", False)
+    if not isinstance(rollup, bool):
+        errors.append(f"{prefix}.quantity_mapping: rollup_to_value_mapping must be boolean")
+        rollup = False
+
     if mode == "same_as_value":
         if item.get("mapping_status") != "hs8_validated":
             errors.append(
@@ -60,6 +65,10 @@ def _validate_quantity_mapping(item: dict, *, prefix: str) -> list[str]:
         if "hs_codes" in quantity or "classification_eras" in quantity:
             errors.append(
                 f"{prefix}.quantity_mapping: same_as_value must inherit codes/eras instead of redefining them"
+            )
+        if rollup:
+            errors.append(
+                f"{prefix}.quantity_mapping: rollup_to_value_mapping is only valid for separate mappings"
             )
         return errors
 
@@ -74,6 +83,27 @@ def _validate_quantity_mapping(item: dict, *, prefix: str) -> list[str]:
         errors.append(
             f"{prefix}.quantity_mapping: separate quantity hs_codes must all be HS8"
         )
+
+    if rollup:
+        value_codes = item.get("hs_codes")
+        if not isinstance(value_codes, list) or not value_codes:
+            errors.append(
+                f"{prefix}.quantity_mapping: rollup requires a non-empty monetary hs_codes mapping"
+            )
+        else:
+            uncovered = [
+                code
+                for code in codes
+                if isinstance(code, str)
+                and not any(
+                    isinstance(parent, str) and len(parent) < len(code) and code.startswith(parent)
+                    for parent in value_codes
+                )
+            ]
+            if uncovered:
+                errors.append(
+                    f"{prefix}.quantity_mapping: rollup quantity codes must be children of the monetary mapping"
+                )
 
     transitions = quantity.get("classification_transition_periods", [])
     eras = quantity.get("classification_eras", [])
