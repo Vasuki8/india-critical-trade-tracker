@@ -52,12 +52,12 @@ def test_parser_extracts_month_value_and_partner_rows():
     assert doc["source_quantity_unit"] == "TON"
 
 
-def test_explicit_no_data_response_is_zero_not_failure():
+def test_missing_result_table_is_no_data():
     html = """
     <html><body>
       <input type="hidden" name="_token" value="abc123" />
       <div>Data last updated on: 13/08/2026</div>
-      <div>No Result Found</div>
+      <div>Commodity search completed.</div>
     </body></html>
     """
     doc = parse_commodity_all_countries(
@@ -69,10 +69,10 @@ def test_explicit_no_data_response_is_zero_not_failure():
     assert doc["totals"]["previous_year_value"] is None
 
 
-def test_unrecognized_missing_table_is_still_a_failure():
+def test_fatal_missing_table_response_is_failure():
     with pytest.raises(TradeStatError):
         parse_commodity_all_countries(
-            "<html><body>Unexpected server response</body></html>",
+            "<html><body>Internal Server Error</body></html>",
             hscode="2709", month=6, year=2026, trade_type="export"
         )
 
