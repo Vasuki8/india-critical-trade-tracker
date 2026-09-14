@@ -25,6 +25,8 @@ MONTHS = {
     "aug": 8, "august": 8, "sep": 9, "sept": 9, "september": 9, "oct": 10,
     "october": 10, "nov": 11, "november": 11, "dec": 12, "december": 12,
 }
+QUANTITY_SCALE_TO_SOURCE_UNIT = 1_000
+QUANTITY_SCALE_NOTE = "TradeStat quantity values are thousands of the displayed source unit (for example KGS or NOS)."
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -115,6 +117,9 @@ def ingest_one(
                     value_type=value_type,
                     year_type=year_type,
                 )
+                if value_type == "quantity":
+                    report["quantity_scale_to_source_unit"] = QUANTITY_SCALE_TO_SOURCE_UNIT
+                    report["quantity_scale_note"] = QUANTITY_SCALE_NOTE
                 reports.append(report)
                 print(f"OK {period} {commodity['id']} {trade_type} HS {hs_code}")
             except Exception as exc:
@@ -129,6 +134,8 @@ def ingest_one(
         "period": period,
         "value_type": value_type,
         "year_type": year_type,
+        "quantity_scale_to_source_unit": QUANTITY_SCALE_TO_SOURCE_UNIT if value_type == "quantity" else None,
+        "quantity_scale_note": QUANTITY_SCALE_NOTE if value_type == "quantity" else None,
         "commodity": {
             "id": commodity["id"],
             "name": commodity["name"],
