@@ -22,3 +22,5 @@ jobs:
         run: uv run python scripts/validate_data.py
       - name: Run tests
         run: uv run pytest -q
+      - name: Check dashboard JavaScript syntax
+        run: node --check assets/js/app.js
