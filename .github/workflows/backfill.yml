@@ -138,6 +138,7 @@ jobs:
           uv run pytest -q
           node --check assets/js/app.js
       - name: Commit historical data
+        shell: bash
         run: |
           if git diff --quiet; then
             echo "No repository data change"
@@ -145,7 +146,10 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/dashboard.json data/observations/ data/revisions/
+          git add data/dashboard.json data/observations/
+          if [[ -d data/revisions ]]; then
+            git add data/revisions/
+          fi
           if git diff --cached --quiet; then
             echo "No tracked data change"
             exit 0
