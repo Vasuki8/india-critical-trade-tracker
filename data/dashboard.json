@@ -1129,24 +1129,24 @@
       "status": "ok",
       "unit_values": {
         "status": "ok",
-        "method": "USD million \u00d7 1,000,000 divided by TradeStat quantity \u00d7 1,000 because DGCI&S reports quantity in thousand source units",
-        "quantity_scale_note": "Raw TradeStat quantity values are thousands of the displayed source unit (for example KGS or NOS).",
+        "method": "USD million \u00d7 1,000,000 divided by TradeStat MEIDB quantity in the displayed physical source unit",
+        "quantity_scale_note": "MEIDB quantity values are used directly in the displayed HS8 source unit; no thousand-unit multiplier is applied.",
         "aggregate": {
           "import": {
             "status": "ok",
             "usd_million": 3.34,
-            "raw_quantity_thousand_source_units": 175019.0,
-            "quantity": 175019000.0,
+            "raw_quantity_source_units": 175019.0,
+            "quantity": 175019.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.019084
+            "unit_value_usd_per_source_unit": 19.083642
           },
           "export": {
             "status": "ok",
             "usd_million": 1.85,
-            "raw_quantity_thousand_source_units": 56412.0,
-            "quantity": 56412000.0,
+            "raw_quantity_source_units": 56412.0,
+            "quantity": 56412.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.032794
+            "unit_value_usd_per_source_unit": 32.794441
           }
         },
         "by_hs_code": [
@@ -1155,44 +1155,44 @@
             "hs_code": "28252000",
             "status": "ok",
             "usd_million": 0.63,
-            "raw_quantity_thousand_source_units": 30950.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 30950000.0,
+            "raw_quantity_source_units": 30950.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 30950.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.020355
+            "unit_value_usd_per_source_unit": 20.355412
           },
           {
             "trade_type": "export",
             "hs_code": "28369100",
             "status": "ok",
             "usd_million": 1.22,
-            "raw_quantity_thousand_source_units": 25462.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 25462000.0,
+            "raw_quantity_source_units": 25462.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 25462.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.047915
+            "unit_value_usd_per_source_unit": 47.914539
           },
           {
             "trade_type": "import",
             "hs_code": "28252000",
             "status": "ok",
             "usd_million": 2.7,
-            "raw_quantity_thousand_source_units": 149513.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 149513000.0,
+            "raw_quantity_source_units": 149513.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 149513.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.018059
+            "unit_value_usd_per_source_unit": 18.05863
           },
           {
             "trade_type": "import",
             "hs_code": "28369100",
             "status": "ok",
             "usd_million": 0.64,
-            "raw_quantity_thousand_source_units": 25506.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 25506000.0,
+            "raw_quantity_source_units": 25506.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 25506.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.025092
+            "unit_value_usd_per_source_unit": 25.092135
           }
         ]
       }
@@ -1370,24 +1370,24 @@
       "status": "ok",
       "unit_values": {
         "status": "ok",
-        "method": "USD million \u00d7 1,000,000 divided by TradeStat quantity \u00d7 1,000 because DGCI&S reports quantity in thousand source units",
-        "quantity_scale_note": "Raw TradeStat quantity values are thousands of the displayed source unit (for example KGS or NOS).",
+        "method": "USD million \u00d7 1,000,000 divided by TradeStat MEIDB quantity in the displayed physical source unit",
+        "quantity_scale_note": "MEIDB quantity values are used directly in the displayed HS8 source unit; no thousand-unit multiplier is applied.",
         "aggregate": {
           "import": {
             "status": "ok",
             "usd_million": 1808.56,
-            "raw_quantity_thousand_source_units": 2659363375.0,
-            "quantity": 2659363375000.0,
+            "raw_quantity_source_units": 2659363375.0,
+            "quantity": 2659363375.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.00068
+            "unit_value_usd_per_source_unit": 0.680073
           },
           "export": {
             "status": "ok",
             "usd_million": 1.36,
-            "raw_quantity_thousand_source_units": 1323960.0,
-            "quantity": 1323960000.0,
+            "raw_quantity_source_units": 1323960.0,
+            "quantity": 1323960.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.001027
+            "unit_value_usd_per_source_unit": 1.027221
           }
         },
         "by_hs_code": [
@@ -1396,19 +1396,19 @@
             "hs_code": "27111100",
             "status": "ok",
             "usd_million": 1.36,
-            "raw_quantity_thousand_source_units": 1323960.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 1323960000.0,
+            "raw_quantity_source_units": 1323960.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 1323960.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.001027
+            "unit_value_usd_per_source_unit": 1.027221
           },
           {
             "trade_type": "export",
             "hs_code": "27112100",
             "status": "quantity_not_available",
             "usd_million": 0.0,
-            "raw_quantity_thousand_source_units": 0.0,
-            "quantity_scale_to_source_unit": 1000.0,
+            "raw_quantity_source_units": 0.0,
+            "quantity_scale_to_source_unit": 1.0,
             "quantity": 0.0,
             "quantity_unit": "KGS",
             "unit_value_usd_per_source_unit": null
@@ -1418,22 +1418,22 @@
             "hs_code": "27111100",
             "status": "ok",
             "usd_million": 1808.55,
-            "raw_quantity_thousand_source_units": 2659363374.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 2659363374000.0,
+            "raw_quantity_source_units": 2659363374.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 2659363374.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.00068
+            "unit_value_usd_per_source_unit": 0.680069
           },
           {
             "trade_type": "import",
             "hs_code": "27112100",
             "status": "ok",
             "usd_million": 0.01,
-            "raw_quantity_thousand_source_units": 1.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 1000.0,
+            "raw_quantity_source_units": 1.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 1.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 10.0
+            "unit_value_usd_per_source_unit": 10000.0
           }
         ]
       }
@@ -2185,24 +2185,24 @@
       "status": "ok",
       "unit_values": {
         "status": "ok",
-        "method": "USD million \u00d7 1,000,000 divided by TradeStat quantity \u00d7 1,000 because DGCI&S reports quantity in thousand source units",
-        "quantity_scale_note": "Raw TradeStat quantity values are thousands of the displayed source unit (for example KGS or NOS).",
+        "method": "USD million \u00d7 1,000,000 divided by TradeStat MEIDB quantity in the displayed physical source unit",
+        "quantity_scale_note": "MEIDB quantity values are used directly in the displayed HS8 source unit; no thousand-unit multiplier is applied.",
         "aggregate": {
           "import": {
             "status": "ok",
             "usd_million": 294.52,
-            "raw_quantity_thousand_source_units": 505476843.0,
-            "quantity": 505476843000.0,
+            "raw_quantity_source_units": 505476843.0,
+            "quantity": 505476843.0,
             "quantity_unit": "NOS",
-            "unit_value_usd_per_source_unit": 0.000583
+            "unit_value_usd_per_source_unit": 0.582658
           },
           "export": {
             "status": "ok",
             "usd_million": 12.65,
-            "raw_quantity_thousand_source_units": 3209445.0,
-            "quantity": 3209445000.0,
+            "raw_quantity_source_units": 3209445.0,
+            "quantity": 3209445.0,
             "quantity_unit": "NOS",
-            "unit_value_usd_per_source_unit": 0.003941
+            "unit_value_usd_per_source_unit": 3.941491
           }
         },
         "by_hs_code": [
@@ -2211,44 +2211,44 @@
             "hs_code": "85414200",
             "status": "ok",
             "usd_million": 1.89,
-            "raw_quantity_thousand_source_units": 3108014.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 3108014000.0,
+            "raw_quantity_source_units": 3108014.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 3108014.0,
             "quantity_unit": "NOS",
-            "unit_value_usd_per_source_unit": 0.000608
+            "unit_value_usd_per_source_unit": 0.608105
           },
           {
             "trade_type": "export",
             "hs_code": "85414300",
             "status": "ok",
             "usd_million": 10.76,
-            "raw_quantity_thousand_source_units": 101431.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 101431000.0,
+            "raw_quantity_source_units": 101431.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 101431.0,
             "quantity_unit": "NOS",
-            "unit_value_usd_per_source_unit": 0.106082
+            "unit_value_usd_per_source_unit": 106.081967
           },
           {
             "trade_type": "import",
             "hs_code": "85414200",
             "status": "ok",
             "usd_million": 265.39,
-            "raw_quantity_thousand_source_units": 505083351.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 505083351000.0,
+            "raw_quantity_source_units": 505083351.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 505083351.0,
             "quantity_unit": "NOS",
-            "unit_value_usd_per_source_unit": 0.000525
+            "unit_value_usd_per_source_unit": 0.525438
           },
           {
             "trade_type": "import",
             "hs_code": "85414300",
             "status": "ok",
             "usd_million": 29.13,
-            "raw_quantity_thousand_source_units": 393492.0,
-            "quantity_scale_to_source_unit": 1000.0,
-            "quantity": 393492000.0,
+            "raw_quantity_source_units": 393492.0,
+            "quantity_scale_to_source_unit": 1.0,
+            "quantity": 393492.0,
             "quantity_unit": "NOS",
-            "unit_value_usd_per_source_unit": 0.074029
+            "unit_value_usd_per_source_unit": 74.029459
           }
         ]
       }
@@ -2411,7 +2411,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2419,7 +2419,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2445,7 +2445,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2453,7 +2453,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2479,7 +2479,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2487,7 +2487,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2513,7 +2513,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2521,7 +2521,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2547,7 +2547,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2555,7 +2555,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2581,7 +2581,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2589,7 +2589,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2615,7 +2615,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2623,7 +2623,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2649,7 +2649,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2657,7 +2657,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2683,7 +2683,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2691,7 +2691,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2717,7 +2717,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2725,7 +2725,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2751,7 +2751,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2759,7 +2759,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2785,18 +2785,18 @@
           "import": {
             "status": "ok",
             "usd_million": 3.34,
-            "raw_quantity_thousand_source_units": 175019.0,
-            "quantity": 175019000.0,
+            "raw_quantity_source_units": 175019.0,
+            "quantity": 175019.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.019084
+            "unit_value_usd_per_source_unit": 19.083642
           },
           "export": {
             "status": "ok",
             "usd_million": 1.85,
-            "raw_quantity_thousand_source_units": 56412.0,
-            "quantity": 56412000.0,
+            "raw_quantity_source_units": 56412.0,
+            "quantity": 56412.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.032794
+            "unit_value_usd_per_source_unit": 32.794441
           }
         },
         "status": "ok"
@@ -2819,7 +2819,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2827,7 +2827,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2853,18 +2853,18 @@
           "import": {
             "status": "ok",
             "usd_million": 1808.56,
-            "raw_quantity_thousand_source_units": 2659363375.0,
-            "quantity": 2659363375000.0,
+            "raw_quantity_source_units": 2659363375.0,
+            "quantity": 2659363375.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.00068
+            "unit_value_usd_per_source_unit": 0.680073
           },
           "export": {
             "status": "ok",
             "usd_million": 1.36,
-            "raw_quantity_thousand_source_units": 1323960.0,
-            "quantity": 1323960000.0,
+            "raw_quantity_source_units": 1323960.0,
+            "quantity": 1323960.0,
             "quantity_unit": "KGS",
-            "unit_value_usd_per_source_unit": 0.001027
+            "unit_value_usd_per_source_unit": 1.027221
           }
         },
         "status": "ok"
@@ -2887,7 +2887,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2895,7 +2895,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2921,7 +2921,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2929,7 +2929,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2955,7 +2955,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2963,7 +2963,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2989,7 +2989,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -2997,7 +2997,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -3023,7 +3023,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -3031,7 +3031,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -3057,7 +3057,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -3065,7 +3065,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -3091,7 +3091,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -3099,7 +3099,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -3125,18 +3125,18 @@
           "import": {
             "status": "ok",
             "usd_million": 294.52,
-            "raw_quantity_thousand_source_units": 505476843.0,
-            "quantity": 505476843000.0,
+            "raw_quantity_source_units": 505476843.0,
+            "quantity": 505476843.0,
             "quantity_unit": "NOS",
-            "unit_value_usd_per_source_unit": 0.000583
+            "unit_value_usd_per_source_unit": 0.582658
           },
           "export": {
             "status": "ok",
             "usd_million": 12.65,
-            "raw_quantity_thousand_source_units": 3209445.0,
-            "quantity": 3209445000.0,
+            "raw_quantity_source_units": 3209445.0,
+            "quantity": 3209445.0,
             "quantity_unit": "NOS",
-            "unit_value_usd_per_source_unit": 0.003941
+            "unit_value_usd_per_source_unit": 3.941491
           }
         },
         "status": "ok"
@@ -3159,7 +3159,7 @@
           "import": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
@@ -3167,7 +3167,7 @@
           "export": {
             "status": "not_available",
             "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
+            "raw_quantity_source_units": null,
             "quantity": null,
             "quantity_unit": null,
             "unit_value_usd_per_source_unit": null
