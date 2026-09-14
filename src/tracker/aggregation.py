@@ -8,6 +8,19 @@ def _sum(values: Iterable[float | None]) -> float:
     return round(sum(v for v in values if v is not None), 6)
 
 
+def _sum_optional(values: Iterable[float | None]) -> float | None:
+    known = [float(v) for v in values if v is not None]
+    if not known:
+        return None
+    return round(sum(known), 6)
+
+
+def _growth_pct(current: float | None, previous: float | None) -> float | None:
+    if current is None or previous is None or previous == 0:
+        return None
+    return round((current - previous) / previous * 100, 2)
+
+
 def _partner_rollup(reports: list[dict[str, Any]]) -> list[dict[str, Any]]:
     by_country: dict[str, float] = defaultdict(float)
     for report in reports:
@@ -59,19 +72,52 @@ def dependency_score(import_value: float, export_value: float, supplier_metrics:
     }
 
 
+def _trade_period_metrics(reports: list[dict[str, Any]]) -> dict[str, Any]:
+    current = _sum(r.get("totals", {}).get("value") for r in reports)
+    previous = _sum_optional(r.get("totals", {}).get("previous_year_value") for r in reports)
+    cumulative = _sum_optional(r.get("totals", {}).get("cumulative_value") for r in reports)
+    cumulative_previous = _sum_optional(
+        r.get("totals", {}).get("cumulative_previous_year_value") for r in reports
+    )
+    return {
+        "current": round(current, 4),
+        "previous_year": round(previous, 4) if previous is not None else None,
+        "yoy_pct": _growth_pct(current, previous),
+        "ytd": round(cumulative, 4) if cumulative is not None else None,
+        "ytd_previous_year": round(cumulative_previous, 4) if cumulative_previous is not None else None,
+        "ytd_yoy_pct": _growth_pct(cumulative, cumulative_previous),
+    }
+
+
 def aggregate_commodity(reports: list[dict[str, Any]]) -> dict[str, Any]:
     imports = [r for r in reports if r.get("trade_type") == "import"]
     exports = [r for r in reports if r.get("trade_type") == "export"]
-    import_value = _sum(r.get("totals", {}).get("value") for r in imports)
-    export_value = _sum(r.get("totals", {}).get("value") for r in exports)
+    import_period = _trade_period_metrics(imports)
+    export_period = _trade_period_metrics(exports)
+    import_value = import_period["current"]
+    export_value = export_period["current"]
     suppliers = _partner_rollup(imports)
     destinations = _partner_rollup(exports)
     supplier_metrics = concentration_metrics(suppliers)
     destination_metrics = concentration_metrics(destinations)
+    ytd_balance = None
+    if import_period["ytd"] is not None and export_period["ytd"] is not None:
+        ytd_balance = round(export_period["ytd"] - import_period["ytd"], 4)
     return {
         "imports": round(import_value, 4),
         "exports": round(export_value, 4),
         "balance": round(export_value - import_value, 4),
+        "import_previous_year": import_period["previous_year"],
+        "export_previous_year": export_period["previous_year"],
+        "import_yoy_pct": import_period["yoy_pct"],
+        "export_yoy_pct": export_period["yoy_pct"],
+        "ytd_imports": import_period["ytd"],
+        "ytd_exports": export_period["ytd"],
+        "ytd_balance": ytd_balance,
+        "ytd_imports_previous_year": import_period["ytd_previous_year"],
+        "ytd_exports_previous_year": export_period["ytd_previous_year"],
+        "ytd_import_yoy_pct": import_period["ytd_yoy_pct"],
+        "ytd_export_yoy_pct": export_period["ytd_yoy_pct"],
         "unit": "USD million",
         "supplier_concentration": supplier_metrics,
         "export_destination_concentration": destination_metrics,
@@ -101,16 +147,28 @@ def _dedupe_union_reports(reports: list[dict[str, Any]]) -> list[dict[str, Any]]
 
 def portfolio_summary(reports: list[dict[str, Any]]) -> dict[str, Any]:
     union = _dedupe_union_reports(reports)
-    import_value = _sum(
-        r.get("totals", {}).get("value") for r in union if r.get("trade_type") == "import"
-    )
-    export_value = _sum(
-        r.get("totals", {}).get("value") for r in union if r.get("trade_type") == "export"
-    )
+    imports = [r for r in union if r.get("trade_type") == "import"]
+    exports = [r for r in union if r.get("trade_type") == "export"]
+    import_period = _trade_period_metrics(imports)
+    export_period = _trade_period_metrics(exports)
+    import_value = import_period["current"]
+    export_value = export_period["current"]
+    ytd_balance = None
+    if import_period["ytd"] is not None and export_period["ytd"] is not None:
+        ytd_balance = round(export_period["ytd"] - import_period["ytd"], 4)
     return {
         "imports": round(import_value, 4),
         "exports": round(export_value, 4),
         "balance": round(export_value - import_value, 4),
+        "import_previous_year": import_period["previous_year"],
+        "export_previous_year": export_period["previous_year"],
+        "import_yoy_pct": import_period["yoy_pct"],
+        "export_yoy_pct": export_period["yoy_pct"],
+        "ytd_imports": import_period["ytd"],
+        "ytd_exports": export_period["ytd"],
+        "ytd_balance": ytd_balance,
+        "ytd_import_yoy_pct": import_period["ytd_yoy_pct"],
+        "ytd_export_yoy_pct": export_period["ytd_yoy_pct"],
         "unit": "USD million",
         "coverage_method": "unique shortest-HS-prefix union to prevent parent/child double counting",
         "included_hs_codes": sorted({r["hs_code"] for r in union}, key=lambda x: (len(x), x)),
