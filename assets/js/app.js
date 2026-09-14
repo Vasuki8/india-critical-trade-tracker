@@ -8,6 +8,12 @@ function usdMillions(v) {
   return `${sign}$${fmt.format(n)}M`;
 }
 
+function pct(v) {
+  if (v === null || v === undefined) return '—';
+  const sign = v > 0 ? '+' : '';
+  return `${sign}${fmt.format(v)}%`;
+}
+
 async function loadJSON(path) {
   const res = await fetch(path, { cache: 'no-store' });
   if (!res.ok) throw new Error(`${path}: ${res.status}`);
@@ -41,6 +47,14 @@ function renderCommodities(master, dashboard) {
         <div class="trade-stat"><span>Imports</span><strong>${usdMillions(m.imports)}</strong></div>
         <div class="trade-stat"><span>Exports</span><strong>${usdMillions(m.exports)}</strong></div>
         <div class="trade-stat"><span>Balance</span><strong>${usdMillions(m.balance)}</strong></div>
+      </div>
+      <div class="growth-row">
+        <span>Import YoY <strong>${pct(m.import_yoy_pct)}</strong></span>
+        <span>Export YoY <strong>${pct(m.export_yoy_pct)}</strong></span>
+      </div>
+      <div class="growth-row">
+        <span>YTD imports <strong>${usdMillions(m.ytd_imports)}</strong></span>
+        <span>YTD exports <strong>${usdMillions(m.ytd_exports)}</strong></span>
       </div>
       <div class="commodity-foot">
         <span class="${riskClass(dependency.risk)}">${dependency.score ?? '—'} dependency · ${dependency.risk || 'n/a'}</span>
@@ -89,6 +103,9 @@ async function main() {
     document.querySelector('#imports').textContent = usdMillions(dashboard.summary.imports);
     document.querySelector('#exports').textContent = usdMillions(dashboard.summary.exports);
     document.querySelector('#balance').textContent = usdMillions(dashboard.summary.balance);
+    document.querySelector('#imports-foot').textContent = `YoY ${pct(dashboard.summary.import_yoy_pct)} · YTD ${usdMillions(dashboard.summary.ytd_imports)} · watched HS universe`;
+    document.querySelector('#exports-foot').textContent = `YoY ${pct(dashboard.summary.export_yoy_pct)} · YTD ${usdMillions(dashboard.summary.ytd_exports)} · overlap-adjusted`;
+    document.querySelector('#balance-foot').textContent = `YTD balance ${usdMillions(dashboard.summary.ytd_balance)} · exports minus imports`;
     document.querySelector('#as-of').textContent = dashboard.as_of || 'Awaiting first ingestion';
     initFilters(master, dashboard);
     renderCommodities(master, dashboard);
