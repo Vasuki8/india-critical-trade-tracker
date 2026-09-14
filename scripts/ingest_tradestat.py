@@ -29,6 +29,7 @@ MONTHS = {
 }
 QUANTITY_SCALE_TO_SOURCE_UNIT = 1
 QUANTITY_SCALE_NOTE = "TradeStat MEIDB quantity values are already expressed in the displayed source unit (for example KGS or NOS)."
+FETCH_TIME_ONLY_KEYS = {"retrieved_at", "report_date"}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -236,12 +237,18 @@ def ingest_one(
 
 
 def _revision_payload(value: Any) -> Any:
-    """Return stable semantic content, excluding fetch-time-only provenance."""
+    """Return stable semantic content, excluding fetch/render-time provenance.
+
+    TradeStat's report_date is the date the HTML report is rendered, not the
+    official release date. It therefore changes on a refetch even when the
+    checksum, rows and official source release are unchanged. The official
+    publication state is tracked separately in data/source_status.json.
+    """
     if isinstance(value, dict):
         return {
             key: _revision_payload(item)
             for key, item in sorted(value.items())
-            if key != "retrieved_at"
+            if key not in FETCH_TIME_ONLY_KEYS
         }
     if isinstance(value, list):
         return [_revision_payload(item) for item in value]
@@ -266,12 +273,12 @@ def write_observation(
 ) -> Path:
     """Write the current observation and preserve superseded semantic versions.
 
-    A fetch-time-only change such as ``source.retrieved_at`` is ignored. In that
-    case the existing current file is left untouched, which prevents noisy
-    commits and false revision records. When source data, headers, report dates,
-    mappings, totals, partner rows, units, or other semantic content changes,
-    the previous current document is archived by its content fingerprint before
-    the new document replaces it.
+    Fetch/render-time-only changes such as ``source.retrieved_at`` and the
+    TradeStat HTML ``report_date`` are ignored. In that case the existing
+    current file is left untouched, preventing noisy commits and false revision
+    records. Genuine changes to official data, status headers, mappings, totals,
+    partner rows, units, checksums, or other semantic content archive the prior
+    current document before replacement.
     """
     out_dir = observation_root / doc["period"]
     out_dir.mkdir(parents=True, exist_ok=True)
