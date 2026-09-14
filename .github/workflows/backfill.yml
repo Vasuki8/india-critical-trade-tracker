@@ -132,6 +132,8 @@ jobs:
             echo "### Backfill result"
             grep '^BACKFILL_SUMMARY ' /tmp/backfill-run.log || true
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Rebuild revision comparison summary
+        run: uv run python scripts/build_revision_summary.py
       - name: Validate generated data
         run: |
           uv run python scripts/validate_data.py
@@ -146,7 +148,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/dashboard.json data/observations/
+          git add data/dashboard.json data/revision_summary.json data/observations/
           if [[ -d data/revisions ]]; then
             git add data/revisions/
           fi
