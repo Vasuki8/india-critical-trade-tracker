@@ -1,10 +1,10 @@
-name: Bootstrap 2019 TradeStat history
+name: Bootstrap 2018 TradeStat history
 
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/bootstrap-2019.yml"
+      - ".github/workflows/bootstrap-2018.yml"
 
 permissions:
   contents: write
@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  backfill-2019:
+  backfill-2018:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -26,14 +26,14 @@ jobs:
         run: uv python install 3.12
       - name: Sync dependencies
         run: uv sync --dev
-      - name: Preview 2019 resumable plan
+      - name: Preview 2018 resumable plan
         run: |
-          uv run python scripts/backfill_tradestat.py --start-period 2019-01 --end-period 2019-12 --value-type usd --trade-type both --dry-run
-          uv run python scripts/backfill_tradestat.py --start-period 2019-01 --end-period 2019-12 --value-type quantity --trade-type both --dry-run
-      - name: Backfill 2019 USD observations
-        run: uv run python scripts/backfill_tradestat.py --start-period 2019-01 --end-period 2019-12 --value-type usd --trade-type both --no-build-dashboard
-      - name: Backfill 2019 HS8 quantity observations
-        run: uv run python scripts/backfill_tradestat.py --start-period 2019-01 --end-period 2019-12 --value-type quantity --trade-type both --no-build-dashboard
+          uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 2018-12 --value-type usd --trade-type both --dry-run
+          uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 2018-12 --value-type quantity --trade-type both --dry-run
+      - name: Backfill 2018 USD observations
+        run: uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 2018-12 --value-type usd --trade-type both --no-build-dashboard
+      - name: Backfill 2018 HS8 quantity observations
+        run: uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 2018-12 --value-type quantity --trade-type both --no-build-dashboard
       - name: Rebuild dashboard from stored observations
         run: uv run python scripts/build_dashboard.py
       - name: Rebuild revision comparison summary
@@ -47,7 +47,7 @@ jobs:
           node --check assets/js/app.js
           node --check assets/js/intelligence.js
           node --check assets/js/portfolio.js
-      - name: Commit 2019 official history
+      - name: Commit 2018 official history
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
@@ -63,6 +63,6 @@ jobs:
             echo "No tracked data change"
             exit 0
           fi
-          git commit -m "data: backfill TradeStat history for 2019"
+          git commit -m "data: backfill TradeStat history for 2018"
           git pull --rebase origin main
           git push origin HEAD:main
