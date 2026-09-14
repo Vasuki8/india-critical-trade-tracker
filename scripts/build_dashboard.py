@@ -1,3 +1,5 @@
+"""Rebuild the static dashboard payload from stored monthly observations."""
+
 from pathlib import Path
 
 from src.tracker.dashboard import build_dashboard
