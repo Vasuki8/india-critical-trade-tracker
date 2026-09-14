@@ -256,11 +256,19 @@ def test_observation_fingerprint_ignores_retrieval_timestamp():
     assert observation_fingerprint(original) == observation_fingerprint(refetched)
 
 
-def test_timestamp_only_refetch_does_not_rewrite_or_archive(tmp_path: Path):
+def test_observation_fingerprint_ignores_tradestat_render_date():
+    original = _revision_doc()
+    refetched = deepcopy(original)
+    refetched["reports"][0]["source"]["report_date"] = "15 September 2026"
+    assert observation_fingerprint(original) == observation_fingerprint(refetched)
+
+
+def test_fetch_time_only_refetch_does_not_rewrite_or_archive(tmp_path: Path):
     observation_root = tmp_path / "observations"
     revision_root = tmp_path / "revisions"
     original = _revision_doc(retrieved_at="2026-09-14T10:00:00+00:00")
     refetched = _revision_doc(retrieved_at="2026-09-15T10:00:00+00:00")
+    refetched["reports"][0]["source"]["report_date"] = "15 September 2026"
 
     path = write_observation(original, observation_root=observation_root, revision_root=revision_root)
     before = path.read_text(encoding="utf-8")
