@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "definition_date": "2026-09-14",
+  "notes": "User-facing critical commodity groups. Broad HS mappings are intentionally separated from exact ITC-HS8 mappings so classification changes can be versioned safely.",
+  "commodities": [
+    {"id":"crude_oil","name":"Crude Oil","category":"Energy","priority":"critical","hs_codes":["2709"],"mapping_status":"heading_validated","icon":"droplet"},
+    {"id":"petroleum_products","name":"Petroleum Products","category":"Energy","priority":"critical","hs_codes":["2710"],"mapping_status":"heading_validated","icon":"fuel"},
+    {"id":"natural_gas_lng","name":"Natural Gas / LNG","category":"Energy","priority":"critical","hs_codes":["271111","271121"],"mapping_status":"subheading_validated","icon":"flame"},
+    {"id":"coal","name":"Coal","category":"Energy","priority":"critical","hs_codes":["2701"],"mapping_status":"heading_validated","icon":"mountain"},
+    {"id":"gold","name":"Gold","category":"Precious Metals","priority":"critical","hs_codes":["7108"],"mapping_status":"heading_validated","icon":"gem"},
+    {"id":"electronics","name":"Electronics","category":"Technology","priority":"critical","hs_codes":["85"],"mapping_status":"chapter_broad","icon":"cpu"},
+    {"id":"semiconductors","name":"Semiconductors","category":"Technology","priority":"critical","hs_codes":["8541"],"mapping_status":"heading_validated","icon":"chip"},
+    {"id":"telecom_equipment","name":"Telecom Equipment","category":"Technology","priority":"critical","hs_codes":["8517"],"mapping_status":"heading_validated","icon":"radio"},
+    {"id":"computers","name":"Computers / Data Processing","category":"Technology","priority":"critical","hs_codes":["8471"],"mapping_status":"heading_validated","icon":"monitor"},
+    {"id":"machinery","name":"Machinery","category":"Industrial","priority":"critical","hs_codes":["84"],"mapping_status":"chapter_broad","icon":"cog"},
+    {"id":"fertilizers","name":"Fertilizers","category":"Agriculture","priority":"critical","hs_codes":["31"],"mapping_status":"chapter_broad","icon":"sprout"},
+    {"id":"edible_oils","name":"Edible Oils","category":"Food Security","priority":"critical","hs_codes":["1507","1511","1512"],"mapping_status":"heading_set","icon":"leaf"},
+    {"id":"pulses","name":"Pulses","category":"Food Security","priority":"critical","hs_codes":["0713"],"mapping_status":"heading_validated","icon":"wheat"},
+    {"id":"pharmaceuticals","name":"Pharmaceuticals","category":"Healthcare","priority":"critical","hs_codes":["30"],"mapping_status":"chapter_broad","icon":"pill"},
+    {"id":"organic_chemicals_apis","name":"Organic Chemicals / API Inputs","category":"Healthcare","priority":"critical","hs_codes":["29"],"mapping_status":"chapter_broad","icon":"flask"},
+    {"id":"iron_steel","name":"Iron & Steel","category":"Industrial","priority":"critical","hs_codes":["72"],"mapping_status":"chapter_broad","icon":"factory"},
+    {"id":"copper","name":"Copper","category":"Strategic Minerals","priority":"critical","hs_codes":["74","2603"],"mapping_status":"chapter_plus_ore","icon":"circle"},
+    {"id":"lithium","name":"Lithium & Compounds","category":"Strategic Minerals","priority":"critical","hs_codes":["282520","283691"],"mapping_status":"partial_needs_hs8_review","icon":"battery"},
+    {"id":"nickel","name":"Nickel","category":"Strategic Minerals","priority":"critical","hs_codes":["2604","75"],"mapping_status":"heading_plus_chapter","icon":"battery"},
+    {"id":"cobalt","name":"Cobalt","category":"Strategic Minerals","priority":"critical","hs_codes":["2605","8105"],"mapping_status":"heading_set","icon":"battery"},
+    {"id":"rare_earths","name":"Rare Earths","category":"Strategic Minerals","priority":"critical","hs_codes":["2846"],"mapping_status":"heading_validated","icon":"atom"},
+    {"id":"solar_pv","name":"Solar Cells / Modules","category":"Clean Energy","priority":"critical","hs_codes":["85414"],"mapping_status":"version_sensitive_needs_hs8_review","icon":"sun"},
+    {"id":"batteries","name":"Electric Accumulators / Batteries","category":"Clean Energy","priority":"critical","hs_codes":["8507"],"mapping_status":"heading_validated","icon":"battery"}
+  ]
+}

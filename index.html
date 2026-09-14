@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="India Critical Commodity Import-Export Tracker" />
+  <title>India Critical Trade Tracker</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <div class="kicker">India Trade Intelligence</div>
+        <h1>Critical Commodity Import–Export Tracker</h1>
+        <p class="subtitle">Official-source architecture for monitoring India's strategic import dependence, exports, trade balance and supply-chain concentration.</p>
+      </div>
+      <div class="status-pill">Data as of: <strong id="as-of">Loading…</strong></div>
+    </header>
+
+    <div id="fatal" class="warning" hidden></div>
+
+    <section class="grid summary-grid">
+      <article class="card"><div class="metric-label">Critical commodity groups</div><div id="commodity-count" class="metric-value">—</div><div class="metric-foot">Phase 1 watchlist</div></article>
+      <article class="card"><div class="metric-label">Imports</div><div id="imports" class="metric-value">—</div><div class="metric-foot">Populates after official trade ingestion</div></article>
+      <article class="card"><div class="metric-label">Exports</div><div id="exports" class="metric-value">—</div><div class="metric-foot">Populates after official trade ingestion</div></article>
+      <article class="card"><div class="metric-label">Net trade balance</div><div id="balance" class="metric-value">—</div><div class="metric-foot">Exports minus imports</div></article>
+    </section>
+
+    <section class="card">
+      <div class="section-title" style="margin-top:0">
+        <div><h2>Commodity Master</h2><p>Filter by name, HS code or strategic category.</p></div>
+        <div><span id="visible-count">—</span> shown</div>
+      </div>
+      <div class="toolbar">
+        <input id="search" class="search" placeholder="Search crude oil, 2709, lithium…" />
+        <select id="category"><option>Loading…</option></select>
+      </div>
+      <div id="commodity-grid" class="grid commodity-grid"></div>
+    </section>
+
+    <section class="grid source-grid">
+      <article class="card">
+        <div class="section-title" style="margin-top:0"><div><h2>Official Source Status</h2><p>Department of Commerce TradeStat / DGCI&S.</p></div></div>
+        <div class="source-list">
+          <div>Data available</div><div id="source-data-available">—</div>
+          <div>Last source update</div><div id="source-updated">—</div>
+          <div>Final through</div><div id="source-final">—</div>
+          <div>Revised-final through</div><div id="source-revised">—</div>
+          <div>Source monitor</div><div id="source-check">—</div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="section-title" style="margin-top:0"><div><h2>Classification Guardrail</h2><p>Prevents false historical comparisons.</p></div></div>
+        <div id="source-warning" class="warning">Loading…</div>
+      </article>
+    </section>
+
+    <footer>Phase 1 foundation · Static GitHub Pages architecture · Source provenance preserved in repository data</footer>
+  </main>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

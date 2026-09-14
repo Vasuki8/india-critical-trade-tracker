@@ -1,0 +1,37 @@
+name: Watch TradeStat source
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tradestat-source-watch
+  cancel-in-progress: false
+
+jobs:
+  refresh-source-status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync dependencies
+        run: uv sync
+      - name: Check official TradeStat source
+        run: uv run python scripts/check_source.py
+      - name: Commit status changes
+        run: |
+          if git diff --quiet -- data/source_status.json; then
+            echo "No source-status change"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/source_status.json
+          git commit -m "data: refresh TradeStat source status"
+          git push

@@ -1,0 +1,15 @@
+[project]
+name = "india-critical-trade-tracker"
+version = "0.1.0"
+description = "Static India critical commodity import-export tracker powered by official TradeStat/DGCI&S data."
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3.3",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
