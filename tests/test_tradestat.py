@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from src.tracker.tradestat import (
+    TradeStatError,
     build_payload,
     parse_commodity_all_countries,
     parse_csrf_token,
@@ -42,12 +43,38 @@ def test_parser_extracts_month_value_and_partner_rows():
         HTML, hscode="2709", month=6, year=2026, trade_type="import", retrieved_at="2026-09-14T00:00:00+00:00"
     )
     assert doc["period"] == "2026-06"
+    assert doc["data_status"] == "ok"
     assert doc["totals"]["value"] == 1600.0
     assert doc["rows"][0]["partner_country"] == "RUSSIA"
     assert doc["rows"][0]["value"] == 1200.0
     assert doc["source"]["report_date"] == "13/08/2026"
     assert doc["commodity_description"].startswith("PETROLEUM OILS")
     assert doc["source_quantity_unit"] == "TON"
+
+
+def test_explicit_no_data_response_is_zero_not_failure():
+    html = """
+    <html><body>
+      <input type="hidden" name="_token" value="abc123" />
+      <div>Data last updated on: 13/08/2026</div>
+      <div>No Result Found</div>
+    </body></html>
+    """
+    doc = parse_commodity_all_countries(
+        html, hscode="2709", month=6, year=2026, trade_type="export", retrieved_at="2026-09-14T00:00:00+00:00"
+    )
+    assert doc["data_status"] == "no_data"
+    assert doc["rows"] == []
+    assert doc["totals"]["value"] == 0.0
+    assert doc["totals"]["previous_year_value"] is None
+
+
+def test_unrecognized_missing_table_is_still_a_failure():
+    with pytest.raises(TradeStatError):
+        parse_commodity_all_countries(
+            "<html><body>Unexpected server response</body></html>",
+            hscode="2709", month=6, year=2026, trade_type="export"
+        )
 
 
 def test_quantity_requires_hs8():
