@@ -41,12 +41,6 @@ on:
         required: true
         default: false
         type: boolean
-  # Temporary bootstrap trigger for the Jan-Feb 2026 H1 completion batch.
-  # Remove after the resulting data commit lands; manual dispatch remains canonical.
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/backfill.yml"
 
 permissions:
   contents: write
@@ -60,12 +54,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      START_PERIOD: ${{ github.event_name == 'workflow_dispatch' && inputs.start_period || '2026-01' }}
-      END_PERIOD: ${{ github.event_name == 'workflow_dispatch' && inputs.end_period || '2026-02' }}
-      COMMODITY: ${{ github.event_name == 'workflow_dispatch' && inputs.commodity || 'all' }}
-      VALUE_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.value_type || 'both' }}
-      TRADE_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.trade_type || 'both' }}
-      FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force || false }}
+      START_PERIOD: ${{ inputs.start_period }}
+      END_PERIOD: ${{ inputs.end_period }}
+      COMMODITY: ${{ inputs.commodity }}
+      VALUE_TYPE: ${{ inputs.value_type }}
+      TRADE_TYPE: ${{ inputs.trade_type }}
+      FORCE: ${{ inputs.force }}
     steps:
       - uses: actions/checkout@v4
         with:
