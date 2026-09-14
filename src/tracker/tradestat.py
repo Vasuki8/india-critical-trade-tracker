@@ -30,7 +30,9 @@ FIELDS = {
         "year_type": "cwacimReportYear",
     },
 }
-VALUE_TYPES = {"usd": "1", "inr": "2", "quantity": "3"}
+# Verified against the live TradeStat MEIDB form on 2026-09-14:
+# 1 = US $ Million, 3 = INR Crore, 2 = Quantity.
+VALUE_TYPES = {"usd": "1", "inr": "3", "quantity": "2"}
 YEAR_TYPES = {"financial": "1", "calendar": "2"}
 VALUE_UNITS = {"usd": "USD million", "inr": "INR crore", "quantity": "source unit"}
 VALID_HS_LENGTHS = {2, 4, 6, 8}
@@ -189,9 +191,6 @@ def parse_commodity_all_countries(
     headers: list[str] = []
     data_status = "ok"
 
-    # TradeStat's successful POST can legitimately return the report page with no
-    # result table when a requested HS/trade/period combination has no rows.
-    # The upstream/public parser uses this same table-presence rule for NO_DATA.
     if table is None:
         data_status = "no_data"
         totals = _empty_totals()
@@ -259,6 +258,7 @@ def parse_commodity_all_countries(
         "hs_code": hscode,
         "hs_level": len(hscode),
         "value_type": value_type,
+        "value_selector_code": VALUE_TYPES[value_type],
         "value_unit": VALUE_UNITS[value_type],
         "year_type": year_type,
         "data_status": data_status,
