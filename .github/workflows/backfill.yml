@@ -6,12 +6,12 @@ on:
       start_period:
         description: "First calendar month (YYYY-MM)"
         required: true
-        default: "2020-01"
+        default: "2019-01"
         type: string
       end_period:
         description: "Last calendar month (YYYY-MM)"
         required: true
-        default: "2020-12"
+        default: "2019-12"
         type: string
       commodity:
         description: "Commodity id, or 'all'"
