@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -17,6 +18,7 @@ from src.tracker.tradestat import TradeStatClient, VALID_HS_LENGTHS
 MASTER_PATH = ROOT / "data" / "commodities.json"
 SOURCE_STATUS_PATH = ROOT / "data" / "source_status.json"
 OBS_ROOT = ROOT / "data" / "observations"
+REVISION_ROOT = ROOT / "data" / "revisions"
 DASHBOARD_PATH = ROOT / "data" / "dashboard.json"
 
 MONTHS = {
@@ -153,11 +155,68 @@ def ingest_one(
     }
 
 
-def write_observation(doc: dict[str, Any]) -> Path:
-    out_dir = OBS_ROOT / doc["period"]
+def _revision_payload(value: Any) -> Any:
+    """Return stable semantic content, excluding fetch-time-only provenance."""
+    if isinstance(value, dict):
+        return {
+            key: _revision_payload(item)
+            for key, item in sorted(value.items())
+            if key != "retrieved_at"
+        }
+    if isinstance(value, list):
+        return [_revision_payload(item) for item in value]
+    return value
+
+
+def observation_fingerprint(doc: dict[str, Any]) -> str:
+    payload = json.dumps(
+        _revision_payload(doc),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def write_observation(
+    doc: dict[str, Any],
+    *,
+    observation_root: Path = OBS_ROOT,
+    revision_root: Path = REVISION_ROOT,
+) -> Path:
+    """Write the current observation and preserve superseded semantic versions.
+
+    A fetch-time-only change such as ``source.retrieved_at`` is ignored. In that
+    case the existing current file is left untouched, which prevents noisy
+    commits and false revision records. When source data, headers, report dates,
+    mappings, totals, partner rows, units, or other semantic content changes,
+    the previous current document is archived by its content fingerprint before
+    the new document replaces it.
+    """
+    out_dir = observation_root / doc["period"]
     out_dir.mkdir(parents=True, exist_ok=True)
     value_type = doc.get("value_type", "usd")
-    path = out_dir / f"{doc['commodity']['id']}.{value_type}.json"
+    commodity_id = doc["commodity"]["id"]
+    path = out_dir / f"{commodity_id}.{value_type}.json"
+
+    new_fingerprint = observation_fingerprint(doc)
+    if path.exists():
+        try:
+            previous = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            previous = None
+
+        if previous is not None:
+            previous_fingerprint = observation_fingerprint(previous)
+            if previous_fingerprint == new_fingerprint:
+                return path
+
+            archive_dir = revision_root / doc["period"] / f"{commodity_id}.{value_type}"
+            archive_dir.mkdir(parents=True, exist_ok=True)
+            archive_path = archive_dir / f"{previous_fingerprint}.json"
+            if not archive_path.exists():
+                archive_path.write_text(json.dumps(previous, indent=2) + "\n", encoding="utf-8")
+
     path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
     return path
 
