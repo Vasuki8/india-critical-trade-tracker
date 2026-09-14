@@ -156,6 +156,8 @@ async function main() {
     document.querySelector('#exports-foot').textContent = `YoY ${pct(dashboard.summary.export_yoy_pct)} · YTD ${usdMillions(dashboard.summary.ytd_exports)} · overlap-adjusted`;
     document.querySelector('#balance-foot').textContent = `YTD balance ${usdMillions(dashboard.summary.ytd_balance)} · exports minus imports`;
     document.querySelector('#as-of').textContent = dashboard.as_of || 'Awaiting first ingestion';
+    window.trackerDashboard = dashboard;
+    if (typeof window.renderPortfolioHistory === 'function') window.renderPortfolioHistory(dashboard);
     initFilters(master, dashboard);
     renderCommodities(master, dashboard);
     renderSource(source);
