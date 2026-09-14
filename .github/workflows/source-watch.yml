@@ -164,16 +164,14 @@ jobs:
           uv run python scripts/validate_data.py
           uv run pytest -q
           node --check assets/js/app.js
+          node --check assets/js/intelligence.js
+          node --check assets/js/portfolio.js
       - name: Ignore timestamp-only source check
         if: steps.decision.outputs.ingest_usd != 'true' && steps.decision.outputs.ingest_quantity != 'true' && steps.decision.outputs.refresh_revisions != 'true'
         run: git checkout -- data/source_status.json
       - name: Commit official data changes
         shell: bash
         run: |
-          if git diff --quiet; then
-            echo "No repository data change"
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/source_status.json data/dashboard.json data/revision_summary.json data/observations/
