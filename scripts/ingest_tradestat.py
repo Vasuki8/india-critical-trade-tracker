@@ -140,14 +140,20 @@ def is_queryable_commodity(
     return True, None
 
 
-def _active_mapping_metadata(commodity: dict[str, Any], value_type: str) -> tuple[str, list[str], str | None]:
+def _active_mapping_metadata(
+    commodity: dict[str, Any],
+    value_type: str,
+) -> tuple[str, list[str], str | None, bool]:
     mapping, status, mode = _mapping_for_value_type(commodity, value_type)
+    quantity = commodity.get("quantity_mapping") if value_type == "quantity" else None
+    rollup = bool(quantity.get("rollup_to_value_mapping")) if isinstance(quantity, dict) else False
     if mapping is None:
-        return commodity.get("mapping_status", ""), list(commodity.get("hs_codes", [])), mode
+        return commodity.get("mapping_status", ""), list(commodity.get("hs_codes", [])), mode, rollup
     return (
         str(status or commodity.get("mapping_status", "")),
         list(mapping.get("hs_codes", commodity.get("hs_codes", []))),
         mode,
+        rollup,
     )
 
 
@@ -189,7 +195,7 @@ def ingest_one(
     expected = len(hs_codes) * len(trade_types)
     status = "ok" if len(reports) == expected else "partial" if reports else "failed"
     metrics = aggregate_commodity(reports) if reports and value_type == "usd" else {}
-    active_mapping_status, canonical_hs_codes, quantity_mapping_mode = _active_mapping_metadata(
+    active_mapping_status, canonical_hs_codes, quantity_mapping_mode, quantity_rollup = _active_mapping_metadata(
         commodity, value_type
     )
     return {
@@ -209,6 +215,7 @@ def ingest_one(
             "mapping_status": active_mapping_status,
             "monetary_mapping_status": commodity["mapping_status"],
             "quantity_mapping_mode": quantity_mapping_mode if value_type == "quantity" else None,
+            "quantity_rollup_to_value_mapping": quantity_rollup if value_type == "quantity" else None,
             "classification_note": classification_note,
         },
         "status": status,
