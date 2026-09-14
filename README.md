@@ -4,17 +4,60 @@ A live tracker for India's strategically important commodity imports and exports
 
 ## Current build
 
-The tracker covers **23 critical commodity groups** and currently carries official monthly data through **June 2026**. The repository has a validated, contiguous **January 2023–June 2026** USD history for all 23 groups: **966 commodity-month history rows**. Historical HS8 quantity observations and implied unit values are also present for the validated quantity-capable groups.
+The tracker covers **23 critical commodity groups** and currently carries official monthly data through **June 2026**. The repository has validated historical USD observations from **January 2021 through June 2026** with **1,517 commodity-month history rows**. The single intentional hole is Solar PV for February 2022, where the ITC(HS) classification changed and the tracker refuses to invent a bridge between old and new codes.
+
+Historical HS8 quantity observations and implied unit values are also present for the validated quantity-capable groups.
+
+The site now has two complementary analytical layers:
+
+- a lightweight **consolidated portfolio dashboard** for the full watched commodity universe; and
+- a lazy-loaded **commodity intelligence drill-down** for each commodity, generated from the stored observation archive.
+
+For an individual commodity such as Crude Oil, the intelligence view provides:
+
+- month-by-month imports, exports and trade balance;
+- every reported partner country for a selected month, with import/export value and share;
+- historical trends for any selected supplier or export destination;
+- annual consolidated imports, exports and balance;
+- top supplier, supplier share and HHI concentration by year;
+- long-run cumulative imports/exports, peak import month and dependency indicators;
+- HS-level breakdowns and quantity / implied unit-value context where validated; and
+- explicit classification-transition warnings so a missing mapping cannot be read as zero trade.
+
+The consolidated portfolio view adds monthly and annual imports/exports for the complete watched universe, cumulative totals, peak import month and explicit complete/partial coverage status.
+
+## Intelligence data architecture
+
+`data/dashboard.json` remains the small portfolio-level payload used for the initial page load.
+
+Deep country/month detail is generated deterministically from `data/observations/` into one file per commodity:
+
+```text
+data/intelligence/<commodity>.json
+```
+
+The browser downloads one of these files only when the user clicks **Explore intelligence**, keeping the homepage responsive even as historical coverage grows. `data/intelligence/index.json` is the generated manifest.
+
+The intelligence builder preserves all partner-country rows rather than limiting the stored drill-down to the top five. Repository tests require each intelligence file's periods and classification gaps to match the canonical dashboard history.
+
+Rebuild the intelligence layer locally with:
+
+```powershell
+uv run python scripts/build_intelligence.py
+```
+
+## Derived analytics
 
 The ingestion layer preserves partner-country detail and source provenance, then derives:
 
-- imports, exports and trade balance
-- monthly YoY change and calendar-year YTD values
-- top suppliers / export destinations and concentration
-- a transparent dependency score
-- physical quantity and implied USD per source unit for validated HS8 mappings
-- monthly commodity history from stored observations
-- revision history when an official observation changes semantically
+- imports, exports and trade balance;
+- monthly YoY change and calendar-year YTD values;
+- top suppliers / export destinations and concentration;
+- a transparent dependency score;
+- physical quantity and implied USD per source unit for validated HS8 mappings;
+- monthly commodity history from stored observations;
+- consolidated annual commodity and portfolio views; and
+- revision history when an official observation changes semantically.
 
 The source monitor checks TradeStat daily. Heavy ingestion runs only when official release metadata changes, a stored observation is stale, or a bounded Revised-Final refresh is required after a publication change. Timestamp-only source checks remain no-ops.
 
@@ -61,6 +104,7 @@ Solar cell and module unit values are kept at HS8 level because a bare photovolt
 - Stored observations are automatically refreshed when their active HS mapping differs from the commodity master or the period's classification era.
 - Quantity observations are refreshed when selector provenance or direct-unit scale metadata is stale.
 - Quantity-only months cannot advance the dashboard's headline `as_of` period.
+- Generated commodity intelligence must stay synchronized with dashboard periods and classification gaps.
 - The April 2026 TradeStat ITC-HS reallocation/unit warning remains a classification guardrail.
 
 ### Revision-aware observations
@@ -81,7 +125,7 @@ data/revisions/YYYY-MM/<commodity>.<value_type>/<fingerprint>.json
 
 This applies to both the daily source watcher and historical backfills because they share the same observation writer. Deterministic fingerprints also prevent duplicate archive copies when the same historical version is encountered again.
 
-When official publication metadata changes, the daily watcher also plans a bounded Revised-Final sweep. Normally it rechecks the trailing three Revised-Final months; if the official Revised-Final cutoff advances, it also covers the newly revised interval. Automatic sweeps are capped at 12 months so the daily watcher cannot become an unbounded historical backfill.
+When official publication metadata changes, the daily watcher plans a bounded Revised-Final sweep. Normally it rechecks the trailing three Revised-Final months; if the official Revised-Final cutoff advances, it also covers the newly revised interval. Automatic sweeps are capped at 12 months so the daily watcher cannot become an unbounded historical backfill.
 
 ### Classification-aware series
 
@@ -91,7 +135,7 @@ Solar PV is explicitly versioned around the ITC(HS) 2022 change:
 - **February 2022**: transition month intentionally not auto-stitched
 - from **March 2022**: `85414200`, `85414300`
 
-This prevents the history layer from pretending the current solar codes existed unchanged across the classification transition. Consequently, the 2022 backfill intentionally skips the Solar PV group for February 2022 rather than treating an unvalidated code bridge as zero trade.
+This prevents the history layer from pretending the current solar codes existed unchanged across the classification transition. Consequently, February 2022 is shown as an explicit coverage/classification gap rather than zero trade.
 
 ## Automation
 
@@ -104,17 +148,18 @@ This prevents the history layer from pretending the current solar codes existed 
 3. plans a bounded Revised-Final historical refresh when official publication metadata changes;
 4. fetches only stale/latest layers plus any required forced historical revision window;
 5. archives superseded semantic observations before replacing them;
-6. rebuilds `data/dashboard.json`;
-7. validates the commodity master, Python tests and dashboard JavaScript; and
-8. commits official data plus any revision archives back to `main`.
+6. rebuilds `data/dashboard.json`, `data/revision_summary.json` and `data/intelligence/`;
+7. validates the commodity master, generated history/intelligence synchronization, Python tests and frontend JavaScript; and
+8. commits official data plus generated intelligence and any revision archives back to `main`.
 
 ### Validation
 
 `.github/workflows/validate.yml` runs on pushes and pull requests and checks:
 
+- generated commodity intelligence can be rebuilt from stored observations;
 - commodity-master and generated-dashboard validation;
-- Python tests; and
-- dashboard JavaScript syntax with `node --check`.
+- Python tests, including intelligence/dashboard synchronization; and
+- JavaScript syntax for the homepage, portfolio history and commodity intelligence views.
 
 ### Historical backfill
 
@@ -134,16 +179,16 @@ Current observations are skipped automatically. Missing, incomplete or stale obs
 
 Safety limits remain in place: all-commodity USD runs are limited to 12 months per workflow run; single-commodity or quantity runs may cover up to 36 months.
 
-The next full-year batch is **2022**. Preview it locally without network writes:
+The next full-year historical target is **2020**. Preview it locally without network writes:
 
 ```powershell
-uv run python scripts/backfill_tradestat.py --start-period 2022-01 --end-period 2022-12 --value-type usd --trade-type both --dry-run
+uv run python scripts/backfill_tradestat.py --start-period 2020-01 --end-period 2020-12 --value-type usd --trade-type both --dry-run
 ```
 
 Run the same resumable batch:
 
 ```powershell
-uv run python scripts/backfill_tradestat.py --start-period 2022-01 --end-period 2022-12 --value-type usd --trade-type both
+uv run python scripts/backfill_tradestat.py --start-period 2020-01 --end-period 2020-12 --value-type usd --trade-type both
 ```
 
 For GitHub Actions, select `both` in the **Backfill TradeStat history** workflow when USD and eligible HS8 quantity history should be filled together.
@@ -152,6 +197,9 @@ For GitHub Actions, select `both` in the **Backfill TradeStat history** workflow
 
 ```powershell
 uv sync --dev
+uv run python scripts/build_dashboard.py
+uv run python scripts/build_revision_summary.py
+uv run python scripts/build_intelligence.py
 uv run python scripts/validate_data.py
 uv run pytest -q
 uv run python -m http.server 8000
@@ -185,12 +233,6 @@ One commodity and one period:
 uv run python scripts/ingest_tradestat.py --period 2026-06 --commodity natural_gas_lng --trade-type both --value-type quantity
 ```
 
-Rebuild the static dashboard JSON from stored observations:
-
-```powershell
-uv run python scripts/build_dashboard.py
-```
-
 ## Repository structure
 
 ```text
@@ -200,17 +242,26 @@ uv run python scripts/build_dashboard.py
 │   ├── source-watch.yml
 │   └── validate.yml
 ├── assets/
-│   ├── css/styles.css
-│   └── js/app.js
+│   ├── css/
+│   │   ├── intelligence.css
+│   │   └── styles.css
+│   └── js/
+│       ├── app.js
+│       ├── intelligence.js
+│       └── portfolio.js
 ├── data/
 │   ├── commodities.json
 │   ├── dashboard.json
+│   ├── revision_summary.json
 │   ├── source_status.json
+│   ├── intelligence/<commodity>.json
 │   ├── observations/YYYY-MM/*.json
 │   └── revisions/YYYY-MM/<commodity>.<value_type>/*.json
 ├── scripts/
 │   ├── backfill_tradestat.py
 │   ├── build_dashboard.py
+│   ├── build_intelligence.py
+│   ├── build_revision_summary.py
 │   ├── check_source.py
 │   ├── ingest_tradestat.py
 │   └── validate_data.py
@@ -218,6 +269,7 @@ uv run python scripts/build_dashboard.py
 │   ├── aggregation.py
 │   ├── dashboard.py
 │   ├── derived.py
+│   ├── intelligence.py
 │   ├── releases.py
 │   ├── tradestat.py
 │   └── validation.py
@@ -238,12 +290,12 @@ The score is intended for ranking watched commodities, not as a claim about nati
 
 ## Publication
 
-GitHub Pages is enabled for the repository. Updates committed to `main` trigger the repository's Pages build/deployment flow, so the static site and its generated dashboard data move together.
+GitHub Pages is enabled for the repository. Updates committed to `main` trigger the repository's Pages build/deployment flow, so the static site and its generated data move together.
 
 ## Next build priorities
 
-1. Continue the bounded resumable history backfill through **2022**, then backward toward **2018**.
-2. Extend HS8 quantity history alongside USD wherever an exact validated mapping is available, preserving historical implied unit values.
-3. Add interactive historical charts and country drill-downs from the stored monthly history.
-4. Add revision comparison summaries so archived first/revised/final observations can be quantified instead of merely preserved.
+1. Continue bounded resumable history backfill through **2020**, then backward toward **2018**.
+2. Extend HS8 quantity history alongside USD wherever an exact validated mapping is available.
+3. Add richer cross-commodity comparison and supplier-country concentration views on top of the intelligence layer.
+4. Continue validating and surfacing official revisions as the Revised-Final window moves.
 5. Continue promoting broad HS2/4/6 commodity groups to validated HS8 definitions where an exact, stable mapping is economically meaningful.
