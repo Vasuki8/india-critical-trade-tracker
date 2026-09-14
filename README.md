@@ -4,7 +4,9 @@ A live tracker for India's strategically important commodity imports and exports
 
 ## Current build
 
-The tracker covers **23 critical commodity groups** and currently carries official monthly data through **June 2026**. The ingestion layer preserves partner-country detail and source provenance, then derives:
+The tracker covers **23 critical commodity groups** and currently carries official monthly data through **June 2026**. The repository now has a validated, contiguous **January–June 2026** USD history for all 23 groups. Historical HS8 quantity observations and implied unit values are also present for the validated quantity-capable groups.
+
+The ingestion layer preserves partner-country detail and source provenance, then derives:
 
 - imports, exports and trade balance
 - monthly YoY change and calendar-year YTD values
@@ -87,13 +89,15 @@ This prevents the history layer from pretending the current solar codes existed 
 
 `.github/workflows/validate.yml` runs on pushes and pull requests and checks:
 
-- commodity-master validation;
+- commodity-master and generated-dashboard validation;
 - Python tests; and
 - dashboard JavaScript syntax with `node --check`.
 
 ### Historical backfill
 
 A controlled workflow is available at `.github/workflows/backfill.yml`. It is intentionally separate from the lightweight daily updater.
+
+The workflow can backfill **USD**, **quantity**, or **both** layers in one run. When `both` is selected, USD is processed first and then eligible HS8 quantity observations are processed before one final validation/commit.
 
 The backfill is **resumable**. Before any request, `scripts/backfill_tradestat.py` checks each period/commodity observation for:
 
@@ -118,6 +122,8 @@ Run the same resumable batch:
 ```powershell
 uv run python scripts/backfill_tradestat.py --start-period 2025-01 --end-period 2025-12 --value-type usd --trade-type both
 ```
+
+For GitHub Actions, select `both` in the **Backfill TradeStat history** workflow when USD and eligible HS8 quantity history should be filled together.
 
 ## Local setup with uv
 
@@ -211,8 +217,8 @@ GitHub Pages is enabled for the repository. Updates committed to `main` trigger 
 
 ## Next build priorities
 
-1. Backfill monthly USD history from 2018 in bounded resumable batches.
-2. Backfill HS8 quantity history for validated quantity-capable groups and calculate historical implied unit values.
+1. Continue the bounded resumable history backfill backward through **2025**, then toward **2018**.
+2. Extend HS8 quantity history alongside USD wherever an exact validated mapping is available, preserving historical implied unit values.
 3. Add interactive historical charts and country drill-downs from the stored monthly history.
 4. Separate first-release and revised observations so revisions can be measured rather than silently replacing prior values.
 5. Continue promoting broad HS2/4/6 commodity groups to validated HS8 definitions where an exact, stable mapping is economically meaningful.
