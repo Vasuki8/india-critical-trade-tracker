@@ -16,7 +16,7 @@ The ingestion layer preserves partner-country detail and source provenance, then
 - monthly commodity history from stored observations
 - revision history when an official observation changes semantically
 
-The source monitor checks TradeStat daily. Heavy ingestion runs only when the official release changes, a stored mapping becomes stale, or a quantity observation needs contract/provenance refresh.
+The source monitor checks TradeStat daily. Heavy ingestion runs only when official release metadata changes, a stored observation is stale, or a bounded Revised-Final refresh is required after a publication change. Timestamp-only source checks remain no-ops.
 
 ## Verified TradeStat MEIDB contracts
 
@@ -81,6 +81,8 @@ data/revisions/YYYY-MM/<commodity>.<value_type>/<fingerprint>.json
 
 This applies to both the daily source watcher and historical backfills because they share the same observation writer. Deterministic fingerprints also prevent duplicate archive copies when the same historical version is encountered again.
 
+When official publication metadata changes, the daily watcher also plans a bounded Revised-Final sweep. Normally it rechecks the trailing three Revised-Final months; if the official Revised-Final cutoff advances, it also covers the newly revised interval. Automatic sweeps are capped at 12 months so the daily watcher cannot become an unbounded historical backfill.
+
 ### Classification-aware series
 
 Solar PV is explicitly versioned around the ITC(HS) 2022 change:
@@ -98,12 +100,13 @@ This prevents the history layer from pretending the current solar codes existed 
 `.github/workflows/source-watch.yml`:
 
 1. checks the official TradeStat release state;
-2. compares stored observations with current HS mappings and quantity provenance;
-3. fetches only the USD and/or quantity layers that are actually stale;
-4. archives a superseded semantic observation before replacing it;
-5. rebuilds `data/dashboard.json`;
-6. validates the commodity master and runs the full test suite; and
-7. commits official data plus any revision archives back to `main`.
+2. compares stored latest observations with current HS mappings and quantity provenance;
+3. plans a bounded Revised-Final historical refresh when official publication metadata changes;
+4. fetches only stale/latest layers plus any required forced historical revision window;
+5. archives superseded semantic observations before replacing them;
+6. rebuilds `data/dashboard.json`;
+7. validates the commodity master, Python tests and dashboard JavaScript; and
+8. commits official data plus any revision archives back to `main`.
 
 ### Validation
 
@@ -215,6 +218,7 @@ uv run python scripts/build_dashboard.py
 │   ├── aggregation.py
 │   ├── dashboard.py
 │   ├── derived.py
+│   ├── releases.py
 │   ├── tradestat.py
 │   └── validation.py
 ├── tests/
