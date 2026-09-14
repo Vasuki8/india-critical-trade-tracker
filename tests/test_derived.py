@@ -92,3 +92,88 @@ def test_missing_quantity_report_is_transparent():
 
     assert result["status"] == "not_available"
     assert result["by_hs_code"][0]["status"] == "missing_quantity_report"
+
+
+def test_parent_heading_rollup_derives_only_aggregate_unit_value():
+    usd = {
+        "reports": [
+            _report("import", "2846", 6.0, value_type="usd"),
+        ]
+    }
+    quantity = {
+        "commodity": {
+            "canonical_hs_codes": ["28461010", "28469090"],
+            "quantity_rollup_to_value_mapping": True,
+        },
+        "reports": [
+            _report("import", "28461010", 1_000_000, value_type="quantity", unit="KGS", scale=1),
+            _report("import", "28469090", 2_000_000, value_type="quantity", unit="KGS", scale=1),
+        ],
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    assert result["status"] == "ok"
+    aggregate = result["aggregate"]["import"]
+    assert aggregate["status"] == "ok"
+    assert aggregate["rollup_method"] == "parent_value_child_hs8_quantity"
+    assert aggregate["value_hs_code"] == "2846"
+    assert aggregate["quantity"] == 3_000_000
+    assert aggregate["quantity_unit"] == "KGS"
+    assert aggregate["unit_value_usd_per_source_unit"] == 2.0
+    assert all(item["status"] != "ok" for item in result["by_hs_code"])
+
+
+def test_parent_heading_rollup_requires_explicit_provenance():
+    usd = {"reports": [_report("import", "2846", 6.0, value_type="usd")]}
+    quantity = {
+        "commodity": {"canonical_hs_codes": ["28461010", "28469090"]},
+        "reports": [
+            _report("import", "28461010", 1_000_000, value_type="quantity", unit="KGS"),
+            _report("import", "28469090", 2_000_000, value_type="quantity", unit="KGS"),
+        ],
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    assert result["status"] == "not_available"
+    assert result["aggregate"]["import"]["status"] == "not_available"
+
+
+def test_parent_heading_rollup_rejects_mixed_child_units():
+    usd = {"reports": [_report("import", "2846", 6.0, value_type="usd")]}
+    quantity = {
+        "commodity": {
+            "canonical_hs_codes": ["28461010", "28469090"],
+            "quantity_rollup_to_value_mapping": True,
+        },
+        "reports": [
+            _report("import", "28461010", 1_000_000, value_type="quantity", unit="KGS"),
+            _report("import", "28469090", 2_000_000, value_type="quantity", unit="NOS"),
+        ],
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    assert result["status"] == "not_available"
+    assert result["aggregate"]["import"]["status"] == "mixed_quantity_units"
+    assert result["aggregate"]["import"]["unit_value_usd_per_source_unit"] is None
+
+
+def test_parent_heading_rollup_requires_complete_expected_child_set():
+    usd = {"reports": [_report("import", "2846", 6.0, value_type="usd")]}
+    quantity = {
+        "commodity": {
+            "canonical_hs_codes": ["28461010", "28461090", "28469090"],
+            "quantity_rollup_to_value_mapping": True,
+        },
+        "reports": [
+            _report("import", "28461010", 1_000_000, value_type="quantity", unit="KGS"),
+            _report("import", "28469090", 2_000_000, value_type="quantity", unit="KGS"),
+        ],
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    assert result["status"] == "not_available"
+    assert result["aggregate"]["import"]["status"] == "not_available"
