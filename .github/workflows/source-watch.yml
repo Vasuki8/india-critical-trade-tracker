@@ -157,6 +157,8 @@ jobs:
         run: uv run python scripts/build_dashboard.py
       - name: Rebuild revision comparison summary
         run: uv run python scripts/build_revision_summary.py
+      - name: Rebuild commodity intelligence
+        run: uv run python scripts/build_intelligence.py
       - name: Validate generated data
         run: |
           uv run python scripts/validate_data.py
@@ -175,6 +177,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/source_status.json data/dashboard.json data/revision_summary.json data/observations/
+          if [[ -d data/intelligence ]]; then
+            git add data/intelligence/
+          fi
           if [[ -d data/revisions ]]; then
             git add data/revisions/
           fi
