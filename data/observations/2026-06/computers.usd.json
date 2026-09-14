@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "computers",
     "name": "Computers / Data Processing",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "8471"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "8471"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -1182,7 +1188,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:07+00:00",
+        "retrieved_at": "2026-09-14T16:28:10+00:00",
         "checksum_sha256": "68b94048a747c511f411e4dc76b4b070f6a54cee519ce1d39abaaa1a76e564cb"
       }
     },
@@ -3093,7 +3099,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:09+00:00",
+        "retrieved_at": "2026-09-14T16:28:12+00:00",
         "checksum_sha256": "0ca840a87f614dd37a288c16e80e1cb0c37ab323ea2f68d78a67790587145799"
       }
     }
@@ -3102,6 +3108,17 @@
     "imports": 2366.85,
     "exports": 92.39,
     "balance": -2274.46,
+    "import_previous_year": 903.45,
+    "export_previous_year": 74.29,
+    "import_yoy_pct": 161.98,
+    "export_yoy_pct": 24.36,
+    "ytd_imports": 10487.23,
+    "ytd_exports": 580.78,
+    "ytd_balance": -9906.45,
+    "ytd_imports_previous_year": 5431.51,
+    "ytd_exports_previous_year": 464.15,
+    "ytd_import_yoy_pct": 93.08,
+    "ytd_export_yoy_pct": 25.13,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 21.24,

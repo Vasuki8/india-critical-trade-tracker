@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "rare_earths",
     "name": "Rare Earths",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "2846"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "2846"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -322,7 +328,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:13+00:00",
+        "retrieved_at": "2026-09-14T16:29:17+00:00",
         "checksum_sha256": "64dc290c037aaa6da38f63202b12c5256457a3c781b30ac0314ea294f405e18e"
       }
     },
@@ -1173,7 +1179,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:14+00:00",
+        "retrieved_at": "2026-09-14T16:29:18+00:00",
         "checksum_sha256": "099edb64332e19576c2716843ad2b52dc9703953772af4509921df56020ec7f1"
       }
     }
@@ -1182,6 +1188,17 @@
     "imports": 1.98,
     "exports": 3.51,
     "balance": 1.53,
+    "import_previous_year": 1.24,
+    "export_previous_year": 4.22,
+    "import_yoy_pct": 59.68,
+    "export_yoy_pct": -16.82,
+    "ytd_imports": 16.9,
+    "ytd_exports": 16.8,
+    "ytd_balance": -0.1,
+    "ytd_imports_previous_year": 5.74,
+    "ytd_exports_previous_year": 22.0,
+    "ytd_import_yoy_pct": 194.43,
+    "ytd_export_yoy_pct": -23.64,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 42.35,

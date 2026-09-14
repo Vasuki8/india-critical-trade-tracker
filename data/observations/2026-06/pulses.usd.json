@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "pulses",
     "name": "Pulses",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "0713"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "0713"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -702,7 +708,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:31+00:00",
+        "retrieved_at": "2026-09-14T16:28:34+00:00",
         "checksum_sha256": "2ed98ab5563431276ee7939b687ddf4f2f0387a7f7f794a59071c4dfdaf41aa4"
       }
     },
@@ -2243,7 +2249,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:32+00:00",
+        "retrieved_at": "2026-09-14T16:28:35+00:00",
         "checksum_sha256": "7885f883b9930d64d81c1f12cd96e068b6a9ced4dd2a003ae107b4f5642c899f"
       }
     }
@@ -2252,6 +2258,17 @@
     "imports": 271.97,
     "exports": 115.37,
     "balance": -156.6,
+    "import_previous_year": 92.38,
+    "export_previous_year": 71.07,
+    "import_yoy_pct": 194.4,
+    "export_yoy_pct": 62.33,
+    "ytd_imports": 1785.86,
+    "ytd_exports": 590.43,
+    "ytd_balance": -1195.43,
+    "ytd_imports_previous_year": 2292.6,
+    "ytd_exports_previous_year": 492.86,
+    "ytd_import_yoy_pct": -22.1,
+    "ytd_export_yoy_pct": 19.8,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 41.73,

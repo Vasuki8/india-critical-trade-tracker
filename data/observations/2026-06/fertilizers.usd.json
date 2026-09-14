@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "fertilizers",
     "name": "Fertilizers",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "31"
     ],
-    "mapping_status": "chapter_broad"
+    "canonical_hs_codes": [
+      "31"
+    ],
+    "mapping_status": "chapter_broad",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -862,7 +868,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:20+00:00",
+        "retrieved_at": "2026-09-14T16:28:23+00:00",
         "checksum_sha256": "bf52ce1d9f6ac17c8fa67573090571d42b9a504299d726aefe0edbf72ad0c026"
       }
     },
@@ -2363,7 +2369,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:21+00:00",
+        "retrieved_at": "2026-09-14T16:28:24+00:00",
         "checksum_sha256": "1a6b2ef79cd3e6a7c1d72099a2351a54044d7abf0fda011af10166fa7a7e6e65"
       }
     }
@@ -2372,6 +2378,17 @@
     "imports": 2149.1,
     "exports": 13.85,
     "balance": -2135.25,
+    "import_previous_year": 663.71,
+    "export_previous_year": 10.73,
+    "import_yoy_pct": 223.8,
+    "export_yoy_pct": 29.08,
+    "ytd_imports": 5505.83,
+    "ytd_exports": 110.14,
+    "ytd_balance": -5395.69,
+    "ytd_imports_previous_year": 3359.97,
+    "ytd_exports_previous_year": 62.38,
+    "ytd_import_yoy_pct": 63.87,
+    "ytd_export_yoy_pct": 76.56,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 20.67,

@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "gold",
     "name": "Gold",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "7108"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "7108"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -512,7 +518,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:05:52+00:00",
+        "retrieved_at": "2026-09-14T16:27:54+00:00",
         "checksum_sha256": "8139bb520654f06a6ec4ed917432c75d491a41d6ad609c154aab88ec031d9b32"
       }
     },
@@ -703,7 +709,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:05:53+00:00",
+        "retrieved_at": "2026-09-14T16:27:55+00:00",
         "checksum_sha256": "4aeabefa85721d918c4a15c75a594e2db6e48baf8192090f71899bcc902011e3"
       }
     }
@@ -712,6 +718,17 @@
     "imports": 1968.42,
     "exports": 47.57,
     "balance": -1920.85,
+    "import_previous_year": 1839.08,
+    "export_previous_year": 37.37,
+    "import_yoy_pct": 7.03,
+    "export_yoy_pct": 27.29,
+    "ytd_imports": 33588.61,
+    "ytd_exports": 267.45,
+    "ytd_balance": -33321.16,
+    "ytd_imports_previous_year": 16986.96,
+    "ytd_exports_previous_year": 811.17,
+    "ytd_import_yoy_pct": 97.73,
+    "ytd_export_yoy_pct": -67.03,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 32.99,

@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "telecom_equipment",
     "name": "Telecom Equipment",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "8517"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "8517"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -1452,7 +1458,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:04+00:00",
+        "retrieved_at": "2026-09-14T16:28:07+00:00",
         "checksum_sha256": "d3103aea37aa020ea9813d84c16bfd472782652f5a0f22da1f0716b665f0120c"
       }
     },
@@ -3383,7 +3389,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:06+00:00",
+        "retrieved_at": "2026-09-14T16:28:09+00:00",
         "checksum_sha256": "13a85146eedef671e102de2c80a8d22988d0aa2d94d53898349aa025274f9a3d"
       }
     }
@@ -3392,6 +3398,17 @@
     "imports": 1838.15,
     "exports": 3528.09,
     "balance": 1689.94,
+    "import_previous_year": 1564.42,
+    "export_previous_year": 2911.75,
+    "import_yoy_pct": 17.5,
+    "export_yoy_pct": 21.17,
+    "ytd_imports": 11974.6,
+    "ytd_exports": 20380.38,
+    "ytd_balance": 8405.78,
+    "ytd_imports_previous_year": 11185.62,
+    "ytd_exports_previous_year": 17817.22,
+    "ytd_import_yoy_pct": 7.05,
+    "ytd_export_yoy_pct": 14.39,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 67.46,

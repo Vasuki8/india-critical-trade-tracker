@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "edible_oils",
     "name": "Edible Oils",
@@ -13,7 +15,13 @@
       "1511",
       "1512"
     ],
-    "mapping_status": "heading_set"
+    "canonical_hs_codes": [
+      "1507",
+      "1511",
+      "1512"
+    ],
+    "mapping_status": "heading_set",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -404,7 +412,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:22+00:00",
+        "retrieved_at": "2026-09-14T16:28:25+00:00",
         "checksum_sha256": "f2165a94f9a6d348540a8630333d06730618a991edbca306a0fedb6a2378b4ee"
       }
     },
@@ -965,7 +973,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:24+00:00",
+        "retrieved_at": "2026-09-14T16:28:27+00:00",
         "checksum_sha256": "9a0e2f7654adef9d60ff65dbeb5d1c4856caf388a974f9e018ded29c874c0e0b"
       }
     },
@@ -1296,7 +1304,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:25+00:00",
+        "retrieved_at": "2026-09-14T16:28:28+00:00",
         "checksum_sha256": "a1fe2d8389504b65d65058145f2311d52a6f508ae00e342b51c601911a785356"
       }
     },
@@ -1757,7 +1765,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:27+00:00",
+        "retrieved_at": "2026-09-14T16:28:30+00:00",
         "checksum_sha256": "20fff2f24c73810ec0707fc7c77725969ffc4e1b61f806f4130f0224e99c1126"
       }
     },
@@ -2078,7 +2086,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:28+00:00",
+        "retrieved_at": "2026-09-14T16:28:31+00:00",
         "checksum_sha256": "1519649eaddb2c286f71539180564097ba50faa73b5aec91721a34f2ad2b47ef"
       }
     },
@@ -3149,7 +3157,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:29+00:00",
+        "retrieved_at": "2026-09-14T16:28:33+00:00",
         "checksum_sha256": "1463b94bea444ba89c4d0520cad6d6c20860e3c4bf2378cac0bd1928a21f6aba"
       }
     }
@@ -3158,6 +3166,17 @@
     "imports": 1577.86,
     "exports": 25.61,
     "balance": -1552.25,
+    "import_previous_year": 1623.81,
+    "export_previous_year": 8.28,
+    "import_yoy_pct": -2.83,
+    "export_yoy_pct": 209.3,
+    "ytd_imports": 9711.75,
+    "ytd_exports": 152.81,
+    "ytd_balance": -9558.94,
+    "ytd_imports_previous_year": 7960.71,
+    "ytd_exports_previous_year": 55.59,
+    "ytd_import_yoy_pct": 22.0,
+    "ytd_export_yoy_pct": 174.89,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 18.92,

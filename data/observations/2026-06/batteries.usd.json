@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "batteries",
     "name": "Electric Accumulators / Batteries",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "8507"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "8507"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -852,7 +858,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:21+00:00",
+        "retrieved_at": "2026-09-14T16:29:25+00:00",
         "checksum_sha256": "c6ed94b83f00687efccdbe12f22ff0d82e9e7c521771a52f33f8ef9d66991753"
       }
     },
@@ -2533,7 +2539,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:23+00:00",
+        "retrieved_at": "2026-09-14T16:29:27+00:00",
         "checksum_sha256": "9781fcca904d060da1c18cb36a82504a81c116cda24426fdfb7b6dece8a5088a"
       }
     }
@@ -2542,6 +2548,17 @@
     "imports": 686.14,
     "exports": 53.58,
     "balance": -632.56,
+    "import_previous_year": 375.25,
+    "export_previous_year": 62.13,
+    "import_yoy_pct": 82.85,
+    "export_yoy_pct": -13.76,
+    "ytd_imports": 3609.92,
+    "ytd_exports": 324.4,
+    "ytd_balance": -3285.52,
+    "ytd_imports_previous_year": 2157.63,
+    "ytd_exports_previous_year": 352.81,
+    "ytd_import_yoy_pct": 67.31,
+    "ytd_export_yoy_pct": -8.05,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 80.69,

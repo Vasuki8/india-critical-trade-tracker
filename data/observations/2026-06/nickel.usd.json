@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "nickel",
     "name": "Nickel",
@@ -12,7 +14,12 @@
       "2604",
       "75"
     ],
-    "mapping_status": "heading_plus_chapter"
+    "canonical_hs_codes": [
+      "2604",
+      "75"
+    ],
+    "mapping_status": "heading_plus_chapter",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -93,7 +100,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:00+00:00",
+        "retrieved_at": "2026-09-14T16:29:04+00:00",
         "checksum_sha256": "9e7acdbc969312fc60b387befc7059826ed99c669916dbc3c80a0934e399a66f"
       }
     },
@@ -144,7 +151,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:01+00:00",
+        "retrieved_at": "2026-09-14T16:29:05+00:00",
         "checksum_sha256": "8c724ae5ebea6c970cc79a4082de97c8fc00b8cc2f3b35deb62a6e737a09e6b1"
       }
     },
@@ -985,7 +992,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:02+00:00",
+        "retrieved_at": "2026-09-14T16:29:07+00:00",
         "checksum_sha256": "7b05c31b3365eb65b536e98868853c74e4295c9a0e39934a9f9aa6f6a8bb1967"
       }
     },
@@ -2276,7 +2283,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:04+00:00",
+        "retrieved_at": "2026-09-14T16:29:08+00:00",
         "checksum_sha256": "382930e19988a8629e4765704c7830980801d6f1d060dc11b75cb194ad206f08"
       }
     }
@@ -2285,6 +2292,17 @@
     "imports": 117.47,
     "exports": 16.21,
     "balance": -101.26,
+    "import_previous_year": 106.11,
+    "export_previous_year": 12.06,
+    "import_yoy_pct": 10.71,
+    "export_yoy_pct": 34.41,
+    "ytd_imports": 642.07,
+    "ytd_exports": 103.83,
+    "ytd_balance": -538.24,
+    "ytd_imports_previous_year": 572.59,
+    "ytd_exports_previous_year": 93.71,
+    "ytd_import_yoy_pct": 12.13,
+    "ytd_export_yoy_pct": 10.8,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 17.2,

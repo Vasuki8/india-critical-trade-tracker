@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "crude_oil",
     "name": "Crude Oil",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "2709"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "2709"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -582,7 +588,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:05:38+00:00",
+        "retrieved_at": "2026-09-14T16:27:40+00:00",
         "checksum_sha256": "218d6304af5b0297cb9cbed22d8667c3ac1795a9b6f63baac6115d201722d588"
       }
     },
@@ -613,7 +619,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "13/08/2026",
-        "retrieved_at": "2026-09-14T16:05:39+00:00",
+        "retrieved_at": "2026-09-14T16:27:41+00:00",
         "checksum_sha256": "bcd7ec9bc5fadd87d4eebd11830d787779c442caa11c5ff61a1d191bf2a7e746"
       }
     }
@@ -622,6 +628,17 @@
     "imports": 14765.56,
     "exports": 0.0,
     "balance": -14765.56,
+    "import_previous_year": 10521.59,
+    "export_previous_year": null,
+    "import_yoy_pct": 40.34,
+    "export_yoy_pct": null,
+    "ytd_imports": 78750.82,
+    "ytd_exports": null,
+    "ytd_balance": null,
+    "ytd_imports_previous_year": 72632.46,
+    "ytd_exports_previous_year": null,
+    "ytd_import_yoy_pct": 8.42,
+    "ytd_export_yoy_pct": null,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 48.64,

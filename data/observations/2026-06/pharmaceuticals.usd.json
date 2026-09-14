@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "pharmaceuticals",
     "name": "Pharmaceuticals",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "30"
     ],
-    "mapping_status": "chapter_broad"
+    "canonical_hs_codes": [
+      "30"
+    ],
+    "mapping_status": "chapter_broad",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -1362,7 +1368,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:34+00:00",
+        "retrieved_at": "2026-09-14T16:28:37+00:00",
         "checksum_sha256": "e0a2ea230fc89817fad462d21bb90b5f78f4eb21b74f24bec35c11d2478b2bd8"
       }
     },
@@ -3583,7 +3589,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:37+00:00",
+        "retrieved_at": "2026-09-14T16:28:40+00:00",
         "checksum_sha256": "f6a0eb82ae86e54b58b5c7e049f5395136732c7fcaa4a330545891042ef4b5c7"
       }
     }
@@ -3592,6 +3598,17 @@
     "imports": 314.66,
     "exports": 2234.32,
     "balance": 1919.66,
+    "import_previous_year": 262.67,
+    "export_previous_year": 2115.98,
+    "import_yoy_pct": 19.79,
+    "export_yoy_pct": 5.59,
+    "ytd_imports": 1849.99,
+    "ytd_exports": 12837.32,
+    "ytd_balance": 10987.33,
+    "ytd_imports_previous_year": 1563.69,
+    "ytd_exports_previous_year": 13245.07,
+    "ytd_import_yoy_pct": 18.31,
+    "ytd_export_yoy_pct": -3.08,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 17.57,

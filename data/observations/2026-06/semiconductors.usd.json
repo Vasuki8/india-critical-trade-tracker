@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "semiconductors",
     "name": "Semiconductors",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "8541"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "8541"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -972,7 +978,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:02+00:00",
+        "retrieved_at": "2026-09-14T16:28:04+00:00",
         "checksum_sha256": "af766726a87793469220ad5c654c36afa1c68eac3efdd069d1524398ff69379a"
       }
     },
@@ -2653,7 +2659,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:03+00:00",
+        "retrieved_at": "2026-09-14T16:28:06+00:00",
         "checksum_sha256": "a9586c60f277567a082f9473c4bef82dc4eaf4590cf29857722ca4965bf9c0c6"
       }
     }
@@ -2662,6 +2668,17 @@
     "imports": 491.12,
     "exports": 19.89,
     "balance": -471.23,
+    "import_previous_year": 399.61,
+    "export_previous_year": 146.96,
+    "import_yoy_pct": 22.9,
+    "export_yoy_pct": -86.47,
+    "ytd_imports": 3656.29,
+    "ytd_exports": 183.73,
+    "ytd_balance": -3472.56,
+    "ytd_imports_previous_year": 3094.26,
+    "ytd_exports_previous_year": 912.66,
+    "ytd_import_yoy_pct": 18.16,
+    "ytd_export_yoy_pct": -79.87,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 25.69,

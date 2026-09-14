@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "petroleum_products",
     "name": "Petroleum Products",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "2710"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "2710"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -1222,7 +1228,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:05:41+00:00",
+        "retrieved_at": "2026-09-14T16:27:43+00:00",
         "checksum_sha256": "c0f18f69681382bb32bd5927036c1333df66e34729c20ce44be206aedebc1dcc"
       }
     },
@@ -3043,7 +3049,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:05:42+00:00",
+        "retrieved_at": "2026-09-14T16:27:44+00:00",
         "checksum_sha256": "55b9b5ed732680edacf2784636d8a2534fd7154c7de4768f8a981c504a50ae8f"
       }
     }
@@ -3052,6 +3058,17 @@
     "imports": 1069.76,
     "exports": 4775.05,
     "balance": 3705.29,
+    "import_previous_year": 839.18,
+    "export_previous_year": 4386.69,
+    "import_yoy_pct": 27.48,
+    "export_yoy_pct": 8.85,
+    "ytd_imports": 5241.41,
+    "ytd_exports": 35111.61,
+    "ytd_balance": 29870.2,
+    "ytd_imports_previous_year": 5299.21,
+    "ytd_exports_previous_year": 30629.43,
+    "ytd_import_yoy_pct": -1.09,
+    "ytd_export_yoy_pct": 14.63,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 49.64,

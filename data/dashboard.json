@@ -41,8 +41,8 @@
       "2846",
       "7108",
       "8105",
-      "271111",
-      "271121",
+      "27111100",
+      "27112100",
       "28252000",
       "28369100"
     ]
@@ -1295,10 +1295,10 @@
       "name": "Natural Gas / LNG",
       "category": "Energy",
       "hs_codes": [
-        "271111",
-        "271121"
+        "27111100",
+        "27112100"
       ],
-      "mapping_status": "subheading_validated",
+      "mapping_status": "hs8_validated",
       "imports": 1808.56,
       "exports": 1.36,
       "balance": -1807.2,
@@ -1367,7 +1367,76 @@
         "import_reliance_pct": 99.92,
         "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
       },
-      "status": "ok"
+      "status": "ok",
+      "unit_values": {
+        "status": "ok",
+        "method": "USD million \u00d7 1,000,000 divided by TradeStat quantity \u00d7 1,000 because DGCI&S reports quantity in thousand source units",
+        "quantity_scale_note": "Raw TradeStat quantity values are thousands of the displayed source unit (for example KGS or NOS).",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 1808.56,
+            "raw_quantity_thousand_source_units": 17175.85,
+            "quantity": 17175850.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 105.296681
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 1.36,
+            "raw_quantity_thousand_source_units": 12.91,
+            "quantity": 12910.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 105.344694
+          }
+        },
+        "by_hs_code": [
+          {
+            "trade_type": "export",
+            "hs_code": "27111100",
+            "status": "ok",
+            "usd_million": 1.36,
+            "raw_quantity_thousand_source_units": 12.91,
+            "quantity_scale_to_source_unit": 1000.0,
+            "quantity": 12910.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 105.344694
+          },
+          {
+            "trade_type": "export",
+            "hs_code": "27112100",
+            "status": "quantity_not_available",
+            "usd_million": 0.0,
+            "raw_quantity_thousand_source_units": 0.0,
+            "quantity_scale_to_source_unit": 1000.0,
+            "quantity": 0.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": null
+          },
+          {
+            "trade_type": "import",
+            "hs_code": "27111100",
+            "status": "ok",
+            "usd_million": 1808.55,
+            "raw_quantity_thousand_source_units": 17175.71,
+            "quantity_scale_to_source_unit": 1000.0,
+            "quantity": 17175710.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 105.296957
+          },
+          {
+            "trade_type": "import",
+            "hs_code": "27112100",
+            "status": "ok",
+            "usd_million": 0.01,
+            "raw_quantity_thousand_source_units": 0.14,
+            "quantity_scale_to_source_unit": 1000.0,
+            "quantity": 140.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 71.428571
+          }
+        ]
+      }
     },
     {
       "id": "nickel",
@@ -2317,8 +2386,8 @@
         "2846",
         "7108",
         "8105",
-        "271111",
-        "271121",
+        "27111100",
+        "27112100",
         "28252000",
         "28369100"
       ]
@@ -2782,20 +2851,20 @@
         "dependency_risk": "moderate",
         "unit_values": {
           "import": {
-            "status": "not_available",
-            "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
-            "quantity": null,
-            "quantity_unit": null,
-            "unit_value_usd_per_source_unit": null
+            "status": "ok",
+            "usd_million": 1808.56,
+            "raw_quantity_thousand_source_units": 17175.85,
+            "quantity": 17175850.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 105.296681
           },
           "export": {
-            "status": "not_available",
-            "usd_million": null,
-            "raw_quantity_thousand_source_units": null,
-            "quantity": null,
-            "quantity_unit": null,
-            "unit_value_usd_per_source_unit": null
+            "status": "ok",
+            "usd_million": 1.36,
+            "raw_quantity_thousand_source_units": 12.91,
+            "quantity": 12910.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 105.344694
           }
         },
         "status": "ok"

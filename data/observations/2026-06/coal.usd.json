@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "coal",
     "name": "Coal",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "2701"
     ],
-    "mapping_status": "heading_validated"
+    "canonical_hs_codes": [
+      "2701"
+    ],
+    "mapping_status": "heading_validated",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -432,7 +438,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:05:49+00:00",
+        "retrieved_at": "2026-09-14T16:27:51+00:00",
         "checksum_sha256": "6b9adafdeabe57275f9e9e79caa488574942e7327abf45a139d6c264bdf10eaf"
       }
     },
@@ -1053,7 +1059,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:05:50+00:00",
+        "retrieved_at": "2026-09-14T16:27:53+00:00",
         "checksum_sha256": "36e2250bad0bfe57e575613087f54919ec86c69090b8e513ab90106d7dc524c6"
       }
     }
@@ -1062,6 +1068,17 @@
     "imports": 2634.34,
     "exports": 20.65,
     "balance": -2613.69,
+    "import_previous_year": 2294.82,
+    "export_previous_year": 13.09,
+    "import_yoy_pct": 14.8,
+    "export_yoy_pct": 57.75,
+    "ytd_imports": 14687.18,
+    "ytd_exports": 124.05,
+    "ytd_balance": -14563.13,
+    "ytd_imports_previous_year": 14141.62,
+    "ytd_exports_previous_year": 93.86,
+    "ytd_import_yoy_pct": 3.86,
+    "ytd_export_yoy_pct": 32.16,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 23.68,

@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "electronics",
     "name": "Electronics",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "85"
     ],
-    "mapping_status": "chapter_broad"
+    "canonical_hs_codes": [
+      "85"
+    ],
+    "mapping_status": "chapter_broad",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -2032,7 +2038,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:05:56+00:00",
+        "retrieved_at": "2026-09-14T16:27:58+00:00",
         "checksum_sha256": "568599aee1c554970d7b89b44300a2e43608aeb9cdd9d813587c8c5762cf28b9"
       }
     },
@@ -4363,7 +4369,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:00+00:00",
+        "retrieved_at": "2026-09-14T16:28:03+00:00",
         "checksum_sha256": "1d1f0eef99319f294f1fbb173a47de3a1558bc918b03d898ec22746bf53fb0da"
       }
     }
@@ -4372,6 +4378,17 @@
     "imports": 11364.75,
     "exports": 5440.35,
     "balance": -5924.4,
+    "import_previous_year": 7617.88,
+    "export_previous_year": 4690.23,
+    "import_yoy_pct": 49.19,
+    "export_yoy_pct": 15.99,
+    "ytd_imports": 60978.48,
+    "ytd_exports": 30953.15,
+    "ytd_balance": -30025.33,
+    "ytd_imports_previous_year": 48601.62,
+    "ytd_exports_previous_year": 27896.37,
+    "ytd_import_yoy_pct": 25.47,
+    "ytd_export_yoy_pct": 10.96,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 45.13,

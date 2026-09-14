@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "organic_chemicals_apis",
     "name": "Organic Chemicals / API Inputs",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "29"
     ],
-    "mapping_status": "chapter_broad"
+    "canonical_hs_codes": [
+      "29"
+    ],
+    "mapping_status": "chapter_broad",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -1382,7 +1388,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:39+00:00",
+        "retrieved_at": "2026-09-14T16:28:42+00:00",
         "checksum_sha256": "bedbf7ba717618ecb86c7088e174f54894b009ffa9f28e271b3575aba331eb60"
       }
     },
@@ -3483,7 +3489,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:43+00:00",
+        "retrieved_at": "2026-09-14T16:28:46+00:00",
         "checksum_sha256": "b36b674044d24ea79f6e5e3432c7516b822f45ebf6f97e5febf36e5e3a4a0dce"
       }
     }
@@ -3492,6 +3498,17 @@
     "imports": 2661.76,
     "exports": 1967.89,
     "balance": -693.87,
+    "import_previous_year": 2061.52,
+    "export_previous_year": 1631.66,
+    "import_yoy_pct": 29.12,
+    "export_yoy_pct": 20.61,
+    "ytd_imports": 13483.21,
+    "ytd_exports": 11262.62,
+    "ytd_balance": -2220.59,
+    "ytd_imports_previous_year": 12994.38,
+    "ytd_exports_previous_year": 10159.67,
+    "ytd_import_yoy_pct": 3.76,
+    "ytd_export_yoy_pct": 10.86,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 57.41,

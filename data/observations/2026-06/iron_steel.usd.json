@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "iron_steel",
     "name": "Iron & Steel",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "72"
     ],
-    "mapping_status": "chapter_broad"
+    "canonical_hs_codes": [
+      "72"
+    ],
+    "mapping_status": "chapter_broad",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -1782,7 +1788,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:45+00:00",
+        "retrieved_at": "2026-09-14T16:28:48+00:00",
         "checksum_sha256": "fa4c4454960adbf3994b8db9f6f0d0ea8a38d79c9262da4c7fdceb4985977f03"
       }
     },
@@ -3753,7 +3759,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:47+00:00",
+        "retrieved_at": "2026-09-14T16:28:50+00:00",
         "checksum_sha256": "95e620760efd9677b943a1cec17daf19059cdaf74b9bc6ffa7846894c28250c3"
       }
     }
@@ -3762,6 +3768,17 @@
     "imports": 1258.74,
     "exports": 1114.38,
     "balance": -144.36,
+    "import_previous_year": 1165.32,
+    "export_previous_year": 770.62,
+    "import_yoy_pct": 8.02,
+    "export_yoy_pct": 44.61,
+    "ytd_imports": 7084.01,
+    "ytd_exports": 5600.41,
+    "ytd_balance": -1483.6,
+    "ytd_imports_previous_year": 8065.74,
+    "ytd_exports_previous_year": 4639.71,
+    "ytd_import_yoy_pct": -12.17,
+    "ytd_export_yoy_pct": 20.71,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 19.27,

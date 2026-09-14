@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "solar_pv",
     "name": "Solar Cells / Modules",
@@ -12,7 +14,12 @@
       "85414200",
       "85414300"
     ],
-    "mapping_status": "hs8_validated"
+    "canonical_hs_codes": [
+      "85414200",
+      "85414300"
+    ],
+    "mapping_status": "hs8_validated",
+    "classification_note": "ITC(HS) 2022 solar PV cells and module/panel tariff lines. February 2022 is intentionally excluded from automatic stitching because the classification changed mid-month."
   },
   "status": "ok",
   "reports": [
@@ -363,7 +370,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:16+00:00",
+        "retrieved_at": "2026-09-14T16:29:20+00:00",
         "checksum_sha256": "1dd3c53fd6bdea3887ee2687495d0defb924838b10446dcff85992c7b011772e"
       }
     },
@@ -774,7 +781,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:17+00:00",
+        "retrieved_at": "2026-09-14T16:29:21+00:00",
         "checksum_sha256": "2bdc8005e988c165ac714e0f5005c9917e4516e157b0611e7fecb4d5c9c819fc"
       }
     },
@@ -1135,7 +1142,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:18+00:00",
+        "retrieved_at": "2026-09-14T16:29:22+00:00",
         "checksum_sha256": "15a902aa8693989edab3d0683d52c962521f68298d83bebf5744bd6e10cc604b"
       }
     },
@@ -2106,7 +2113,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:20+00:00",
+        "retrieved_at": "2026-09-14T16:29:24+00:00",
         "checksum_sha256": "732a14f184cc0634ba5acf58546b1d429ef06ce515e3f2770e56e208ea9e944d"
       }
     }
@@ -2115,6 +2122,17 @@
     "imports": 294.52,
     "exports": 12.65,
     "balance": -281.87,
+    "import_previous_year": 243.69,
+    "export_previous_year": 140.67,
+    "import_yoy_pct": 20.86,
+    "export_yoy_pct": -91.01,
+    "ytd_imports": 2529.42,
+    "ytd_exports": 146.49,
+    "ytd_balance": -2382.93,
+    "ytd_imports_previous_year": 2143.56,
+    "ytd_exports_previous_year": 816.66,
+    "ytd_import_yoy_pct": 18.0,
+    "ytd_export_yoy_pct": -82.06,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 42.77,

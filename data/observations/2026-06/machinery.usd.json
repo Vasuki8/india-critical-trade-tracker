@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "machinery",
     "name": "Machinery",
@@ -11,7 +13,11 @@
     "hs_codes": [
       "84"
     ],
-    "mapping_status": "chapter_broad"
+    "canonical_hs_codes": [
+      "84"
+    ],
+    "mapping_status": "chapter_broad",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -1982,7 +1988,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:12+00:00",
+        "retrieved_at": "2026-09-14T16:28:15+00:00",
         "checksum_sha256": "e9b5a320cf1e5ad61b9d356efe6839a8e15a14dd4c623b5f9295cc1da9f36f25"
       }
     },
@@ -4303,7 +4309,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:06:18+00:00",
+        "retrieved_at": "2026-09-14T16:28:21+00:00",
         "checksum_sha256": "f6987cda9a7fe4c1fb71b2ab38c3ee9429a70db12277d657e343ff64f6b387f8"
       }
     }
@@ -4312,6 +4318,17 @@
     "imports": 8021.24,
     "exports": 3487.97,
     "balance": -4533.27,
+    "import_previous_year": 5385.65,
+    "export_previous_year": 2892.44,
+    "import_yoy_pct": 48.94,
+    "export_yoy_pct": 20.59,
+    "ytd_imports": 42566.14,
+    "ytd_exports": 19267.93,
+    "ytd_balance": -23298.21,
+    "ytd_imports_previous_year": 33172.58,
+    "ytd_exports_previous_year": 17706.31,
+    "ytd_import_yoy_pct": 28.32,
+    "ytd_export_yoy_pct": 8.82,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 30.05,

@@ -1,8 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "period": "2026-06",
   "value_type": "usd",
   "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
   "commodity": {
     "id": "cobalt",
     "name": "Cobalt",
@@ -12,7 +14,12 @@
       "2605",
       "8105"
     ],
-    "mapping_status": "heading_set"
+    "canonical_hs_codes": [
+      "2605",
+      "8105"
+    ],
+    "mapping_status": "heading_set",
+    "classification_note": null
   },
   "status": "ok",
   "reports": [
@@ -93,7 +100,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:07+00:00",
+        "retrieved_at": "2026-09-14T16:29:11+00:00",
         "checksum_sha256": "de90ecfb62bfefd04ea492f7c63ce2dc3e7d17da77eacf5faa0532106058faed"
       }
     },
@@ -144,7 +151,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:09+00:00",
+        "retrieved_at": "2026-09-14T16:29:13+00:00",
         "checksum_sha256": "91f8c556f30420263824edeab6200ada2d289cf87bd4dd23d2489e2b838238cd"
       }
     },
@@ -535,7 +542,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:10+00:00",
+        "retrieved_at": "2026-09-14T16:29:14+00:00",
         "checksum_sha256": "6de6062ea58f933a2fc60119103b429ec808b85e9a6531a7200069ac2f54c99c"
       }
     },
@@ -1036,7 +1043,7 @@
         "system": "TradeStat MEIDB",
         "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
         "report_date": "14 Sep 2026",
-        "retrieved_at": "2026-09-14T16:07:11+00:00",
+        "retrieved_at": "2026-09-14T16:29:15+00:00",
         "checksum_sha256": "0513d305bbc029cbb4a0f80be706c97b81e036a652ed863dbc47c7733aba48b7"
       }
     }
@@ -1045,6 +1052,17 @@
     "imports": 11.32,
     "exports": 7.82,
     "balance": -3.5,
+    "import_previous_year": 7.53,
+    "export_previous_year": 3.93,
+    "import_yoy_pct": 50.33,
+    "export_yoy_pct": 98.98,
+    "ytd_imports": 57.1,
+    "ytd_exports": 56.48,
+    "ytd_balance": -0.62,
+    "ytd_imports_previous_year": 44.77,
+    "ytd_exports_previous_year": 13.46,
+    "ytd_import_yoy_pct": 27.54,
+    "ytd_export_yoy_pct": 319.61,
     "unit": "USD million",
     "supplier_concentration": {
       "top_partner_share_pct": 37.22,
