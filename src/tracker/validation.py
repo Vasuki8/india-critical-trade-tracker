@@ -114,6 +114,40 @@ def _validate_period_sequence(periods: list[object], *, prefix: str) -> list[str
     return errors
 
 
+def _validate_coverage_row(row: dict, *, prefix: str) -> list[str]:
+    errors: list[str] = []
+    if "coverage_status" not in row:
+        return errors
+
+    status = row.get("coverage_status")
+    observed = row.get("observed_commodity_count")
+    expected = row.get("expected_commodity_count")
+    missing = row.get("missing_commodities")
+
+    if status not in {"complete", "partial"}:
+        errors.append(f"{prefix}: coverage_status must be complete or partial")
+    if not isinstance(observed, int) or isinstance(observed, bool) or observed < 0:
+        errors.append(f"{prefix}: observed_commodity_count must be a non-negative integer")
+    if not isinstance(expected, int) or isinstance(expected, bool) or expected < 0:
+        errors.append(f"{prefix}: expected_commodity_count must be a non-negative integer")
+    if not isinstance(missing, list) or any(not isinstance(item, str) or not item for item in missing or []):
+        errors.append(f"{prefix}: missing_commodities must be a list of non-empty ids")
+        return errors
+    if len(missing) != len(set(missing)):
+        errors.append(f"{prefix}: missing_commodities must not contain duplicates")
+
+    if isinstance(observed, int) and not isinstance(observed, bool) and isinstance(expected, int) and not isinstance(expected, bool):
+        if observed > expected:
+            errors.append(f"{prefix}: observed_commodity_count cannot exceed expected_commodity_count")
+        if expected - observed != len(missing):
+            errors.append(f"{prefix}: coverage counts do not match missing_commodities")
+        if status == "complete" and (observed != expected or missing):
+            errors.append(f"{prefix}: complete coverage requires no missing commodities")
+        if status == "partial" and (observed >= expected or not missing):
+            errors.append(f"{prefix}: partial coverage requires at least one missing commodity")
+    return errors
+
+
 def validate_dashboard(doc: dict) -> list[str]:
     """Validate generated dashboard chronology and cross-section/history integrity."""
     errors: list[str] = []
@@ -132,6 +166,9 @@ def validate_dashboard(doc: dict) -> list[str]:
         errors.append(
             f"dashboard: as_of {as_of} must equal latest monthly USD period {valid_monthly_periods[-1]}"
         )
+    for i, row in enumerate(monthly):
+        if isinstance(row, dict):
+            errors.extend(_validate_coverage_row(row, prefix=f"dashboard.monthly[{i}]"))
 
     commodities = doc.get("commodities")
     if not isinstance(commodities, list):
@@ -186,5 +223,32 @@ def validate_dashboard(doc: dict) -> list[str]:
             "dashboard.commodity_history contains ids missing from dashboard.commodities: "
             + ", ".join(unknown_history_ids)
         )
+
+    history_gaps = doc.get("history_gaps", {})
+    if not isinstance(history_gaps, dict):
+        errors.append("dashboard.history_gaps must be an object")
+        history_gaps = {}
+    valid_period_set = set(valid_monthly_periods)
+    known_ids = set(history) | set(commodity_ids)
+    for commodity_id, rows in history_gaps.items():
+        prefix = f"dashboard.history_gaps[{commodity_id}]"
+        if commodity_id not in known_ids:
+            errors.append(f"{prefix}: commodity id is not present in dashboard history/current commodities")
+        if not isinstance(rows, list):
+            errors.append(f"{prefix}: gaps must be a list")
+            continue
+        periods = [row.get("period") if isinstance(row, dict) else None for row in rows]
+        errors.extend(_validate_period_sequence(periods, prefix=prefix))
+        for j, row in enumerate(rows):
+            if not isinstance(row, dict):
+                errors.append(f"{prefix}[{j}]: gap must be an object")
+                continue
+            period = row.get("period")
+            if _valid_period(period) and period not in valid_period_set:
+                errors.append(f"{prefix}[{j}]: gap period {period} is outside dashboard monthly coverage")
+            if not row.get("reason"):
+                errors.append(f"{prefix}[{j}]: missing reason")
+            if not row.get("note"):
+                errors.append(f"{prefix}[{j}]: missing note")
 
     return errors
