@@ -1,4 +1,6 @@
 const fmt = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 });
+const compactFmt = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
+const unitValueFmt = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 function usdMillions(v) {
   if (v === null || v === undefined) return '—';
@@ -14,6 +16,16 @@ function pct(v) {
   return `${sign}${fmt.format(v)}%`;
 }
 
+function physicalQuantity(metric) {
+  if (!metric || metric.status !== 'ok' || metric.quantity === null || metric.quantity === undefined) return '—';
+  return `${compactFmt.format(metric.quantity)} ${metric.quantity_unit || ''}`.trim();
+}
+
+function impliedUnitValue(metric) {
+  if (!metric || metric.status !== 'ok' || metric.unit_value_usd_per_source_unit === null || metric.unit_value_usd_per_source_unit === undefined) return '—';
+  return `$${unitValueFmt.format(metric.unit_value_usd_per_source_unit)}/${metric.quantity_unit || 'unit'}`;
+}
+
 async function loadJSON(path) {
   const res = await fetch(path, { cache: 'no-store' });
   if (!res.ok) throw new Error(`${path}: ${res.status}`);
@@ -26,6 +38,30 @@ function mappingClass(status) {
 
 function riskClass(risk) {
   return ['high', 'moderate', 'low'].includes(risk) ? `risk ${risk}` : 'risk';
+}
+
+function quantityBlock(metrics) {
+  const aggregate = metrics?.unit_values?.aggregate || {};
+  const imports = aggregate.import;
+  const exports = aggregate.export;
+  const rows = [];
+
+  if (imports?.status === 'ok') {
+    rows.push(`
+      <div class="quantity-row" title="TradeStat quantities are normalized from thousand source units to physical source units before unit-value calculation.">
+        <span>Import quantity <strong>${physicalQuantity(imports)}</strong></span>
+        <span>Implied import unit <strong>${impliedUnitValue(imports)}</strong></span>
+      </div>`);
+  }
+  if (exports?.status === 'ok') {
+    rows.push(`
+      <div class="quantity-row" title="TradeStat quantities are normalized from thousand source units to physical source units before unit-value calculation.">
+        <span>Export quantity <strong>${physicalQuantity(exports)}</strong></span>
+        <span>Implied export unit <strong>${impliedUnitValue(exports)}</strong></span>
+      </div>`);
+  }
+
+  return rows.join('');
 }
 
 function renderCommodities(master, dashboard) {
@@ -56,6 +92,7 @@ function renderCommodities(master, dashboard) {
         <span>YTD imports <strong>${usdMillions(m.ytd_imports)}</strong></span>
         <span>YTD exports <strong>${usdMillions(m.ytd_exports)}</strong></span>
       </div>
+      ${quantityBlock(m)}
       <div class="commodity-foot">
         <span class="${riskClass(dependency.risk)}">${dependency.score ?? '—'} dependency · ${dependency.risk || 'n/a'}</span>
         <span>${topSupplier ? `Top supplier: ${topSupplier.partner_country} ${topSupplier.share_pct}%` : 'Supplier data unavailable'}</span>
