@@ -2349,6 +2349,94 @@
   ],
   "monthly": [
     {
+      "period": "2026-01",
+      "imports": 50296.1,
+      "exports": 16464.56,
+      "balance": -33831.54,
+      "import_previous_year": 39722.27,
+      "export_previous_year": 16180.6,
+      "import_yoy_pct": 26.62,
+      "export_yoy_pct": 1.75,
+      "ytd_imports": 50296.1,
+      "ytd_exports": 16464.56,
+      "ytd_balance": -33831.54,
+      "ytd_import_yoy_pct": 26.62,
+      "ytd_export_yoy_pct": 1.75,
+      "unit": "USD million",
+      "coverage_method": "unique shortest-HS-prefix union to prevent parent/child double counting",
+      "included_hs_codes": [
+        "29",
+        "30",
+        "31",
+        "72",
+        "74",
+        "75",
+        "84",
+        "85",
+        "0713",
+        "1507",
+        "1511",
+        "1512",
+        "2603",
+        "2604",
+        "2605",
+        "2701",
+        "2709",
+        "2710",
+        "2846",
+        "7108",
+        "8105",
+        "27111100",
+        "27112100",
+        "28252000",
+        "28369100"
+      ]
+    },
+    {
+      "period": "2026-02",
+      "imports": 44307.29,
+      "exports": 16217.01,
+      "balance": -28090.28,
+      "import_previous_year": 33328.74,
+      "export_previous_year": 17261.29,
+      "import_yoy_pct": 32.94,
+      "export_yoy_pct": -6.05,
+      "ytd_imports": 94603.4,
+      "ytd_exports": 32681.59,
+      "ytd_balance": -61921.81,
+      "ytd_import_yoy_pct": 29.5,
+      "ytd_export_yoy_pct": -2.27,
+      "unit": "USD million",
+      "coverage_method": "unique shortest-HS-prefix union to prevent parent/child double counting",
+      "included_hs_codes": [
+        "29",
+        "30",
+        "31",
+        "72",
+        "74",
+        "75",
+        "84",
+        "85",
+        "0713",
+        "1507",
+        "1511",
+        "1512",
+        "2603",
+        "2604",
+        "2605",
+        "2701",
+        "2709",
+        "2710",
+        "2846",
+        "7108",
+        "8105",
+        "27111100",
+        "27112100",
+        "28252000",
+        "28369100"
+      ]
+    },
+    {
       "period": "2026-03",
       "imports": 40878.42,
       "exports": 19265.9,
@@ -2528,6 +2616,70 @@
   "commodity_history": {
     "batteries": [
       {
+        "period": "2026-01",
+        "imports": 670.42,
+        "exports": 57.08,
+        "balance": -613.34,
+        "import_yoy_pct": 94.12,
+        "export_yoy_pct": 4.68,
+        "ytd_imports": 670.42,
+        "ytd_exports": 57.08,
+        "ytd_balance": -613.34,
+        "dependency_score": 87.6,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 512.03,
+        "exports": 58.32,
+        "balance": -453.71,
+        "import_yoy_pct": 90.58,
+        "export_yoy_pct": 11.45,
+        "ytd_imports": 1182.45,
+        "ytd_exports": 115.4,
+        "ytd_balance": -1067.05,
+        "dependency_score": 84.0,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 516.26,
         "exports": 46.41,
@@ -2657,6 +2809,70 @@
       }
     ],
     "coal": [
+      {
+        "period": "2026-01",
+        "imports": 2099.13,
+        "exports": 18.78,
+        "balance": -2080.35,
+        "import_yoy_pct": -18.75,
+        "export_yoy_pct": -2.8,
+        "ytd_imports": 2099.13,
+        "ytd_exports": 18.78,
+        "ytd_balance": -2080.35,
+        "dependency_score": 67.2,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 2095.16,
+        "exports": 21.15,
+        "balance": -2074.01,
+        "import_yoy_pct": 4.11,
+        "export_yoy_pct": 44.66,
+        "ytd_imports": 4194.28,
+        "ytd_exports": 39.93,
+        "ytd_balance": -4154.35,
+        "dependency_score": 67.6,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 2422.18,
@@ -2788,6 +3004,70 @@
     ],
     "cobalt": [
       {
+        "period": "2026-01",
+        "imports": 11.0,
+        "exports": 8.74,
+        "balance": -2.26,
+        "import_yoy_pct": 60.82,
+        "export_yoy_pct": 765.35,
+        "ytd_imports": 11.0,
+        "ytd_exports": 8.74,
+        "ytd_balance": -2.26,
+        "dependency_score": 24.6,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 7.85,
+        "exports": 10.47,
+        "balance": 2.62,
+        "import_yoy_pct": 43.51,
+        "export_yoy_pct": 878.5,
+        "ytd_imports": 18.85,
+        "ytd_exports": 19.21,
+        "ytd_balance": 0.36,
+        "dependency_score": 10.5,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 6.31,
         "exports": 10.74,
@@ -2917,6 +3197,70 @@
       }
     ],
     "computers": [
+      {
+        "period": "2026-01",
+        "imports": 1201.54,
+        "exports": 99.75,
+        "balance": -1101.79,
+        "import_yoy_pct": 42.44,
+        "export_yoy_pct": 9.5,
+        "ytd_imports": 1201.54,
+        "ytd_exports": 99.75,
+        "ytd_balance": -1101.79,
+        "dependency_score": 66.9,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 1017.73,
+        "exports": 103.55,
+        "balance": -914.18,
+        "import_yoy_pct": 49.57,
+        "export_yoy_pct": 88.03,
+        "ytd_imports": 2219.27,
+        "ytd_exports": 203.3,
+        "ytd_balance": -2015.97,
+        "dependency_score": 66.4,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 1556.4,
@@ -3048,6 +3392,70 @@
     ],
     "copper": [
       {
+        "period": "2026-01",
+        "imports": 1814.22,
+        "exports": 315.53,
+        "balance": -1498.69,
+        "import_yoy_pct": 44.25,
+        "export_yoy_pct": 52.77,
+        "ytd_imports": 1814.22,
+        "ytd_exports": 315.53,
+        "ytd_balance": -1498.69,
+        "dependency_score": 55.6,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 1654.13,
+        "exports": 306.53,
+        "balance": -1347.6,
+        "import_yoy_pct": 76.19,
+        "export_yoy_pct": 103.07,
+        "ytd_imports": 3468.35,
+        "ytd_exports": 622.06,
+        "ytd_balance": -2846.29,
+        "dependency_score": 55.5,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 1418.97,
         "exports": 433.7,
@@ -3177,6 +3585,70 @@
       }
     ],
     "crude_oil": [
+      {
+        "period": "2026-01",
+        "imports": 10274.36,
+        "exports": 0.0,
+        "balance": -10274.36,
+        "import_yoy_pct": 2.04,
+        "export_yoy_pct": null,
+        "ytd_imports": 10274.36,
+        "ytd_exports": null,
+        "ytd_balance": null,
+        "dependency_score": 66.7,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 9823.02,
+        "exports": 0.0,
+        "balance": -9823.02,
+        "import_yoy_pct": 10.36,
+        "export_yoy_pct": null,
+        "ytd_imports": 20097.38,
+        "ytd_exports": null,
+        "ytd_balance": null,
+        "dependency_score": 68.6,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 9531.03,
@@ -3308,6 +3780,70 @@
     ],
     "edible_oils": [
       {
+        "period": "2026-01",
+        "imports": 1548.75,
+        "exports": 15.32,
+        "balance": -1533.43,
+        "import_yoy_pct": 14.2,
+        "export_yoy_pct": 149.51,
+        "ytd_imports": 1548.75,
+        "ytd_exports": 15.32,
+        "ytd_balance": -1533.43,
+        "dependency_score": 67.2,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 1585.76,
+        "exports": 32.4,
+        "balance": -1553.36,
+        "import_yoy_pct": 32.81,
+        "export_yoy_pct": 224.65,
+        "ytd_imports": 3134.51,
+        "ytd_exports": 47.71,
+        "ytd_balance": -3086.8,
+        "dependency_score": 68.1,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 1483.09,
         "exports": 29.87,
@@ -3437,6 +3973,70 @@
       }
     ],
     "electronics": [
+      {
+        "period": "2026-01",
+        "imports": 9232.46,
+        "exports": 4604.66,
+        "balance": -4627.8,
+        "import_yoy_pct": 6.34,
+        "export_yoy_pct": 0.09,
+        "ytd_imports": 9232.46,
+        "ytd_exports": 4604.66,
+        "ytd_balance": -4627.8,
+        "dependency_score": 46.5,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 9275.5,
+        "exports": 4759.09,
+        "balance": -4516.41,
+        "import_yoy_pct": 30.91,
+        "export_yoy_pct": 11.01,
+        "ytd_imports": 18507.97,
+        "ytd_exports": 9363.75,
+        "ytd_balance": -9144.22,
+        "dependency_score": 44.1,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 9824.86,
@@ -3568,6 +4168,70 @@
     ],
     "fertilizers": [
       {
+        "period": "2026-01",
+        "imports": 765.48,
+        "exports": 8.3,
+        "balance": -757.18,
+        "import_yoy_pct": 14.59,
+        "export_yoy_pct": -0.72,
+        "ytd_imports": 765.48,
+        "ytd_exports": 8.3,
+        "ytd_balance": -757.18,
+        "dependency_score": 68.7,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 784.64,
+        "exports": 27.52,
+        "balance": -757.12,
+        "import_yoy_pct": 74.28,
+        "export_yoy_pct": 170.33,
+        "ytd_imports": 1550.13,
+        "ytd_exports": 35.81,
+        "ytd_balance": -1514.32,
+        "dependency_score": 65.3,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 483.5,
         "exports": 30.11,
@@ -3697,6 +4361,70 @@
       }
     ],
     "gold": [
+      {
+        "period": "2026-01",
+        "imports": 12070.45,
+        "exports": 8.29,
+        "balance": -12062.16,
+        "import_yoy_pct": 349.22,
+        "export_yoy_pct": -98.73,
+        "ytd_imports": 12070.45,
+        "ytd_exports": 8.29,
+        "ytd_balance": -12062.16,
+        "dependency_score": 70.3,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 7446.54,
+        "exports": 13.66,
+        "balance": -7432.88,
+        "import_yoy_pct": 218.55,
+        "export_yoy_pct": null,
+        "ytd_imports": 19516.98,
+        "ytd_exports": 21.95,
+        "ytd_balance": -19495.03,
+        "dependency_score": 70.4,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 3060.61,
@@ -3828,6 +4556,70 @@
     ],
     "iron_steel": [
       {
+        "period": "2026-01",
+        "imports": 1298.19,
+        "exports": 911.73,
+        "balance": -386.46,
+        "import_yoy_pct": -24.08,
+        "export_yoy_pct": 22.27,
+        "ytd_imports": 1298.19,
+        "ytd_exports": 911.73,
+        "ytd_balance": -386.46,
+        "dependency_score": 22.1,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 1131.23,
+        "exports": 844.21,
+        "balance": -287.02,
+        "import_yoy_pct": -2.18,
+        "export_yoy_pct": 22.57,
+        "ytd_imports": 2429.42,
+        "ytd_exports": 1755.94,
+        "ytd_balance": -673.48,
+        "dependency_score": 21.0,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 1053.42,
         "exports": 901.8,
@@ -3957,6 +4749,70 @@
       }
     ],
     "lithium": [
+      {
+        "period": "2026-01",
+        "imports": 3.39,
+        "exports": 1.54,
+        "balance": -1.85,
+        "import_yoy_pct": -21.71,
+        "export_yoy_pct": 431.03,
+        "ytd_imports": 3.39,
+        "ytd_exports": 1.54,
+        "ytd_balance": -1.85,
+        "dependency_score": 50.1,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "ok",
+            "usd_million": 3.39,
+            "raw_quantity_source_units": 349247.0,
+            "quantity": 349247.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 9.706597
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 1.54,
+            "raw_quantity_source_units": 127079.0,
+            "quantity": 127079.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 12.118446
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 5.43,
+        "exports": 0.81,
+        "balance": -4.62,
+        "import_yoy_pct": 118.95,
+        "export_yoy_pct": -20.59,
+        "ytd_imports": 8.82,
+        "ytd_exports": 2.35,
+        "ytd_balance": -6.47,
+        "dependency_score": 77.2,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "ok",
+            "usd_million": 5.43,
+            "raw_quantity_source_units": 414008.0,
+            "quantity": 414008.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 13.115689
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.81,
+            "raw_quantity_source_units": 30039.0,
+            "quantity": 30039.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 26.964946
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 5.0,
@@ -4088,6 +4944,70 @@
     ],
     "machinery": [
       {
+        "period": "2026-01",
+        "imports": 6472.45,
+        "exports": 3055.74,
+        "balance": -3416.71,
+        "import_yoy_pct": 16.42,
+        "export_yoy_pct": 12.96,
+        "ytd_imports": 6472.45,
+        "ytd_exports": 3055.74,
+        "ytd_balance": -3416.71,
+        "dependency_score": 44.7,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 6116.52,
+        "exports": 3015.68,
+        "balance": -3100.84,
+        "import_yoy_pct": 25.0,
+        "export_yoy_pct": 8.49,
+        "ytd_imports": 12588.98,
+        "ytd_exports": 6071.43,
+        "ytd_balance": -6517.55,
+        "dependency_score": 43.7,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 7044.03,
         "exports": 3217.73,
@@ -4217,6 +5137,70 @@
       }
     ],
     "natural_gas_lng": [
+      {
+        "period": "2026-01",
+        "imports": 1176.75,
+        "exports": 0.01,
+        "balance": -1176.74,
+        "import_yoy_pct": 10.55,
+        "export_yoy_pct": -87.5,
+        "ytd_imports": 1176.75,
+        "ytd_exports": 0.01,
+        "ytd_balance": -1176.74,
+        "dependency_score": 73.6,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "ok",
+            "usd_million": 1176.75,
+            "raw_quantity_source_units": 2413897461.0,
+            "quantity": 2413897461.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.48749
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.01,
+            "raw_quantity_source_units": 18925.0,
+            "quantity": 18925.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.528402
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 1044.06,
+        "exports": 0.0,
+        "balance": -1044.06,
+        "import_yoy_pct": -11.22,
+        "export_yoy_pct": -100.0,
+        "ytd_imports": 2220.81,
+        "ytd_exports": 0.02,
+        "ytd_balance": -2220.79,
+        "dependency_score": 71.2,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "ok",
+            "usd_million": 1044.06,
+            "raw_quantity_source_units": 2040090129.0,
+            "quantity": 2040090129.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.511772
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.0,
+            "raw_quantity_source_units": 2168.0,
+            "quantity": 2168.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.0
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 970.99,
@@ -4348,6 +5332,70 @@
     ],
     "nickel": [
       {
+        "period": "2026-01",
+        "imports": 100.07,
+        "exports": 14.45,
+        "balance": -85.62,
+        "import_yoy_pct": 10.14,
+        "export_yoy_pct": -19.77,
+        "ytd_imports": 100.07,
+        "ytd_exports": 14.45,
+        "ytd_balance": -85.62,
+        "dependency_score": 60.5,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 101.35,
+        "exports": 17.77,
+        "balance": -83.58,
+        "import_yoy_pct": 45.22,
+        "export_yoy_pct": 7.76,
+        "ytd_imports": 201.42,
+        "ytd_exports": 32.23,
+        "ytd_balance": -169.19,
+        "dependency_score": 54.6,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 85.26,
         "exports": 19.98,
@@ -4477,6 +5525,70 @@
       }
     ],
     "organic_chemicals_apis": [
+      {
+        "period": "2026-01",
+        "imports": 2138.24,
+        "exports": 1736.77,
+        "balance": -401.47,
+        "import_yoy_pct": -10.86,
+        "export_yoy_pct": 4.35,
+        "ytd_imports": 2138.24,
+        "ytd_exports": 1736.77,
+        "ytd_balance": -401.47,
+        "dependency_score": 27.6,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 1923.5,
+        "exports": 1674.67,
+        "balance": -248.83,
+        "import_yoy_pct": 1.18,
+        "export_yoy_pct": 5.84,
+        "ytd_imports": 4061.74,
+        "ytd_exports": 3411.44,
+        "ytd_balance": -650.3,
+        "dependency_score": 23.6,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 2002.83,
@@ -4608,6 +5720,70 @@
     ],
     "petroleum_products": [
       {
+        "period": "2026-01",
+        "imports": 606.71,
+        "exports": 3608.16,
+        "balance": 3001.45,
+        "import_yoy_pct": 4.37,
+        "export_yoy_pct": 6.26,
+        "ytd_imports": 606.71,
+        "ytd_exports": 3608.16,
+        "ytd_balance": 3001.45,
+        "dependency_score": 9.7,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 652.81,
+        "exports": 3359.11,
+        "balance": 2706.3,
+        "import_yoy_pct": 50.45,
+        "export_yoy_pct": -40.52,
+        "ytd_imports": 1259.53,
+        "ytd_exports": 6967.27,
+        "ytd_balance": 5707.74,
+        "dependency_score": 8.2,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 864.78,
         "exports": 5108.55,
@@ -4737,6 +5913,70 @@
       }
     ],
     "pharmaceuticals": [
+      {
+        "period": "2026-01",
+        "imports": 277.83,
+        "exports": 2082.09,
+        "balance": 1804.26,
+        "import_yoy_pct": 14.19,
+        "export_yoy_pct": -0.07,
+        "ytd_imports": 277.83,
+        "ytd_exports": 2082.09,
+        "ytd_balance": 1804.26,
+        "dependency_score": 5.3,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 342.44,
+        "exports": 2066.64,
+        "balance": 1724.2,
+        "import_yoy_pct": 25.06,
+        "export_yoy_pct": 3.76,
+        "ytd_imports": 620.27,
+        "ytd_exports": 4148.74,
+        "ytd_balance": 3528.47,
+        "dependency_score": 5.3,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 273.3,
@@ -4868,6 +6108,70 @@
     ],
     "pulses": [
       {
+        "period": "2026-01",
+        "imports": 404.82,
+        "exports": 72.69,
+        "balance": -332.13,
+        "import_yoy_pct": -46.62,
+        "export_yoy_pct": 2.57,
+        "ytd_imports": 404.82,
+        "ytd_exports": 72.69,
+        "ytd_balance": -332.13,
+        "dependency_score": 63.6,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 307.07,
+        "exports": 66.14,
+        "balance": -240.93,
+        "import_yoy_pct": -38.08,
+        "export_yoy_pct": -7.34,
+        "ytd_imports": 711.89,
+        "ytd_exports": 138.83,
+        "ytd_balance": -573.06,
+        "dependency_score": 63.6,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 347.66,
         "exports": 84.47,
@@ -4997,6 +6301,70 @@
       }
     ],
     "rare_earths": [
+      {
+        "period": "2026-01",
+        "imports": 1.8,
+        "exports": 1.76,
+        "balance": -0.04,
+        "import_yoy_pct": 71.43,
+        "export_yoy_pct": -56.22,
+        "ytd_imports": 1.8,
+        "ytd_exports": 1.76,
+        "ytd_balance": -0.04,
+        "dependency_score": 16.0,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 10.28,
+        "exports": 1.16,
+        "balance": -9.12,
+        "import_yoy_pct": 851.85,
+        "export_yoy_pct": -24.68,
+        "ytd_imports": 12.07,
+        "ytd_exports": 2.92,
+        "ytd_balance": -9.15,
+        "dependency_score": 86.5,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 0.6,
@@ -5128,6 +6496,70 @@
     ],
     "semiconductors": [
       {
+        "period": "2026-01",
+        "imports": 670.95,
+        "exports": 22.72,
+        "balance": -648.23,
+        "import_yoy_pct": 4.6,
+        "export_yoy_pct": -73.9,
+        "ytd_imports": 670.95,
+        "ytd_exports": 22.72,
+        "ytd_balance": -648.23,
+        "dependency_score": 72.6,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 549.86,
+        "exports": 26.67,
+        "balance": -523.19,
+        "import_yoy_pct": 4.16,
+        "export_yoy_pct": -70.2,
+        "ytd_imports": 1220.81,
+        "ytd_exports": 49.39,
+        "ytd_balance": -1171.42,
+        "dependency_score": 67.7,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 594.29,
         "exports": 46.55,
@@ -5258,6 +6690,70 @@
     ],
     "solar_pv": [
       {
+        "period": "2026-01",
+        "imports": 474.96,
+        "exports": 17.25,
+        "balance": -457.71,
+        "import_yoy_pct": 0.05,
+        "export_yoy_pct": -79.02,
+        "ytd_imports": 474.96,
+        "ytd_exports": 17.25,
+        "ytd_balance": -457.71,
+        "dependency_score": 74.6,
+        "dependency_risk": "high",
+        "unit_values": {
+          "import": {
+            "status": "ok",
+            "usd_million": 474.96,
+            "raw_quantity_source_units": 826331211.0,
+            "quantity": 826331211.0,
+            "quantity_unit": "NOS",
+            "unit_value_usd_per_source_unit": 0.574782
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 17.25,
+            "raw_quantity_source_units": 1287089.0,
+            "quantity": 1287089.0,
+            "quantity_unit": "NOS",
+            "unit_value_usd_per_source_unit": 13.402337
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 372.29,
+        "exports": 20.83,
+        "balance": -351.46,
+        "import_yoy_pct": -5.59,
+        "export_yoy_pct": -75.43,
+        "ytd_imports": 847.26,
+        "ytd_exports": 38.08,
+        "ytd_balance": -809.18,
+        "dependency_score": 68.2,
+        "dependency_risk": "moderate",
+        "unit_values": {
+          "import": {
+            "status": "ok",
+            "usd_million": 372.29,
+            "raw_quantity_source_units": 472487983.0,
+            "quantity": 472487983.0,
+            "quantity_unit": "NOS",
+            "unit_value_usd_per_source_unit": 0.787935
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 20.83,
+            "raw_quantity_source_units": 13481717.0,
+            "quantity": 13481717.0,
+            "quantity_unit": "NOS",
+            "unit_value_usd_per_source_unit": 1.545055
+          }
+        },
+        "status": "ok"
+      },
+      {
         "period": "2026-03",
         "imports": 419.99,
         "exports": 39.67,
@@ -5387,6 +6883,70 @@
       }
     ],
     "telecom_equipment": [
+      {
+        "period": "2026-01",
+        "imports": 1829.06,
+        "exports": 3023.28,
+        "balance": 1194.22,
+        "import_yoy_pct": -10.28,
+        "export_yoy_pct": -1.51,
+        "ytd_imports": 1829.06,
+        "ytd_exports": 3023.28,
+        "ytd_balance": 1194.22,
+        "dependency_score": 24.8,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
+      {
+        "period": "2026-02",
+        "imports": 1867.96,
+        "exports": 2987.76,
+        "balance": 1119.8,
+        "import_yoy_pct": 0.83,
+        "export_yoy_pct": 6.59,
+        "ytd_imports": 3697.03,
+        "ytd_exports": 6011.04,
+        "ytd_balance": 2314.01,
+        "dependency_score": 25.1,
+        "dependency_risk": "low",
+        "unit_values": {
+          "import": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          },
+          "export": {
+            "status": "not_available",
+            "usd_million": null,
+            "raw_quantity_source_units": null,
+            "quantity": null,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null
+          }
+        },
+        "status": "ok"
+      },
       {
         "period": "2026-03",
         "imports": 2187.11,
