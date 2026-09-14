@@ -1,0 +1,63 @@
+name: Bootstrap 2023 TradeStat history
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/bootstrap-2023.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tradestat-history-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill-2023:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync dependencies
+        run: uv sync --dev
+      - name: Preview 2023 resumable plan
+        run: |
+          uv run python scripts/backfill_tradestat.py --start-period 2023-01 --end-period 2023-12 --value-type usd --trade-type both --dry-run
+          uv run python scripts/backfill_tradestat.py --start-period 2023-01 --end-period 2023-12 --value-type quantity --trade-type both --dry-run
+      - name: Backfill 2023 USD observations
+        run: uv run python scripts/backfill_tradestat.py --start-period 2023-01 --end-period 2023-12 --value-type usd --trade-type both
+      - name: Backfill 2023 HS8 quantity observations
+        run: uv run python scripts/backfill_tradestat.py --start-period 2023-01 --end-period 2023-12 --value-type quantity --trade-type both
+      - name: Rebuild dashboard from stored observations
+        run: uv run python scripts/build_dashboard.py
+      - name: Validate generated data
+        run: |
+          uv run python scripts/validate_data.py
+          uv run pytest -q
+          node --check assets/js/app.js
+      - name: Commit 2023 official history
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No repository data change"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/dashboard.json data/observations/
+          if [[ -d data/revisions ]]; then
+            git add data/revisions/
+          fi
+          if git diff --cached --quiet; then
+            echo "No tracked data change"
+            exit 0
+          fi
+          git commit -m "data: backfill TradeStat history for 2023"
+          git pull --rebase origin main
+          git push origin HEAD:main
