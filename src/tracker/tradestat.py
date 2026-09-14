@@ -33,6 +33,11 @@ FIELDS = {
 # Verified against the live TradeStat MEIDB form on 2026-09-14:
 # 1 = US $ Million, 3 = INR Crore, 2 = Quantity.
 VALUE_TYPES = {"usd": "1", "inr": "3", "quantity": "2"}
+VALUE_TYPE_LABEL_TERMS = {
+    "usd": ("us $", "million"),
+    "inr": ("crore",),
+    "quantity": ("quantity",),
+}
 YEAR_TYPES = {"financial": "1", "calendar": "2"}
 VALUE_UNITS = {"usd": "USD million", "inr": "INR crore", "quantity": "source unit"}
 VALID_HS_LENGTHS = {2, 4, 6, 8}
@@ -109,6 +114,32 @@ def parse_csrf_token(html: str) -> str:
     if node is None or not node.get("value"):
         raise TradeStatError("TradeStat CSRF token not found; page contract may have changed")
     return str(node["value"])
+
+
+def validate_value_type_contract(html: str, trade_type: str) -> None:
+    trade_type = trade_type.lower()
+    if trade_type not in ENDPOINTS:
+        raise ValueError("trade_type must be 'import' or 'export'")
+
+    soup = BeautifulSoup(html, "html.parser")
+    field_name = FIELDS[trade_type]["value_type"]
+    select = soup.find("select", attrs={"name": field_name})
+    if select is None:
+        raise TradeStatError(f"TradeStat value selector {field_name!r} not found; page contract may have changed")
+
+    options = {
+        str(option.get("value")): " ".join(option.get_text(" ", strip=True).lower().split())
+        for option in select.find_all("option")
+        if option.get("value") is not None
+    }
+    for value_type, selector_code in VALUE_TYPES.items():
+        label = options.get(selector_code)
+        required_terms = VALUE_TYPE_LABEL_TERMS[value_type]
+        if label is None or not all(term in label for term in required_terms):
+            raise TradeStatError(
+                f"TradeStat value selector contract changed for {value_type}: "
+                f"expected code {selector_code!r} with label terms {required_terms!r}; got {label!r}"
+            )
 
 
 def _find_result_table(soup: BeautifulSoup):
@@ -325,6 +356,7 @@ class TradeStatClient:
 
         endpoint = self.base_url + ENDPOINTS[trade_type]
         landing = self._request("GET", endpoint)
+        validate_value_type_contract(landing.text, trade_type)
         token = parse_csrf_token(landing.text)
         payload = build_payload(
             trade_type=trade_type,
