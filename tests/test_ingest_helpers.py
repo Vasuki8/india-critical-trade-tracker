@@ -143,7 +143,7 @@ class _QuantityClient:
         }
 
 
-def test_quantity_ingestion_persists_direct_unit_scale_metadata():
+def test_quantity_ingestion_persists_direct_unit_scale_metadata_without_new_identity_fields():
     commodity = {
         "id": "lithium",
         "name": "Lithium & Compounds",
@@ -173,7 +173,43 @@ def test_quantity_ingestion_persists_direct_unit_scale_metadata():
     assert doc["reports"][0]["quantity_scale_to_source_unit"] == 1
     assert "already expressed" in doc["reports"][0]["quantity_scale_note"]
     assert doc["commodity"]["mapping_status"] == "hs8_validated"
-    assert doc["commodity"]["quantity_mapping_mode"] == "same_as_value"
+    assert "quantity_mapping_mode" not in doc["commodity"]
+    assert "quantity_rollup_to_value_mapping" not in doc["commodity"]
+
+
+def test_separate_quantity_ingestion_persists_rollup_provenance():
+    commodity = {
+        "id": "rare_earths",
+        "name": "Rare Earths",
+        "category": "Strategic Minerals",
+        "priority": "critical",
+        "hs_codes": ["2846"],
+        "mapping_status": "heading_validated",
+        "quantity_mapping": {
+            "enabled": True,
+            "mode": "separate",
+            "mapping_status": "hs8_validated",
+            "rollup_to_value_mapping": True,
+            "hs_codes": ["28461010", "28469090"],
+        },
+    }
+
+    doc = ingest_one(
+        _QuantityClient(),
+        commodity,
+        period="2026-06",
+        hs_codes=["28461010", "28469090"],
+        value_type="quantity",
+        year_type="calendar",
+        trade_types=["import"],
+    )
+
+    assert doc["commodity"]["hs_codes"] == ["28461010", "28469090"]
+    assert doc["commodity"]["canonical_hs_codes"] == ["28461010", "28469090"]
+    assert doc["commodity"]["mapping_status"] == "hs8_validated"
+    assert doc["commodity"]["monetary_mapping_status"] == "heading_validated"
+    assert doc["commodity"]["quantity_mapping_mode"] == "separate"
+    assert doc["commodity"]["quantity_rollup_to_value_mapping"] is True
 
 
 def _revision_doc(*, value: float = 10.0, retrieved_at: str = "2026-09-14T10:00:00+00:00") -> dict:
