@@ -11,9 +11,9 @@
     "mapping_status": "hs8_validated"
   },
   "coverage": {
-    "first_period": "2021-01",
+    "first_period": "2020-01",
     "last_period": "2026-06",
-    "months_observed": 66,
+    "months_observed": 78,
     "history_gaps": []
   },
   "latest": {
@@ -76,6 +76,1987 @@
     }
   },
   "monthly": [
+    {
+      "period": "2020-01",
+      "imports": 832.03,
+      "exports": 3.08,
+      "balance": -828.95,
+      "import_yoy_pct": 4.62,
+      "export_yoy_pct": -88.81,
+      "ytd_imports": 832.03,
+      "ytd_exports": 3.08,
+      "dependency": {
+        "score": 76.5,
+        "risk": "high",
+        "import_reliance_pct": 99.63,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 49.16,
+        "hhi": 2956.3,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 409.06,
+            "share_pct": 49.16
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 132.1,
+            "share_pct": 15.88
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 98.57,
+            "share_pct": 11.85
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 67.24,
+            "share_pct": 8.08
+          },
+          {
+            "partner_country": "U S A",
+            "value": 55.58,
+            "share_pct": 6.68
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 95.45,
+        "hhi": 9132.2,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 2.94,
+            "share_pct": 95.45
+          },
+          {
+            "partner_country": "BHUTAN",
+            "value": 0.14,
+            "share_pct": 4.55
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 409.06,
+          "share_pct": 49.16
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 132.1,
+          "share_pct": 15.88
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 98.57,
+          "share_pct": 11.85
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 67.24,
+          "share_pct": 8.08
+        },
+        {
+          "partner_country": "U S A",
+          "value": 55.58,
+          "share_pct": 6.68
+        },
+        {
+          "partner_country": "EQUTL GUINEA",
+          "value": 43.03,
+          "share_pct": 5.17
+        },
+        {
+          "partner_country": "CAMEROON",
+          "value": 26.45,
+          "share_pct": 3.18
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 2.94,
+          "share_pct": 95.45
+        },
+        {
+          "partner_country": "BHUTAN",
+          "value": 0.14,
+          "share_pct": 4.55
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 832.03,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 3.08,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 832.03,
+            "raw_quantity_source_units": 2040650495.0,
+            "quantity": 2040650495.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.407728
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 3.08,
+            "raw_quantity_source_units": 5215245.0,
+            "quantity": 5215245.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.590576
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-02",
+      "imports": 917.82,
+      "exports": 2.71,
+      "balance": -915.11,
+      "import_yoy_pct": 35.18,
+      "export_yoy_pct": -12.01,
+      "ytd_imports": 1749.85,
+      "ytd_exports": 5.79,
+      "dependency": {
+        "score": 77.1,
+        "risk": "high",
+        "import_reliance_pct": 99.7,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 51.02,
+        "hhi": 3038.0,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 468.24,
+            "share_pct": 51.02
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 123.76,
+            "share_pct": 13.48
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 106.39,
+            "share_pct": 11.59
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 68.54,
+            "share_pct": 7.47
+          },
+          {
+            "partner_country": "CAMEROON",
+            "value": 50.86,
+            "share_pct": 5.54
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 96.31,
+        "hhi": 9289.2,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 2.61,
+            "share_pct": 96.31
+          },
+          {
+            "partner_country": "BHUTAN",
+            "value": 0.1,
+            "share_pct": 3.69
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 468.24,
+          "share_pct": 51.02
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 123.76,
+          "share_pct": 13.48
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 106.39,
+          "share_pct": 11.59
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 68.54,
+          "share_pct": 7.47
+        },
+        {
+          "partner_country": "CAMEROON",
+          "value": 50.86,
+          "share_pct": 5.54
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 32.53,
+          "share_pct": 3.54
+        },
+        {
+          "partner_country": "U S A",
+          "value": 31.35,
+          "share_pct": 3.42
+        },
+        {
+          "partner_country": "EQUTL GUINEA",
+          "value": 23.24,
+          "share_pct": 2.53
+        },
+        {
+          "partner_country": "AUSTRALIA",
+          "value": 12.91,
+          "share_pct": 1.41
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 2.61,
+          "share_pct": 96.31
+        },
+        {
+          "partner_country": "BHUTAN",
+          "value": 0.1,
+          "share_pct": 3.69
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 917.82,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 2.71,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 917.82,
+            "raw_quantity_source_units": 2671661062.0,
+            "quantity": 2671661062.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.343539
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 2.71,
+            "raw_quantity_source_units": 3954920.0,
+            "quantity": 3954920.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.685222
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-03",
+      "imports": 684.37,
+      "exports": 2.6,
+      "balance": -681.77,
+      "import_yoy_pct": -19.0,
+      "export_yoy_pct": -8.77,
+      "ytd_imports": 2434.22,
+      "ytd_exports": 8.39,
+      "dependency": {
+        "score": 78.3,
+        "risk": "high",
+        "import_reliance_pct": 99.62,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 54.52,
+        "hhi": 3298.1,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 373.08,
+            "share_pct": 54.52
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 68.48,
+            "share_pct": 10.01
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 66.14,
+            "share_pct": 9.66
+          },
+          {
+            "partner_country": "OMAN",
+            "value": 45.37,
+            "share_pct": 6.63
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 39.0,
+            "share_pct": 5.7
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 96.92,
+        "hhi": 9403.6,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 2.52,
+            "share_pct": 96.92
+          },
+          {
+            "partner_country": "BHUTAN",
+            "value": 0.08,
+            "share_pct": 3.08
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 373.08,
+          "share_pct": 54.52
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 68.48,
+          "share_pct": 10.01
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 66.14,
+          "share_pct": 9.66
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 45.37,
+          "share_pct": 6.63
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 39.0,
+          "share_pct": 5.7
+        },
+        {
+          "partner_country": "EQUTL GUINEA",
+          "value": 35.76,
+          "share_pct": 5.23
+        },
+        {
+          "partner_country": "AUSTRALIA",
+          "value": 32.72,
+          "share_pct": 4.78
+        },
+        {
+          "partner_country": "TRINIDAD",
+          "value": 12.25,
+          "share_pct": 1.79
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 11.56,
+          "share_pct": 1.69
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 2.52,
+          "share_pct": 96.92
+        },
+        {
+          "partner_country": "BHUTAN",
+          "value": 0.08,
+          "share_pct": 3.08
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 684.37,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 2.6,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 684.37,
+            "raw_quantity_source_units": 2190749340.0,
+            "quantity": 2190749340.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.312391
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 2.6,
+            "raw_quantity_source_units": 3962040.0,
+            "quantity": 3962040.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.656228
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-04",
+      "imports": 346.06,
+      "exports": 1.21,
+      "balance": -344.85,
+      "import_yoy_pct": -54.62,
+      "export_yoy_pct": -34.95,
+      "ytd_imports": 2780.28,
+      "ytd_exports": 9.61,
+      "dependency": {
+        "score": 74.9,
+        "risk": "high",
+        "import_reliance_pct": 99.65,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 44.37,
+        "hhi": 2698.1,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 153.54,
+            "share_pct": 44.37
+          },
+          {
+            "partner_country": "U S A",
+            "value": 66.0,
+            "share_pct": 19.07
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 47.9,
+            "share_pct": 13.84
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 28.73,
+            "share_pct": 8.3
+          },
+          {
+            "partner_country": "OMAN",
+            "value": 28.01,
+            "share_pct": 8.09
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 1.21,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 153.54,
+          "share_pct": 44.37
+        },
+        {
+          "partner_country": "U S A",
+          "value": 66.0,
+          "share_pct": 19.07
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 47.9,
+          "share_pct": 13.84
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 28.73,
+          "share_pct": 8.3
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 28.01,
+          "share_pct": 8.09
+        },
+        {
+          "partner_country": "ALGERIA",
+          "value": 21.89,
+          "share_pct": 6.33
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 1.21,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 346.06,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 1.21,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 346.06,
+            "raw_quantity_source_units": 1243664228.0,
+            "quantity": 1243664228.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.278258
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 1.21,
+            "raw_quantity_source_units": 2052688.0,
+            "quantity": 2052688.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.589471
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-05",
+      "imports": 596.36,
+      "exports": 1.34,
+      "balance": -595.02,
+      "import_yoy_pct": -21.57,
+      "export_yoy_pct": -42.74,
+      "ytd_imports": 3376.64,
+      "ytd_exports": 10.95,
+      "dependency": {
+        "score": 70.4,
+        "risk": "high",
+        "import_reliance_pct": 99.78,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 30.73,
+        "hhi": 1933.0,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 183.28,
+            "share_pct": 30.73
+          },
+          {
+            "partner_country": "U S A",
+            "value": 133.78,
+            "share_pct": 22.43
+          },
+          {
+            "partner_country": "AUSTRALIA",
+            "value": 89.8,
+            "share_pct": 15.06
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 57.26,
+            "share_pct": 9.6
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 53.6,
+            "share_pct": 8.99
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 1.34,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 183.28,
+          "share_pct": 30.73
+        },
+        {
+          "partner_country": "U S A",
+          "value": 133.78,
+          "share_pct": 22.43
+        },
+        {
+          "partner_country": "AUSTRALIA",
+          "value": 89.8,
+          "share_pct": 15.06
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 57.26,
+          "share_pct": 9.6
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 53.6,
+          "share_pct": 8.99
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 51.38,
+          "share_pct": 8.62
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 17.28,
+          "share_pct": 2.9
+        },
+        {
+          "partner_country": "CAMEROON",
+          "value": 9.97,
+          "share_pct": 1.67
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 1.34,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 596.36,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 1.34,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 596.36,
+            "raw_quantity_source_units": 2056527680.0,
+            "quantity": 2056527680.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.289984
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 1.34,
+            "raw_quantity_source_units": 3120000.0,
+            "quantity": 3120000.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.429487
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-06",
+      "imports": 572.65,
+      "exports": 0.6,
+      "balance": -572.05,
+      "import_yoy_pct": -36.62,
+      "export_yoy_pct": -79.31,
+      "ytd_imports": 3949.29,
+      "ytd_exports": 11.55,
+      "dependency": {
+        "score": 71.0,
+        "risk": "high",
+        "import_reliance_pct": 99.9,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 32.92,
+        "hhi": 1868.3,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 188.49,
+            "share_pct": 32.92
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 118.71,
+            "share_pct": 20.73
+          },
+          {
+            "partner_country": "U S A",
+            "value": 66.12,
+            "share_pct": 11.55
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 66.01,
+            "share_pct": 11.53
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 29.98,
+            "share_pct": 5.24
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 0.6,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 188.49,
+          "share_pct": 32.92
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 118.71,
+          "share_pct": 20.73
+        },
+        {
+          "partner_country": "U S A",
+          "value": 66.12,
+          "share_pct": 11.55
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 66.01,
+          "share_pct": 11.53
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 29.98,
+          "share_pct": 5.24
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 23.84,
+          "share_pct": 4.16
+        },
+        {
+          "partner_country": "TRINIDAD",
+          "value": 23.1,
+          "share_pct": 4.03
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 22.55,
+          "share_pct": 3.94
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 14.84,
+          "share_pct": 2.59
+        },
+        {
+          "partner_country": "BRUNEI",
+          "value": 11.18,
+          "share_pct": 1.95
+        },
+        {
+          "partner_country": "EQUTL GUINEA",
+          "value": 7.82,
+          "share_pct": 1.37
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 0.6,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 572.65,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 0.6,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 572.65,
+            "raw_quantity_source_units": 2217018071.0,
+            "quantity": 2217018071.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.258297
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.6,
+            "raw_quantity_source_units": 1335654.0,
+            "quantity": 1335654.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.449218
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-07",
+      "imports": 550.91,
+      "exports": 0.47,
+      "balance": -550.44,
+      "import_yoy_pct": -31.51,
+      "export_yoy_pct": -80.25,
+      "ytd_imports": 4500.2,
+      "ytd_exports": 12.01,
+      "dependency": {
+        "score": 74.3,
+        "risk": "high",
+        "import_reliance_pct": 99.91,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 43.38,
+        "hhi": 2352.4,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 239.01,
+            "share_pct": 43.38
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 77.41,
+            "share_pct": 14.05
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 52.35,
+            "share_pct": 9.5
+          },
+          {
+            "partner_country": "U S A",
+            "value": 48.25,
+            "share_pct": 8.76
+          },
+          {
+            "partner_country": "TRINIDAD",
+            "value": 30.81,
+            "share_pct": 5.59
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 0.47,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 239.01,
+          "share_pct": 43.38
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 77.41,
+          "share_pct": 14.05
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 52.35,
+          "share_pct": 9.5
+        },
+        {
+          "partner_country": "U S A",
+          "value": 48.25,
+          "share_pct": 8.76
+        },
+        {
+          "partner_country": "TRINIDAD",
+          "value": 30.81,
+          "share_pct": 5.59
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 29.63,
+          "share_pct": 5.38
+        },
+        {
+          "partner_country": "ALGERIA",
+          "value": 22.28,
+          "share_pct": 4.04
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 19.83,
+          "share_pct": 3.6
+        },
+        {
+          "partner_country": "PAPUA N GNA",
+          "value": 16.78,
+          "share_pct": 3.05
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 14.56,
+          "share_pct": 2.64
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 0.47,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 550.91,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 0.47,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 550.91,
+            "raw_quantity_source_units": 2305599404.0,
+            "quantity": 2305599404.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.238944
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.47,
+            "raw_quantity_source_units": 1038000.0,
+            "quantity": 1038000.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.452794
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-08",
+      "imports": 638.09,
+      "exports": 1.89,
+      "balance": -636.2,
+      "import_yoy_pct": -24.27,
+      "export_yoy_pct": -19.92,
+      "ytd_imports": 5138.29,
+      "ytd_exports": 13.9,
+      "dependency": {
+        "score": 71.4,
+        "risk": "high",
+        "import_reliance_pct": 99.7,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 35.24,
+        "hhi": 1870.5,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 224.86,
+            "share_pct": 35.24
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 86.95,
+            "share_pct": 13.63
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 73.28,
+            "share_pct": 11.48
+          },
+          {
+            "partner_country": "U S A",
+            "value": 69.44,
+            "share_pct": 10.88
+          },
+          {
+            "partner_country": "TRINIDAD",
+            "value": 59.29,
+            "share_pct": 9.29
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 1.89,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 224.86,
+          "share_pct": 35.24
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 86.95,
+          "share_pct": 13.63
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 73.28,
+          "share_pct": 11.48
+        },
+        {
+          "partner_country": "U S A",
+          "value": 69.44,
+          "share_pct": 10.88
+        },
+        {
+          "partner_country": "TRINIDAD",
+          "value": 59.29,
+          "share_pct": 9.29
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 48.76,
+          "share_pct": 7.64
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 30.48,
+          "share_pct": 4.78
+        },
+        {
+          "partner_country": "ALGERIA",
+          "value": 24.37,
+          "share_pct": 3.82
+        },
+        {
+          "partner_country": "AUSTRALIA",
+          "value": 20.65,
+          "share_pct": 3.24
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 1.89,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 638.09,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 1.89,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 638.09,
+            "raw_quantity_source_units": 2211196155.0,
+            "quantity": 2211196155.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.288572
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 1.89,
+            "raw_quantity_source_units": 4200000.0,
+            "quantity": 4200000.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.45
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-09",
+      "imports": 627.4,
+      "exports": 1.2,
+      "balance": -626.2,
+      "import_yoy_pct": -20.26,
+      "export_yoy_pct": -51.02,
+      "ytd_imports": 5765.69,
+      "ytd_exports": 15.1,
+      "dependency": {
+        "score": 74.2,
+        "risk": "high",
+        "import_reliance_pct": 99.81,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 43.6,
+        "hhi": 2298.5,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 273.53,
+            "share_pct": 43.6
+          },
+          {
+            "partner_country": "U S A",
+            "value": 68.89,
+            "share_pct": 10.98
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 57.67,
+            "share_pct": 9.19
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 51.18,
+            "share_pct": 8.16
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 36.33,
+            "share_pct": 5.79
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 1.2,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 273.53,
+          "share_pct": 43.6
+        },
+        {
+          "partner_country": "U S A",
+          "value": 68.89,
+          "share_pct": 10.98
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 57.67,
+          "share_pct": 9.19
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 51.18,
+          "share_pct": 8.16
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 36.33,
+          "share_pct": 5.79
+        },
+        {
+          "partner_country": "TRINIDAD",
+          "value": 35.36,
+          "share_pct": 5.64
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 25.31,
+          "share_pct": 4.03
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 24.88,
+          "share_pct": 3.97
+        },
+        {
+          "partner_country": "AUSTRALIA",
+          "value": 24.63,
+          "share_pct": 3.93
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 21.5,
+          "share_pct": 3.43
+        },
+        {
+          "partner_country": "CAMEROON",
+          "value": 8.12,
+          "share_pct": 1.29
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 1.2,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 627.4,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 1.2,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 627.4,
+            "raw_quantity_source_units": 2132632936.0,
+            "quantity": 2132632936.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.29419
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 1.2,
+            "raw_quantity_source_units": 2635380.0,
+            "quantity": 2635380.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.455342
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-10",
+      "imports": 765.31,
+      "exports": 0.03,
+      "balance": -765.28,
+      "import_yoy_pct": -9.24,
+      "export_yoy_pct": -98.74,
+      "ytd_imports": 6531.0,
+      "ytd_exports": 15.12,
+      "dependency": {
+        "score": 74.2,
+        "risk": "high",
+        "import_reliance_pct": 100.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 42.41,
+        "hhi": 2391.2,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 324.56,
+            "share_pct": 42.41
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 125.42,
+            "share_pct": 16.39
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 74.01,
+            "share_pct": 9.67
+          },
+          {
+            "partner_country": "AUSTRALIA",
+            "value": 71.8,
+            "share_pct": 9.38
+          },
+          {
+            "partner_country": "OMAN",
+            "value": 66.81,
+            "share_pct": 8.73
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 0.03,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 324.56,
+          "share_pct": 42.41
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 125.42,
+          "share_pct": 16.39
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 74.01,
+          "share_pct": 9.67
+        },
+        {
+          "partner_country": "AUSTRALIA",
+          "value": 71.8,
+          "share_pct": 9.38
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 66.81,
+          "share_pct": 8.73
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 54.74,
+          "share_pct": 7.15
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 23.54,
+          "share_pct": 3.08
+        },
+        {
+          "partner_country": "U S A",
+          "value": 16.64,
+          "share_pct": 2.17
+        },
+        {
+          "partner_country": "EQUTL GUINEA",
+          "value": 7.8,
+          "share_pct": 1.02
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 0.03,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 765.31,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 0.03,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 765.31,
+            "raw_quantity_source_units": 2619574956.0,
+            "quantity": 2619574956.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.29215
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.03,
+            "raw_quantity_source_units": 55000.0,
+            "quantity": 55000.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.545455
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-11",
+      "imports": 624.49,
+      "exports": 0.26,
+      "balance": -624.23,
+      "import_yoy_pct": -19.11,
+      "export_yoy_pct": -90.88,
+      "ytd_imports": 7155.49,
+      "ytd_exports": 15.38,
+      "dependency": {
+        "score": 70.6,
+        "risk": "high",
+        "import_reliance_pct": 99.96,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 31.2,
+        "hhi": 1859.4,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 194.86,
+            "share_pct": 31.2
+          },
+          {
+            "partner_country": "U S A",
+            "value": 105.63,
+            "share_pct": 16.91
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 99.04,
+            "share_pct": 15.86
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 95.72,
+            "share_pct": 15.33
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 44.99,
+            "share_pct": 7.2
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 0.26,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 194.86,
+          "share_pct": 31.2
+        },
+        {
+          "partner_country": "U S A",
+          "value": 105.63,
+          "share_pct": 16.91
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 99.04,
+          "share_pct": 15.86
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 95.72,
+          "share_pct": 15.33
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 44.99,
+          "share_pct": 7.2
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 32.09,
+          "share_pct": 5.14
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 26.97,
+          "share_pct": 4.32
+        },
+        {
+          "partner_country": "EGYPT A RP",
+          "value": 25.19,
+          "share_pct": 4.03
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 0.26,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 624.49,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 0.26,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 624.49,
+            "raw_quantity_source_units": 2082639618.0,
+            "quantity": 2082639618.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.299855
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.26,
+            "raw_quantity_source_units": 518000.0,
+            "quantity": 518000.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.501931
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-12",
+      "imports": 751.25,
+      "exports": 0.88,
+      "balance": -750.37,
+      "import_yoy_pct": -0.25,
+      "export_yoy_pct": -71.7,
+      "ytd_imports": 7906.74,
+      "ytd_exports": 16.27,
+      "dependency": {
+        "score": 74.1,
+        "risk": "high",
+        "import_reliance_pct": 99.88,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 42.23,
+        "hhi": 2439.9,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 317.27,
+            "share_pct": 42.23
+          },
+          {
+            "partner_country": "U S A",
+            "value": 159.04,
+            "share_pct": 21.17
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 64.44,
+            "share_pct": 8.58
+          },
+          {
+            "partner_country": "FRANCE",
+            "value": 50.47,
+            "share_pct": 6.72
+          },
+          {
+            "partner_country": "OMAN",
+            "value": 48.3,
+            "share_pct": 6.43
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 0.88,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "QATAR",
+          "value": 317.27,
+          "share_pct": 42.23
+        },
+        {
+          "partner_country": "U S A",
+          "value": 159.04,
+          "share_pct": 21.17
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 64.44,
+          "share_pct": 8.58
+        },
+        {
+          "partner_country": "FRANCE",
+          "value": 50.47,
+          "share_pct": 6.72
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 48.3,
+          "share_pct": 6.43
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 35.34,
+          "share_pct": 4.7
+        },
+        {
+          "partner_country": "EGYPT A RP",
+          "value": 21.32,
+          "share_pct": 2.84
+        },
+        {
+          "partner_country": "CAMEROON",
+          "value": 19.65,
+          "share_pct": 2.62
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 18.5,
+          "share_pct": 2.46
+        },
+        {
+          "partner_country": "EQUTL GUINEA",
+          "value": 16.93,
+          "share_pct": 2.25
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "NEPAL",
+          "value": 0.88,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 751.25,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "27111100",
+          "description": null,
+          "value": 0.88,
+          "source_unit": null
+        },
+        {
+          "hs_code": "27112100",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 751.25,
+            "raw_quantity_source_units": 2122348137.0,
+            "quantity": 2122348137.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.353971
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.88,
+            "raw_quantity_source_units": 1604000.0,
+            "quantity": 1604000.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.548628
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
     {
       "period": "2021-01",
       "imports": 737.28,
@@ -9416,6 +11397,102 @@
     }
   ],
   "annual": [
+    {
+      "year": "2020",
+      "months_observed": 12,
+      "coverage_status": "complete",
+      "imports": 7906.74,
+      "exports": 16.27,
+      "balance": -7890.47,
+      "average_monthly_imports": 658.895,
+      "average_monthly_exports": 1.355833,
+      "supplier_concentration": {
+        "top_partner_share_pct": 42.37,
+        "hhi": 2236.9,
+        "top_partners": [
+          {
+            "partner_country": "QATAR",
+            "value": 3349.78,
+            "share_pct": 42.37
+          },
+          {
+            "partner_country": "NIGERIA",
+            "value": 896.9,
+            "share_pct": 11.34
+          },
+          {
+            "partner_country": "U S A",
+            "value": 820.72,
+            "share_pct": 10.38
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 794.63,
+            "share_pct": 10.05
+          },
+          {
+            "partner_country": "ANGOLA",
+            "value": 600.5,
+            "share_pct": 7.59
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 98.03,
+        "hhi": 9614.4,
+        "top_partners": [
+          {
+            "partner_country": "NEPAL",
+            "value": 15.95,
+            "share_pct": 98.03
+          },
+          {
+            "partner_country": "BHUTAN",
+            "value": 0.32,
+            "share_pct": 1.97
+          }
+        ]
+      },
+      "top_import_partners": [
+        {
+          "partner_country": "QATAR",
+          "value": 3349.78,
+          "share_pct": 42.37
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 896.9,
+          "share_pct": 11.34
+        },
+        {
+          "partner_country": "U S A",
+          "value": 820.72,
+          "share_pct": 10.38
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 794.63,
+          "share_pct": 10.05
+        },
+        {
+          "partner_country": "ANGOLA",
+          "value": 600.5,
+          "share_pct": 7.59
+        }
+      ],
+      "top_export_partners": [
+        {
+          "partner_country": "NEPAL",
+          "value": 15.95,
+          "share_pct": 98.03
+        },
+        {
+          "partner_country": "BHUTAN",
+          "value": 0.32,
+          "share_pct": 1.97
+        }
+      ]
+    },
     {
       "year": "2021",
       "months_observed": 12,

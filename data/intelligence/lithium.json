@@ -11,9 +11,9 @@
     "mapping_status": "hs8_validated"
   },
   "coverage": {
-    "first_period": "2021-01",
+    "first_period": "2020-01",
     "last_period": "2026-06",
-    "months_observed": 66,
+    "months_observed": 78,
     "history_gaps": []
   },
   "latest": {
@@ -91,6 +91,2262 @@
     }
   },
   "monthly": [
+    {
+      "period": "2020-01",
+      "imports": 0.74,
+      "exports": 0.19,
+      "balance": -0.55,
+      "import_yoy_pct": -87.2,
+      "export_yoy_pct": -76.54,
+      "ytd_imports": 0.74,
+      "ytd_exports": 0.19,
+      "dependency": {
+        "score": 58.2,
+        "risk": "moderate",
+        "import_reliance_pct": 74.32,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 37.33,
+        "hhi": 2878.2,
+        "top_partners": [
+          {
+            "partner_country": "CHILE",
+            "value": 0.28,
+            "share_pct": 37.33
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.23,
+            "share_pct": 30.67
+          },
+          {
+            "partner_country": "LATVIA",
+            "value": 0.15,
+            "share_pct": 20.0
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.09,
+            "share_pct": 12.0
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 30.0,
+        "hhi": 2200.0,
+        "top_partners": [
+          {
+            "partner_country": "KUWAIT",
+            "value": 0.06,
+            "share_pct": 30.0
+          },
+          {
+            "partner_country": "SUDAN",
+            "value": 0.04,
+            "share_pct": 20.0
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.04,
+            "share_pct": 20.0
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.04,
+            "share_pct": 20.0
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.02,
+            "share_pct": 10.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "CHILE",
+          "value": 0.28,
+          "share_pct": 37.33
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.23,
+          "share_pct": 30.67
+        },
+        {
+          "partner_country": "LATVIA",
+          "value": 0.15,
+          "share_pct": 20.0
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.09,
+          "share_pct": 12.0
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "KUWAIT",
+          "value": 0.06,
+          "share_pct": 30.0
+        },
+        {
+          "partner_country": "SUDAN",
+          "value": 0.04,
+          "share_pct": 20.0
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.04,
+          "share_pct": 20.0
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.04,
+          "share_pct": 20.0
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.02,
+          "share_pct": 10.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.37,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.37,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.13,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.06,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 0.74,
+            "raw_quantity_source_units": 80028.0,
+            "quantity": 80028.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 9.246764
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.19,
+            "raw_quantity_source_units": 29006.0,
+            "quantity": 29006.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 6.550369
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-02",
+      "imports": 2.28,
+      "exports": 0.57,
+      "balance": -1.71,
+      "import_yoy_pct": 56.16,
+      "export_yoy_pct": 171.43,
+      "ytd_imports": 3.02,
+      "ytd_exports": 0.77,
+      "dependency": {
+        "score": 52.5,
+        "risk": "moderate",
+        "import_reliance_pct": 75.0,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 21.68,
+        "hhi": 1381.5,
+        "top_partners": [
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.49,
+            "share_pct": 21.68
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.43,
+            "share_pct": 19.03
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.32,
+            "share_pct": 14.16
+          },
+          {
+            "partner_country": "JAPAN",
+            "value": 0.27,
+            "share_pct": 11.95
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.19,
+            "share_pct": 8.41
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 67.27,
+        "hhi": 4803.3,
+        "top_partners": [
+          {
+            "partner_country": "IRAN",
+            "value": 0.37,
+            "share_pct": 67.27
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.07,
+            "share_pct": 12.73
+          },
+          {
+            "partner_country": "BANGLADESH PR",
+            "value": 0.04,
+            "share_pct": 7.27
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.03,
+            "share_pct": 5.45
+          },
+          {
+            "partner_country": "MALAYSIA",
+            "value": 0.03,
+            "share_pct": 5.45
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.49,
+          "share_pct": 21.68
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.43,
+          "share_pct": 19.03
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.32,
+          "share_pct": 14.16
+        },
+        {
+          "partner_country": "JAPAN",
+          "value": 0.27,
+          "share_pct": 11.95
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.19,
+          "share_pct": 8.41
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.17,
+          "share_pct": 7.52
+        },
+        {
+          "partner_country": "HONG KONG",
+          "value": 0.13,
+          "share_pct": 5.75
+        },
+        {
+          "partner_country": "ARGENTINA",
+          "value": 0.12,
+          "share_pct": 5.31
+        },
+        {
+          "partner_country": "SLOVENIA",
+          "value": 0.08,
+          "share_pct": 3.54
+        },
+        {
+          "partner_country": "IRELAND",
+          "value": 0.05,
+          "share_pct": 2.21
+        },
+        {
+          "partner_country": "ITALY",
+          "value": 0.01,
+          "share_pct": 0.44
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "IRAN",
+          "value": 0.37,
+          "share_pct": 67.27
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.07,
+          "share_pct": 12.73
+        },
+        {
+          "partner_country": "BANGLADESH PR",
+          "value": 0.04,
+          "share_pct": 7.27
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.03,
+          "share_pct": 5.45
+        },
+        {
+          "partner_country": "MALAYSIA",
+          "value": 0.03,
+          "share_pct": 5.45
+        },
+        {
+          "partner_country": "NEPAL",
+          "value": 0.01,
+          "share_pct": 1.82
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 1.78,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.5,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.09,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.48,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 2.28,
+            "raw_quantity_source_units": 334576.0,
+            "quantity": 334576.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 6.814595
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.57,
+            "raw_quantity_source_units": 75155.0,
+            "quantity": 75155.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 7.584326
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-03",
+      "imports": 1.34,
+      "exports": 0.22,
+      "balance": -1.12,
+      "import_yoy_pct": -58.39,
+      "export_yoy_pct": 1000.0,
+      "ytd_imports": 4.37,
+      "ytd_exports": 0.99,
+      "dependency": {
+        "score": 58.2,
+        "risk": "moderate",
+        "import_reliance_pct": 83.58,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 22.56,
+        "hhi": 1578.9,
+        "top_partners": [
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.3,
+            "share_pct": 22.56
+          },
+          {
+            "partner_country": "SINGAPORE",
+            "value": 0.25,
+            "share_pct": 18.8
+          },
+          {
+            "partner_country": "CHILE",
+            "value": 0.2,
+            "share_pct": 15.04
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.19,
+            "share_pct": 14.29
+          },
+          {
+            "partner_country": "SLOVENIA",
+            "value": 0.16,
+            "share_pct": 12.03
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 43.48,
+        "hhi": 2514.2,
+        "top_partners": [
+          {
+            "partner_country": "MEXICO",
+            "value": 0.1,
+            "share_pct": 43.48
+          },
+          {
+            "partner_country": "BANGLADESH PR",
+            "value": 0.03,
+            "share_pct": 13.04
+          },
+          {
+            "partner_country": "SAUDI ARAB",
+            "value": 0.03,
+            "share_pct": 13.04
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.03,
+            "share_pct": 13.04
+          },
+          {
+            "partner_country": "THAILAND",
+            "value": 0.02,
+            "share_pct": 8.7
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.3,
+          "share_pct": 22.56
+        },
+        {
+          "partner_country": "SINGAPORE",
+          "value": 0.25,
+          "share_pct": 18.8
+        },
+        {
+          "partner_country": "CHILE",
+          "value": 0.2,
+          "share_pct": 15.04
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.19,
+          "share_pct": 14.29
+        },
+        {
+          "partner_country": "SLOVENIA",
+          "value": 0.16,
+          "share_pct": 12.03
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.13,
+          "share_pct": 9.77
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.09,
+          "share_pct": 6.77
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.01,
+          "share_pct": 0.75
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "MEXICO",
+          "value": 0.1,
+          "share_pct": 43.48
+        },
+        {
+          "partner_country": "BANGLADESH PR",
+          "value": 0.03,
+          "share_pct": 13.04
+        },
+        {
+          "partner_country": "SAUDI ARAB",
+          "value": 0.03,
+          "share_pct": 13.04
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.03,
+          "share_pct": 13.04
+        },
+        {
+          "partner_country": "THAILAND",
+          "value": 0.02,
+          "share_pct": 8.7
+        },
+        {
+          "partner_country": "ZAMBIA",
+          "value": 0.01,
+          "share_pct": 4.35
+        },
+        {
+          "partner_country": "NEPAL",
+          "value": 0.01,
+          "share_pct": 4.35
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.26,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 1.08,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.18,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.04,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 1.34,
+            "raw_quantity_source_units": 105070.0,
+            "quantity": 105070.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 12.753402
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.22,
+            "raw_quantity_source_units": 27970.0,
+            "quantity": 27970.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 7.86557
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-04",
+      "imports": 2.61,
+      "exports": 0.02,
+      "balance": -2.59,
+      "import_yoy_pct": -32.38,
+      "export_yoy_pct": -77.78,
+      "ytd_imports": 6.97,
+      "ytd_exports": 1.01,
+      "dependency": {
+        "score": 83.3,
+        "risk": "high",
+        "import_reliance_pct": 99.23,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 66.15,
+        "hhi": 4782.0,
+        "top_partners": [
+          {
+            "partner_country": "CHILE",
+            "value": 1.72,
+            "share_pct": 66.15
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.42,
+            "share_pct": 16.15
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.28,
+            "share_pct": 10.77
+          },
+          {
+            "partner_country": "LATVIA",
+            "value": 0.13,
+            "share_pct": 5.0
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.05,
+            "share_pct": 1.92
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 100.0,
+        "hhi": 10000.0,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.02,
+            "share_pct": 100.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "CHILE",
+          "value": 1.72,
+          "share_pct": 66.15
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.42,
+          "share_pct": 16.15
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.28,
+          "share_pct": 10.77
+        },
+        {
+          "partner_country": "LATVIA",
+          "value": 0.13,
+          "share_pct": 5.0
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.05,
+          "share_pct": 1.92
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.02,
+          "share_pct": 100.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 2.31,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.3,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.0,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.02,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 2.61,
+            "raw_quantity_source_units": 402003.0,
+            "quantity": 402003.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 6.492489
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.02,
+            "raw_quantity_source_units": 12513.0,
+            "quantity": 12513.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 1.598338
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-05",
+      "imports": 2.38,
+      "exports": 0.11,
+      "balance": -2.27,
+      "import_yoy_pct": 22.05,
+      "export_yoy_pct": -72.5,
+      "ytd_imports": 9.35,
+      "ytd_exports": 1.11,
+      "dependency": {
+        "score": 68.5,
+        "risk": "moderate",
+        "import_reliance_pct": 95.38,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 32.91,
+        "hhi": 2031.2,
+        "top_partners": [
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.78,
+            "share_pct": 32.91
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.56,
+            "share_pct": 23.63
+          },
+          {
+            "partner_country": "LATVIA",
+            "value": 0.27,
+            "share_pct": 11.39
+          },
+          {
+            "partner_country": "CHILE",
+            "value": 0.25,
+            "share_pct": 10.55
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.24,
+            "share_pct": 10.13
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 60.0,
+        "hhi": 4600.0,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.06,
+            "share_pct": 60.0
+          },
+          {
+            "partner_country": "BANGLADESH PR",
+            "value": 0.03,
+            "share_pct": 30.0
+          },
+          {
+            "partner_country": "NEPAL",
+            "value": 0.01,
+            "share_pct": 10.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.78,
+          "share_pct": 32.91
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.56,
+          "share_pct": 23.63
+        },
+        {
+          "partner_country": "LATVIA",
+          "value": 0.27,
+          "share_pct": 11.39
+        },
+        {
+          "partner_country": "CHILE",
+          "value": 0.25,
+          "share_pct": 10.55
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.24,
+          "share_pct": 10.13
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.13,
+          "share_pct": 5.49
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.08,
+          "share_pct": 3.38
+        },
+        {
+          "partner_country": "IRELAND",
+          "value": 0.05,
+          "share_pct": 2.11
+        },
+        {
+          "partner_country": "ITALY",
+          "value": 0.01,
+          "share_pct": 0.42
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.06,
+          "share_pct": 60.0
+        },
+        {
+          "partner_country": "BANGLADESH PR",
+          "value": 0.03,
+          "share_pct": 30.0
+        },
+        {
+          "partner_country": "NEPAL",
+          "value": 0.01,
+          "share_pct": 10.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 1.5,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.88,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.01,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.1,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 2.38,
+            "raw_quantity_source_units": 364434.0,
+            "quantity": 364434.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 6.530675
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.11,
+            "raw_quantity_source_units": 31750.0,
+            "quantity": 31750.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 3.464567
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-06",
+      "imports": 2.67,
+      "exports": 0.26,
+      "balance": -2.41,
+      "import_yoy_pct": -28.8,
+      "export_yoy_pct": 23.81,
+      "ytd_imports": 12.02,
+      "ytd_exports": 1.37,
+      "dependency": {
+        "score": 72.8,
+        "risk": "high",
+        "import_reliance_pct": 90.26,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 53.93,
+        "hhi": 3424.8,
+        "top_partners": [
+          {
+            "partner_country": "CHILE",
+            "value": 1.44,
+            "share_pct": 53.93
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.47,
+            "share_pct": 17.6
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.28,
+            "share_pct": 10.49
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.18,
+            "share_pct": 6.74
+          },
+          {
+            "partner_country": "ARGENTINA",
+            "value": 0.15,
+            "share_pct": 5.62
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 53.85,
+        "hhi": 3491.1,
+        "top_partners": [
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.14,
+            "share_pct": 53.85
+          },
+          {
+            "partner_country": "INDONESIA",
+            "value": 0.05,
+            "share_pct": 19.23
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.03,
+            "share_pct": 11.54
+          },
+          {
+            "partner_country": "BANGLADESH PR",
+            "value": 0.02,
+            "share_pct": 7.69
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.01,
+            "share_pct": 3.85
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "CHILE",
+          "value": 1.44,
+          "share_pct": 53.93
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.47,
+          "share_pct": 17.6
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.28,
+          "share_pct": 10.49
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.18,
+          "share_pct": 6.74
+        },
+        {
+          "partner_country": "ARGENTINA",
+          "value": 0.15,
+          "share_pct": 5.62
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.11,
+          "share_pct": 4.12
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.04,
+          "share_pct": 1.5
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.14,
+          "share_pct": 53.85
+        },
+        {
+          "partner_country": "INDONESIA",
+          "value": 0.05,
+          "share_pct": 19.23
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.03,
+          "share_pct": 11.54
+        },
+        {
+          "partner_country": "BANGLADESH PR",
+          "value": 0.02,
+          "share_pct": 7.69
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.01,
+          "share_pct": 3.85
+        },
+        {
+          "partner_country": "THAILAND",
+          "value": 0.01,
+          "share_pct": 3.85
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 2.21,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.46,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.19,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.07,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 2.67,
+            "raw_quantity_source_units": 388313.0,
+            "quantity": 388313.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 6.875897
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.26,
+            "raw_quantity_source_units": 56888.0,
+            "quantity": 56888.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 4.570384
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-07",
+      "imports": 1.34,
+      "exports": 0.2,
+      "balance": -1.14,
+      "import_yoy_pct": -65.01,
+      "export_yoy_pct": 17.65,
+      "ytd_imports": 13.35,
+      "ytd_exports": 1.58,
+      "dependency": {
+        "score": 69.2,
+        "risk": "moderate",
+        "import_reliance_pct": 85.07,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 52.63,
+        "hhi": 3316.8,
+        "top_partners": [
+          {
+            "partner_country": "U S A",
+            "value": 0.7,
+            "share_pct": 52.63
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.19,
+            "share_pct": 14.29
+          },
+          {
+            "partner_country": "CHILE",
+            "value": 0.17,
+            "share_pct": 12.78
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.13,
+            "share_pct": 9.77
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.12,
+            "share_pct": 9.02
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 20.0,
+        "hhi": 1500.0,
+        "top_partners": [
+          {
+            "partner_country": "THAILAND",
+            "value": 0.04,
+            "share_pct": 20.0
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.04,
+            "share_pct": 20.0
+          },
+          {
+            "partner_country": "BANGLADESH PR",
+            "value": 0.03,
+            "share_pct": 15.0
+          },
+          {
+            "partner_country": "MALAYSIA",
+            "value": 0.03,
+            "share_pct": 15.0
+          },
+          {
+            "partner_country": "MYANMAR",
+            "value": 0.02,
+            "share_pct": 10.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "U S A",
+          "value": 0.7,
+          "share_pct": 52.63
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.19,
+          "share_pct": 14.29
+        },
+        {
+          "partner_country": "CHILE",
+          "value": 0.17,
+          "share_pct": 12.78
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.13,
+          "share_pct": 9.77
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.12,
+          "share_pct": 9.02
+        },
+        {
+          "partner_country": "U K",
+          "value": 0.02,
+          "share_pct": 1.5
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "THAILAND",
+          "value": 0.04,
+          "share_pct": 20.0
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.04,
+          "share_pct": 20.0
+        },
+        {
+          "partner_country": "BANGLADESH PR",
+          "value": 0.03,
+          "share_pct": 15.0
+        },
+        {
+          "partner_country": "MALAYSIA",
+          "value": 0.03,
+          "share_pct": 15.0
+        },
+        {
+          "partner_country": "MYANMAR",
+          "value": 0.02,
+          "share_pct": 10.0
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.02,
+          "share_pct": 10.0
+        },
+        {
+          "partner_country": "TAIWAN",
+          "value": 0.01,
+          "share_pct": 5.0
+        },
+        {
+          "partner_country": "URUGUAY",
+          "value": 0.01,
+          "share_pct": 5.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.28,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 1.06,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.1,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.1,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 1.34,
+            "raw_quantity_source_units": 113411.0,
+            "quantity": 113411.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 11.815432
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.2,
+            "raw_quantity_source_units": 46631.0,
+            "quantity": 46631.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 4.288992
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-08",
+      "imports": 0.92,
+      "exports": 0.16,
+      "balance": -0.76,
+      "import_yoy_pct": -74.86,
+      "export_yoy_pct": 1500.0,
+      "ytd_imports": 14.27,
+      "ytd_exports": 1.72,
+      "dependency": {
+        "score": 61.1,
+        "risk": "moderate",
+        "import_reliance_pct": 82.61,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 33.33,
+        "hhi": 2163.3,
+        "top_partners": [
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.31,
+            "share_pct": 33.33
+          },
+          {
+            "partner_country": "ARGENTINA",
+            "value": 0.2,
+            "share_pct": 21.51
+          },
+          {
+            "partner_country": "CHILE",
+            "value": 0.15,
+            "share_pct": 16.13
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.14,
+            "share_pct": 15.05
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.08,
+            "share_pct": 8.6
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 26.67,
+        "hhi": 2177.8,
+        "top_partners": [
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.04,
+            "share_pct": 26.67
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.04,
+            "share_pct": 26.67
+          },
+          {
+            "partner_country": "SWITZERLAND",
+            "value": 0.03,
+            "share_pct": 20.0
+          },
+          {
+            "partner_country": "NEPAL",
+            "value": 0.02,
+            "share_pct": 13.33
+          },
+          {
+            "partner_country": "THAILAND",
+            "value": 0.02,
+            "share_pct": 13.33
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.31,
+          "share_pct": 33.33
+        },
+        {
+          "partner_country": "ARGENTINA",
+          "value": 0.2,
+          "share_pct": 21.51
+        },
+        {
+          "partner_country": "CHILE",
+          "value": 0.15,
+          "share_pct": 16.13
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.14,
+          "share_pct": 15.05
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.08,
+          "share_pct": 8.6
+        },
+        {
+          "partner_country": "CANADA",
+          "value": 0.05,
+          "share_pct": 5.38
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.04,
+          "share_pct": 26.67
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.04,
+          "share_pct": 26.67
+        },
+        {
+          "partner_country": "SWITZERLAND",
+          "value": 0.03,
+          "share_pct": 20.0
+        },
+        {
+          "partner_country": "NEPAL",
+          "value": 0.02,
+          "share_pct": 13.33
+        },
+        {
+          "partner_country": "THAILAND",
+          "value": 0.02,
+          "share_pct": 13.33
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.08,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.84,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.08,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.08,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 0.92,
+            "raw_quantity_source_units": 125052.0,
+            "quantity": 125052.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 7.35694
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.16,
+            "raw_quantity_source_units": 40523.0,
+            "quantity": 40523.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 3.948375
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-09",
+      "imports": 1.43,
+      "exports": 0.26,
+      "balance": -1.17,
+      "import_yoy_pct": -30.58,
+      "export_yoy_pct": 4.0,
+      "ytd_imports": 15.69,
+      "ytd_exports": 1.98,
+      "dependency": {
+        "score": 60.6,
+        "risk": "moderate",
+        "import_reliance_pct": 81.82,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 32.17,
+        "hhi": 2320.4,
+        "top_partners": [
+          {
+            "partner_country": "U S A",
+            "value": 0.46,
+            "share_pct": 32.17
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.38,
+            "share_pct": 26.57
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.23,
+            "share_pct": 16.08
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.2,
+            "share_pct": 13.99
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.16,
+            "share_pct": 11.19
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 80.77,
+        "hhi": 6627.2,
+        "top_partners": [
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.21,
+            "share_pct": 80.77
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.02,
+            "share_pct": 7.69
+          },
+          {
+            "partner_country": "THAILAND",
+            "value": 0.01,
+            "share_pct": 3.85
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.01,
+            "share_pct": 3.85
+          },
+          {
+            "partner_country": "URUGUAY",
+            "value": 0.01,
+            "share_pct": 3.85
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "U S A",
+          "value": 0.46,
+          "share_pct": 32.17
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.38,
+          "share_pct": 26.57
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.23,
+          "share_pct": 16.08
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.2,
+          "share_pct": 13.99
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.16,
+          "share_pct": 11.19
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.21,
+          "share_pct": 80.77
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.02,
+          "share_pct": 7.69
+        },
+        {
+          "partner_country": "THAILAND",
+          "value": 0.01,
+          "share_pct": 3.85
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.01,
+          "share_pct": 3.85
+        },
+        {
+          "partner_country": "URUGUAY",
+          "value": 0.01,
+          "share_pct": 3.85
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.73,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.7,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.22,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.04,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 1.43,
+            "raw_quantity_source_units": 190202.0,
+            "quantity": 190202.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 7.518323
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.26,
+            "raw_quantity_source_units": 46377.0,
+            "quantity": 46377.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 5.606227
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-10",
+      "imports": 1.23,
+      "exports": 0.12,
+      "balance": -1.11,
+      "import_yoy_pct": -55.6,
+      "export_yoy_pct": -57.14,
+      "ytd_imports": 16.93,
+      "ytd_exports": 2.1,
+      "dependency": {
+        "score": 63.1,
+        "risk": "moderate",
+        "import_reliance_pct": 90.24,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 25.81,
+        "hhi": 1646.7,
+        "top_partners": [
+          {
+            "partner_country": "LATVIA",
+            "value": 0.32,
+            "share_pct": 25.81
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.24,
+            "share_pct": 19.35
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.19,
+            "share_pct": 15.32
+          },
+          {
+            "partner_country": "SINGAPORE",
+            "value": 0.15,
+            "share_pct": 12.1
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.14,
+            "share_pct": 11.29
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 41.67,
+        "hhi": 3194.4,
+        "top_partners": [
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.05,
+            "share_pct": 41.67
+          },
+          {
+            "partner_country": "QATAR",
+            "value": 0.04,
+            "share_pct": 33.33
+          },
+          {
+            "partner_country": "SAUDI ARAB",
+            "value": 0.02,
+            "share_pct": 16.67
+          },
+          {
+            "partner_country": "KENYA",
+            "value": 0.01,
+            "share_pct": 8.33
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "LATVIA",
+          "value": 0.32,
+          "share_pct": 25.81
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.24,
+          "share_pct": 19.35
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.19,
+          "share_pct": 15.32
+        },
+        {
+          "partner_country": "SINGAPORE",
+          "value": 0.15,
+          "share_pct": 12.1
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.14,
+          "share_pct": 11.29
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.1,
+          "share_pct": 8.06
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.05,
+          "share_pct": 4.03
+        },
+        {
+          "partner_country": "IRELAND",
+          "value": 0.05,
+          "share_pct": 4.03
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.05,
+          "share_pct": 41.67
+        },
+        {
+          "partner_country": "QATAR",
+          "value": 0.04,
+          "share_pct": 33.33
+        },
+        {
+          "partner_country": "SAUDI ARAB",
+          "value": 0.02,
+          "share_pct": 16.67
+        },
+        {
+          "partner_country": "KENYA",
+          "value": 0.01,
+          "share_pct": 8.33
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.87,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.36,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.07,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.05,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 1.23,
+            "raw_quantity_source_units": 257272.0,
+            "quantity": 257272.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 4.780932
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.12,
+            "raw_quantity_source_units": 46566.0,
+            "quantity": 46566.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 2.576988
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-11",
+      "imports": 1.48,
+      "exports": 0.12,
+      "balance": -1.36,
+      "import_yoy_pct": -28.5,
+      "export_yoy_pct": -52.0,
+      "ytd_imports": 18.4,
+      "ytd_exports": 2.22,
+      "dependency": {
+        "score": 62.1,
+        "risk": "moderate",
+        "import_reliance_pct": 91.89,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 19.46,
+        "hhi": 1392.3,
+        "top_partners": [
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.29,
+            "share_pct": 19.46
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.25,
+            "share_pct": 16.78
+          },
+          {
+            "partner_country": "SINGAPORE",
+            "value": 0.22,
+            "share_pct": 14.77
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 0.2,
+            "share_pct": 13.42
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.19,
+            "share_pct": 12.75
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 50.0,
+        "hhi": 3600.0,
+        "top_partners": [
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.05,
+            "share_pct": 50.0
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.03,
+            "share_pct": 30.0
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.01,
+            "share_pct": 10.0
+          },
+          {
+            "partner_country": "NEPAL",
+            "value": 0.01,
+            "share_pct": 10.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.29,
+          "share_pct": 19.46
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.25,
+          "share_pct": 16.78
+        },
+        {
+          "partner_country": "SINGAPORE",
+          "value": 0.22,
+          "share_pct": 14.77
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.2,
+          "share_pct": 13.42
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.19,
+          "share_pct": 12.75
+        },
+        {
+          "partner_country": "CHILE",
+          "value": 0.15,
+          "share_pct": 10.07
+        },
+        {
+          "partner_country": "LATVIA",
+          "value": 0.11,
+          "share_pct": 7.38
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.05,
+          "share_pct": 3.36
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.03,
+          "share_pct": 2.01
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.05,
+          "share_pct": 50.0
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.03,
+          "share_pct": 30.0
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.01,
+          "share_pct": 10.0
+        },
+        {
+          "partner_country": "NEPAL",
+          "value": 0.01,
+          "share_pct": 10.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.53,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.95,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.07,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.05,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 1.48,
+            "raw_quantity_source_units": 243952.0,
+            "quantity": 243952.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 6.066767
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.12,
+            "raw_quantity_source_units": 38954.0,
+            "quantity": 38954.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 3.080557
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
+    {
+      "period": "2020-12",
+      "imports": 2.02,
+      "exports": 0.1,
+      "balance": -1.92,
+      "import_yoy_pct": 33.77,
+      "export_yoy_pct": -80.0,
+      "ytd_imports": 20.42,
+      "ytd_exports": 2.32,
+      "dependency": {
+        "score": 68.8,
+        "risk": "moderate",
+        "import_reliance_pct": 95.05,
+        "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+      },
+      "supplier_concentration": {
+        "top_partner_share_pct": 34.65,
+        "hhi": 2047.8,
+        "top_partners": [
+          {
+            "partner_country": "RUSSIA",
+            "value": 0.7,
+            "share_pct": 34.65
+          },
+          {
+            "partner_country": "LATVIA",
+            "value": 0.34,
+            "share_pct": 16.83
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 0.32,
+            "share_pct": 15.84
+          },
+          {
+            "partner_country": "GERMANY",
+            "value": 0.24,
+            "share_pct": 11.88
+          },
+          {
+            "partner_country": "U S A",
+            "value": 0.23,
+            "share_pct": 11.39
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 50.0,
+        "hhi": 3800.0,
+        "top_partners": [
+          {
+            "partner_country": "BANGLADESH PR",
+            "value": 0.05,
+            "share_pct": 50.0
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.03,
+            "share_pct": 30.0
+          },
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.02,
+            "share_pct": 20.0
+          }
+        ]
+      },
+      "imports_by_country": [
+        {
+          "partner_country": "RUSSIA",
+          "value": 0.7,
+          "share_pct": 34.65
+        },
+        {
+          "partner_country": "LATVIA",
+          "value": 0.34,
+          "share_pct": 16.83
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 0.32,
+          "share_pct": 15.84
+        },
+        {
+          "partner_country": "GERMANY",
+          "value": 0.24,
+          "share_pct": 11.88
+        },
+        {
+          "partner_country": "U S A",
+          "value": 0.23,
+          "share_pct": 11.39
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.11,
+          "share_pct": 5.45
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 0.07,
+          "share_pct": 3.47
+        },
+        {
+          "partner_country": "NETHERLAND",
+          "value": 0.01,
+          "share_pct": 0.5
+        }
+      ],
+      "exports_by_country": [
+        {
+          "partner_country": "BANGLADESH PR",
+          "value": 0.05,
+          "share_pct": 50.0
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.03,
+          "share_pct": 30.0
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.02,
+          "share_pct": 20.0
+        }
+      ],
+      "import_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 1.47,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.55,
+          "source_unit": null
+        }
+      ],
+      "export_hs_breakdown": [
+        {
+          "hs_code": "28252000",
+          "description": null,
+          "value": 0.02,
+          "source_unit": null
+        },
+        {
+          "hs_code": "28369100",
+          "description": null,
+          "value": 0.08,
+          "source_unit": null
+        }
+      ],
+      "unit_values": {
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 2.02,
+            "raw_quantity_source_units": 342007.0,
+            "quantity": 342007.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 5.906312
+          },
+          "export": {
+            "status": "ok",
+            "usd_million": 0.1,
+            "raw_quantity_source_units": 29012.0,
+            "quantity": 29012.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 3.44685
+          }
+        },
+        "hs_codes": {}
+      },
+      "status": "ok"
+    },
     {
       "period": "2021-01",
       "imports": 3.04,
@@ -12216,6 +14472,132 @@
     }
   ],
   "annual": [
+    {
+      "year": "2020",
+      "months_observed": 12,
+      "coverage_status": "complete",
+      "imports": 20.44,
+      "exports": 2.33,
+      "balance": -18.11,
+      "average_monthly_imports": 1.703333,
+      "average_monthly_exports": 0.194167,
+      "supplier_concentration": {
+        "top_partner_share_pct": 21.35,
+        "hhi": 1352.5,
+        "top_partners": [
+          {
+            "partner_country": "CHILE",
+            "value": 4.36,
+            "share_pct": 21.35
+          },
+          {
+            "partner_country": "BELGIUM",
+            "value": 3.13,
+            "share_pct": 15.33
+          },
+          {
+            "partner_country": "RUSSIA",
+            "value": 2.98,
+            "share_pct": 14.59
+          },
+          {
+            "partner_country": "U S A",
+            "value": 2.97,
+            "share_pct": 14.54
+          },
+          {
+            "partner_country": "CHINA P RP",
+            "value": 2.52,
+            "share_pct": 12.34
+          }
+        ]
+      },
+      "export_destination_concentration": {
+        "top_partner_share_pct": 24.89,
+        "hhi": 1340.7,
+        "top_partners": [
+          {
+            "partner_country": "U ARAB EMTS",
+            "value": 0.57,
+            "share_pct": 24.89
+          },
+          {
+            "partner_country": "VIETNAM SOC REP",
+            "value": 0.39,
+            "share_pct": 17.03
+          },
+          {
+            "partner_country": "IRAN",
+            "value": 0.37,
+            "share_pct": 16.16
+          },
+          {
+            "partner_country": "BANGLADESH PR",
+            "value": 0.2,
+            "share_pct": 8.73
+          },
+          {
+            "partner_country": "MEXICO",
+            "value": 0.1,
+            "share_pct": 4.37
+          }
+        ]
+      },
+      "top_import_partners": [
+        {
+          "partner_country": "CHILE",
+          "value": 4.36,
+          "share_pct": 21.35
+        },
+        {
+          "partner_country": "BELGIUM",
+          "value": 3.13,
+          "share_pct": 15.33
+        },
+        {
+          "partner_country": "RUSSIA",
+          "value": 2.98,
+          "share_pct": 14.59
+        },
+        {
+          "partner_country": "U S A",
+          "value": 2.97,
+          "share_pct": 14.54
+        },
+        {
+          "partner_country": "CHINA P RP",
+          "value": 2.52,
+          "share_pct": 12.34
+        }
+      ],
+      "top_export_partners": [
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 0.57,
+          "share_pct": 24.89
+        },
+        {
+          "partner_country": "VIETNAM SOC REP",
+          "value": 0.39,
+          "share_pct": 17.03
+        },
+        {
+          "partner_country": "IRAN",
+          "value": 0.37,
+          "share_pct": 16.16
+        },
+        {
+          "partner_country": "BANGLADESH PR",
+          "value": 0.2,
+          "share_pct": 8.73
+        },
+        {
+          "partner_country": "MEXICO",
+          "value": 0.1,
+          "share_pct": 4.37
+        }
+      ]
+    },
     {
       "year": "2021",
       "months_observed": 12,
