@@ -4,11 +4,13 @@ A live tracker for India's strategically important commodity imports and exports
 
 ## Current build
 
-The tracker covers **23 critical commodity groups** and currently carries official monthly data through **June 2026**. The repository has validated historical USD observations from **January 2021 through June 2026** with **1,517 commodity-month history rows**. The single intentional hole is Solar PV for February 2022, where the ITC(HS) classification changed and the tracker refuses to invent a bridge between old and new codes.
+The tracker covers **23 critical commodity groups** and currently carries official monthly data through **June 2026**. The baseline historical archive is complete from the TradeStat monthly lower bound of **January 2018 through June 2026**, spanning **102 calendar months** and **2,345 commodity-month history rows**.
 
-Historical HS8 quantity observations and implied unit values are also present for the validated quantity-capable groups.
+There is one intentional series gap: **Solar PV for February 2022**. The ITC(HS) classification changed around that period, so the tracker explicitly marks the transition instead of inventing a bridge between old and new commodity codes. Apart from that classification transition, the validated USD history is continuous for the watched universe.
 
-The site now has two complementary analytical layers:
+Historical HS8 quantity observations and implied unit values are present for **Natural Gas / LNG**, **Lithium & Compounds**, and **Solar Cells / Modules** wherever the period-specific exact HS8 mapping is valid. Solar PV retains the same intentional February 2022 transition gap.
+
+The site has two complementary analytical layers:
 
 - a lightweight **consolidated portfolio dashboard** for the full watched commodity universe; and
 - a lazy-loaded **commodity intelligence drill-down** for each commodity, generated from the stored observation archive.
@@ -36,7 +38,7 @@ Deep country/month detail is generated deterministically from `data/observations
 data/intelligence/<commodity>.json
 ```
 
-The browser downloads one of these files only when the user clicks **Explore intelligence**, keeping the homepage responsive even as historical coverage grows. `data/intelligence/index.json` is the generated manifest.
+The browser downloads one of these files only when the user clicks **Explore intelligence**, keeping the homepage responsive as the archive grows. `data/intelligence/index.json` is the generated manifest.
 
 The intelligence builder preserves all partner-country rows rather than limiting the stored drill-down to the top five. Repository tests require each intelligence file's periods and classification gaps to match the canonical dashboard history.
 
@@ -90,7 +92,10 @@ Validated quantity-capable groups currently include:
 
 - **Lithium & Compounds** — `28252000`, `28369100` (`KGS`)
 - **Natural Gas / LNG** — `27111100`, `27112100` (`KGS`)
-- **Solar Cells / Modules** — `85414200`, `85414300` (`NOS`)
+- **Solar Cells / Modules** — period-specific HS8 mappings (`NOS`):
+  - through January 2022: `85414011`, `85414012`
+  - February 2022: intentional transition gap
+  - from March 2022: `85414200`, `85414300`
 
 Solar cell and module unit values are kept at HS8 level because a bare photovoltaic cell and a completed module/panel are not economically comparable units.
 
@@ -109,7 +114,7 @@ Solar cell and module unit values are kept at HS8 level because a bare photovolt
 
 ### Revision-aware observations
 
-The dashboard continues to read one current document from:
+The dashboard reads one current document from:
 
 ```text
 data/observations/YYYY-MM/<commodity>.<value_type>.json
@@ -163,9 +168,11 @@ This prevents the history layer from pretending the current solar codes existed 
 
 ### Historical backfill
 
-A controlled workflow is available at `.github/workflows/backfill.yml`. It is intentionally separate from the lightweight daily updater.
+A controlled reusable workflow is available at `.github/workflows/backfill.yml`. It is intentionally separate from the lightweight daily updater.
 
-The workflow can backfill **USD**, **quantity**, or **both** layers in one run. When `both` is selected, USD is processed first and then eligible HS8 quantity observations are processed before one final validation/commit.
+The planned baseline backfill is now **complete from January 2018 through the latest stored release**. The workflow remains available for resumable repairs, targeted refetches, official revisions, and rebuilding missing USD or eligible quantity layers.
+
+The workflow can backfill **USD**, **quantity**, or **both** layers in one run. When `both` is selected, USD is processed first and then eligible HS8 quantity observations are processed before final validation and commit.
 
 The backfill is **resumable**. Before any request, `scripts/backfill_tradestat.py` checks each period/commodity observation for:
 
@@ -177,21 +184,17 @@ The backfill is **resumable**. Before any request, `scripts/backfill_tradestat.p
 
 Current observations are skipped automatically. Missing, incomplete or stale observations are fetched. If a forced or stale refetch produces a genuine revision, the prior version is archived by the shared observation writer.
 
-Safety limits remain in place: all-commodity USD runs are limited to 12 months per workflow run; single-commodity or quantity runs may cover up to 36 months.
+Safety limits remain in place: all-commodity USD runs are limited to 12 months per workflow run; single-commodity or quantity runs may cover up to 36 months. The backfill guard treats **January 2018** as the monthly history lower bound and rejects earlier periods.
 
-The next full-year historical target is **2020**. Preview it locally without network writes:
-
-```powershell
-uv run python scripts/backfill_tradestat.py --start-period 2020-01 --end-period 2020-12 --value-type usd --trade-type both --dry-run
-```
-
-Run the same resumable batch:
+Preview a lower-bound year without network writes:
 
 ```powershell
-uv run python scripts/backfill_tradestat.py --start-period 2020-01 --end-period 2020-12 --value-type usd --trade-type both
+uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 2018-12 --value-type usd --trade-type both --dry-run
 ```
 
-For GitHub Actions, select `both` in the **Backfill TradeStat history** workflow when USD and eligible HS8 quantity history should be filled together.
+Re-running that batch is safe: already-current observations are skipped automatically unless `--force` is supplied.
+
+For GitHub Actions, select `both` in the **Backfill TradeStat history** workflow when USD and eligible HS8 quantity history should be checked together.
 
 ## Local setup with uv
 
@@ -294,8 +297,8 @@ GitHub Pages is enabled for the repository. Updates committed to `main` trigger 
 
 ## Next build priorities
 
-1. Continue bounded resumable history backfill through **2020**, then backward toward **2018**.
-2. Extend HS8 quantity history alongside USD wherever an exact validated mapping is available.
+1. Maintain and revalidate the **2018-present** archive as TradeStat publishes Final and Revised-Final updates.
+2. Extend exact-HS8 quantity coverage where stable, economically meaningful mappings can be validated.
 3. Add richer cross-commodity comparison and supplier-country concentration views on top of the intelligence layer.
-4. Continue validating and surfacing official revisions as the Revised-Final window moves.
+4. Continue validating, archiving and surfacing official revisions as the Revised-Final window moves.
 5. Continue promoting broad HS2/4/6 commodity groups to validated HS8 definitions where an exact, stable mapping is economically meaningful.
