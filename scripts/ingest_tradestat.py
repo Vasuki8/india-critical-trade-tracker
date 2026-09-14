@@ -7,11 +7,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
 from src.tracker.aggregation import aggregate_commodity
 from src.tracker.dashboard import build_dashboard
 from src.tracker.tradestat import TradeStatClient, VALID_HS_LENGTHS
 
-ROOT = Path(__file__).resolve().parents[1]
 MASTER_PATH = ROOT / "data" / "commodities.json"
 SOURCE_STATUS_PATH = ROOT / "data" / "source_status.json"
 OBS_ROOT = ROOT / "data" / "observations"
