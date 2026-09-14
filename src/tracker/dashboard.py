@@ -100,6 +100,59 @@ def _history_point(
     }
 
 
+def _commodity_master(master_path: Path | None) -> dict[str, Any] | None:
+    if master_path is None or not master_path.exists():
+        return None
+    try:
+        value = _load(master_path)
+    except (OSError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value.get("commodities"), list) else None
+
+
+def _coverage_metadata(
+    observed_ids: set[str],
+    expected_ids: set[str] | None,
+) -> dict[str, Any]:
+    if expected_ids is None:
+        return {}
+    missing = sorted(expected_ids - observed_ids)
+    return {
+        "coverage_status": "complete" if not missing else "partial",
+        "observed_commodity_count": len(observed_ids),
+        "expected_commodity_count": len(expected_ids),
+        "missing_commodities": missing,
+    }
+
+
+def _history_gaps(
+    master: dict[str, Any] | None,
+    *,
+    first_period: str,
+    last_period: str,
+) -> dict[str, list[dict[str, str]]]:
+    if master is None:
+        return {}
+    output: dict[str, list[dict[str, str]]] = {}
+    for commodity in master.get("commodities", []):
+        commodity_id = str(commodity.get("id") or "")
+        if not commodity_id:
+            continue
+        gaps = []
+        for period in commodity.get("classification_transition_periods", []):
+            if first_period <= period <= last_period:
+                gaps.append(
+                    {
+                        "period": period,
+                        "reason": "classification_transition",
+                        "note": "Historical mapping intentionally omitted for this classification transition month; do not interpret the missing observation as zero trade.",
+                    }
+                )
+        if gaps:
+            output[commodity_id] = gaps
+    return output
+
+
 def _empty_dashboard() -> dict[str, Any]:
     return {
         "schema_version": 3,
@@ -111,15 +164,27 @@ def _empty_dashboard() -> dict[str, Any]:
         "commodities": [],
         "monthly": [],
         "commodity_history": {},
+        "history_gaps": {},
     }
 
 
-def build_dashboard(observations_root: Path, out_path: Path) -> dict[str, Any]:
+def build_dashboard(
+    observations_root: Path,
+    out_path: Path,
+    commodity_master_path: Path | None = None,
+) -> dict[str, Any]:
     period_dirs = sorted(p for p in observations_root.glob("????-??") if p.is_dir())
     if not period_dirs:
         doc = _empty_dashboard()
         out_path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
         return doc
+
+    master = _commodity_master(commodity_master_path)
+    expected_ids = (
+        {str(item.get("id")) for item in master.get("commodities", []) if item.get("id")}
+        if master is not None
+        else None
+    )
 
     monthly: list[dict[str, Any]] = []
     commodity_history: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -135,7 +200,8 @@ def build_dashboard(observations_root: Path, out_path: Path) -> dict[str, Any]:
 
         reports = [report for doc in usd_docs.values() for report in doc.get("reports", [])]
         summary = portfolio_summary(reports)
-        monthly.append({"period": period_dir.name, **summary})
+        coverage = _coverage_metadata(set(usd_docs), expected_ids)
+        monthly.append({"period": period_dir.name, **summary, **coverage})
 
         cards: list[dict[str, Any]] = []
         for commodity_id in sorted(usd_docs):
@@ -156,6 +222,7 @@ def build_dashboard(observations_root: Path, out_path: Path) -> dict[str, Any]:
 
     latest_summary = monthly[-1].copy()
     latest_summary.pop("period", None)
+    first_period = monthly[0]["period"]
     dashboard = {
         "schema_version": 3,
         "as_of": latest_period,
@@ -166,6 +233,7 @@ def build_dashboard(observations_root: Path, out_path: Path) -> dict[str, Any]:
         "commodities": latest_commodities,
         "monthly": monthly,
         "commodity_history": dict(sorted(commodity_history.items())),
+        "history_gaps": _history_gaps(master, first_period=first_period, last_period=latest_period),
     }
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(dashboard, indent=2) + "\n", encoding="utf-8")
