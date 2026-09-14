@@ -26,6 +26,7 @@ on:
         options:
           - usd
           - quantity
+          - both
       trade_type:
         description: "Trade direction"
         required: true
@@ -40,6 +41,12 @@ on:
         required: true
         default: false
         type: boolean
+  # Temporary bootstrap trigger for the Jan-Feb 2026 H1 completion batch.
+  # Remove after the resulting data commit lands; manual dispatch remains canonical.
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/backfill.yml"
 
 permissions:
   contents: write
@@ -52,6 +59,13 @@ jobs:
   backfill:
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    env:
+      START_PERIOD: ${{ github.event_name == 'workflow_dispatch' && inputs.start_period || '2026-01' }}
+      END_PERIOD: ${{ github.event_name == 'workflow_dispatch' && inputs.end_period || '2026-02' }}
+      COMMODITY: ${{ github.event_name == 'workflow_dispatch' && inputs.commodity || 'all' }}
+      VALUE_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.value_type || 'both' }}
+      TRADE_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.trade_type || 'both' }}
+      FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force || false }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,73 +76,74 @@ jobs:
       - name: Sync dependencies
         run: uv sync --dev
       - name: Preview resumable backfill plan
-        env:
-          START_PERIOD: ${{ inputs.start_period }}
-          END_PERIOD: ${{ inputs.end_period }}
-          COMMODITY: ${{ inputs.commodity }}
-          VALUE_TYPE: ${{ inputs.value_type }}
-          TRADE_TYPE: ${{ inputs.trade_type }}
-          FORCE: ${{ inputs.force }}
         shell: bash
         run: |
-          args=(
-            --start-period "$START_PERIOD"
-            --end-period "$END_PERIOD"
-            --value-type "$VALUE_TYPE"
-            --trade-type "$TRADE_TYPE"
-            --dry-run
-          )
-          if [[ "$COMMODITY" != "all" ]]; then
-            args+=(--commodity "$COMMODITY")
+          value_types=("$VALUE_TYPE")
+          if [[ "$VALUE_TYPE" == "both" ]]; then
+            value_types=(usd quantity)
           fi
-          if [[ "$FORCE" == "true" ]]; then
-            args+=(--force)
-          fi
-          uv run python scripts/backfill_tradestat.py "${args[@]}" | tee /tmp/backfill-plan.log
+
+          : > /tmp/backfill-plan.log
+          for value_type in "${value_types[@]}"; do
+            echo "=== ${value_type} ===" | tee -a /tmp/backfill-plan.log
+            args=(
+              --start-period "$START_PERIOD"
+              --end-period "$END_PERIOD"
+              --value-type "$value_type"
+              --trade-type "$TRADE_TYPE"
+              --dry-run
+            )
+            if [[ "$COMMODITY" != "all" ]]; then
+              args+=(--commodity "$COMMODITY")
+            fi
+            if [[ "$FORCE" == "true" ]]; then
+              args+=(--force)
+            fi
+            uv run python scripts/backfill_tradestat.py "${args[@]}" | tee -a /tmp/backfill-plan.log
+          done
+
           {
             echo "### TradeStat backfill plan"
             echo '```text'
-            tail -n 40 /tmp/backfill-plan.log
+            tail -n 80 /tmp/backfill-plan.log
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Backfill missing or stale official observations
-        env:
-          START_PERIOD: ${{ inputs.start_period }}
-          END_PERIOD: ${{ inputs.end_period }}
-          COMMODITY: ${{ inputs.commodity }}
-          VALUE_TYPE: ${{ inputs.value_type }}
-          TRADE_TYPE: ${{ inputs.trade_type }}
-          FORCE: ${{ inputs.force }}
         shell: bash
         run: |
-          args=(
-            --start-period "$START_PERIOD"
-            --end-period "$END_PERIOD"
-            --value-type "$VALUE_TYPE"
-            --trade-type "$TRADE_TYPE"
-          )
-          if [[ "$COMMODITY" != "all" ]]; then
-            args+=(--commodity "$COMMODITY")
+          value_types=("$VALUE_TYPE")
+          if [[ "$VALUE_TYPE" == "both" ]]; then
+            value_types=(usd quantity)
           fi
-          if [[ "$FORCE" == "true" ]]; then
-            args+=(--force)
-          fi
-          uv run python scripts/backfill_tradestat.py "${args[@]}" | tee /tmp/backfill-run.log
-          summary=$(grep '^BACKFILL_SUMMARY ' /tmp/backfill-run.log | tail -n 1 || true)
-          if [[ -n "$summary" ]]; then
-            echo "### Backfill result" >> "$GITHUB_STEP_SUMMARY"
-            echo "\`$summary\`" >> "$GITHUB_STEP_SUMMARY"
-          fi
+
+          : > /tmp/backfill-run.log
+          for value_type in "${value_types[@]}"; do
+            echo "=== ${value_type} ===" | tee -a /tmp/backfill-run.log
+            args=(
+              --start-period "$START_PERIOD"
+              --end-period "$END_PERIOD"
+              --value-type "$value_type"
+              --trade-type "$TRADE_TYPE"
+            )
+            if [[ "$COMMODITY" != "all" ]]; then
+              args+=(--commodity "$COMMODITY")
+            fi
+            if [[ "$FORCE" == "true" ]]; then
+              args+=(--force)
+            fi
+            uv run python scripts/backfill_tradestat.py "${args[@]}" | tee -a /tmp/backfill-run.log
+          done
+
+          {
+            echo "### Backfill result"
+            grep '^BACKFILL_SUMMARY ' /tmp/backfill-run.log || true
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Validate generated data
         run: |
           uv run python scripts/validate_data.py
           uv run pytest -q
           node --check assets/js/app.js
       - name: Commit historical data
-        env:
-          START_PERIOD: ${{ inputs.start_period }}
-          END_PERIOD: ${{ inputs.end_period }}
-          VALUE_TYPE: ${{ inputs.value_type }}
         run: |
           if git diff --quiet; then
             echo "No repository data change"
