@@ -56,6 +56,7 @@ def test_rare_earths_keep_heading_value_mapping_and_exact_quantity_mapping():
     assert rare_earths["mapping_status"] == "heading_validated"
     assert rare_earths["quantity_mapping"]["mode"] == "separate"
     assert rare_earths["quantity_mapping"]["mapping_status"] == "hs8_validated"
+    assert rare_earths["quantity_mapping"]["rollup_to_value_mapping"] is True
     assert rare_earths["quantity_mapping"]["hs_codes"] == [
         "28461010",
         "28461090",
@@ -148,3 +149,19 @@ def test_separate_quantity_mapping_rejects_non_hs8_codes():
     )
     errors = validate_mapping_quality(_master_with(item))
     assert any("must all be HS8" in error for error in errors)
+
+
+def test_quantity_rollup_requires_children_of_value_mapping():
+    item = _commodity(
+        hs_codes=["2846"],
+        mapping_status="heading_validated",
+        quantity_mapping={
+            "enabled": True,
+            "mode": "separate",
+            "mapping_status": "hs8_validated",
+            "rollup_to_value_mapping": True,
+            "hs_codes": ["99999999"],
+        },
+    )
+    errors = validate_mapping_quality(_master_with(item))
+    assert any("rollup quantity codes must be children" in error for error in errors)
