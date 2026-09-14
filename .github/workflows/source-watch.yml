@@ -81,7 +81,11 @@ jobs:
               if doc.get('quantity_scale_to_source_unit') != 1000:
                   return True
               reports = doc.get('reports', [])
-              return any(report.get('quantity_scale_to_source_unit') != 1000 for report in reports)
+              if any(report.get('quantity_scale_to_source_unit') != 1000 for report in reports):
+                  return True
+              # TradeStat live form contract: selector code 2 is Quantity.
+              # Older observations were accidentally produced with selector 3 (INR Crore).
+              return any(report.get('value_selector_code') != '2' for report in reports)
 
           as_of = dashboard.get('as_of')
           usd_missing_or_stale = []
