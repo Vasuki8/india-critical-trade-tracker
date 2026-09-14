@@ -42,9 +42,10 @@ jobs:
         shell: bash
         run: |
           uv run python - <<'PY'
-          import json, os, re
+          import json, os
           from pathlib import Path
 
+          from scripts.ingest_tradestat import hs_codes_for_period, is_queryable_commodity
           from src.tracker.releases import revision_refresh_range
 
           before = json.loads(Path('/tmp/source_status_before.json').read_text())
@@ -93,21 +94,26 @@ jobs:
           quantity_missing_or_stale = []
           if as_of:
               for commodity in master.get('commodities', []):
-                  status = commodity.get('mapping_status', '')
-                  codes = commodity.get('hs_codes', [])
-                  review_required = bool(re.search(r'needs|sensitive|partial', status, flags=re.I))
-                  value_ready = codes and all(len(code) in {2, 4, 6, 8} for code in codes) and not review_required
-                  if not value_ready:
-                      continue
+                  usd_codes, _ = hs_codes_for_period(commodity, as_of, value_type='usd')
+                  usd_ready, _ = is_queryable_commodity(
+                      commodity,
+                      value_type='usd',
+                      hs_codes=usd_codes,
+                  )
+                  if usd_ready and usd_codes:
+                      usd_path = Path('data/observations') / as_of / f"{commodity['id']}.usd.json"
+                      if mapping_needs_refresh(usd_path, usd_codes):
+                          usd_missing_or_stale.append(commodity['id'])
 
-                  usd_path = Path('data/observations') / as_of / f"{commodity['id']}.usd.json"
-                  if mapping_needs_refresh(usd_path, codes):
-                      usd_missing_or_stale.append(commodity['id'])
-
-                  quantity_ready = all(len(code) == 8 for code in codes)
-                  if quantity_ready:
+                  quantity_codes, _ = hs_codes_for_period(commodity, as_of, value_type='quantity')
+                  quantity_ready, _ = is_queryable_commodity(
+                      commodity,
+                      value_type='quantity',
+                      hs_codes=quantity_codes,
+                  )
+                  if quantity_ready and quantity_codes:
                       quantity_path = Path('data/observations') / as_of / f"{commodity['id']}.quantity.json"
-                      if quantity_observation_needs_refresh(quantity_path, codes):
+                      if quantity_observation_needs_refresh(quantity_path, quantity_codes):
                           quantity_missing_or_stale.append(commodity['id'])
 
           ingest_usd = source_changed or awaiting_usd or bool(usd_missing_or_stale)

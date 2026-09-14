@@ -187,7 +187,11 @@ def main() -> int:
 
     for period in iter_periods(args.start_period, args.end_period):
         for commodity in commodities:
-            hs_codes, classification_note = hs_codes_for_period(commodity, period)
+            hs_codes, classification_note = hs_codes_for_period(
+                commodity,
+                period,
+                value_type=args.value_type,
+            )
             queryable, reason = is_queryable_commodity(
                 commodity,
                 value_type=args.value_type,

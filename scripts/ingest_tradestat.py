@@ -38,10 +38,18 @@ def load_json(path: Path) -> dict[str, Any]:
 def latest_period_from_status(path: Path = SOURCE_STATUS_PATH) -> str:
     status = load_json(path)
     text = status.get("data_available") or ""
-    match = re.search(r"to\s+([A-Za-z]+)\s+(\d{4})", text, flags=re.I)
+    match = re.search(r"Data available:\s*(.*?)\s*\(\(R\)", text, flags=re.I)
     if not match:
-        raise ValueError(f"Could not parse latest period from source status: {text!r}")
-    month_name, year_text = match.groups()
+        match = re.search(r"to\s+([A-Za-z]+)\s+(\d{4})", text, flags=re.I)
+        if not match:
+            raise ValueError(f"Could not parse latest period from source status: {text!r}")
+        month_name, year_text = match.groups()
+    else:
+        available_text = match.group(1)
+        period_match = re.search(r"to\s+([A-Za-z]+)\s+(\d{4})", available_text, flags=re.I)
+        if not period_match:
+            raise ValueError(f"Could not parse latest period from source status: {text!r}")
+        month_name, year_text = period_match.groups()
     month = MONTHS.get(month_name.lower())
     if month is None:
         raise ValueError(f"Unknown month in source status: {month_name}")
@@ -56,19 +64,51 @@ def _period_in_range(period: str, start: str | None, through: str | None) -> boo
     return True
 
 
-def hs_codes_for_period(item: dict[str, Any], period: str) -> tuple[list[str], str | None]:
-    transitions = set(item.get("classification_transition_periods", []))
+def _codes_for_mapping(mapping: dict[str, Any], period: str) -> tuple[list[str], str | None]:
+    transitions = set(mapping.get("classification_transition_periods", []))
     if period in transitions:
         return [], f"classification transition month intentionally skipped: {period}"
 
-    eras = item.get("classification_eras") or []
+    eras = mapping.get("classification_eras") or []
     if eras:
         for era in eras:
             if _period_in_range(period, era.get("from"), era.get("through")):
-                return list(era.get("hs_codes", [])), era.get("note")
+                return list(era.get("hs_codes", [])), era.get("note") or mapping.get("note")
         return [], f"no classification mapping defined for {period}"
 
-    return list(item.get("hs_codes", [])), None
+    return list(mapping.get("hs_codes", [])), mapping.get("note")
+
+
+def _mapping_for_value_type(
+    item: dict[str, Any],
+    value_type: str,
+) -> tuple[dict[str, Any] | None, str | None, str | None]:
+    if value_type != "quantity":
+        return item, item.get("mapping_status"), None
+
+    quantity = item.get("quantity_mapping")
+    if not isinstance(quantity, dict) or quantity.get("enabled") is not True:
+        return None, None, None
+
+    mode = quantity.get("mode")
+    if mode == "same_as_value":
+        return item, quantity.get("mapping_status"), mode
+    if mode == "separate":
+        return quantity, quantity.get("mapping_status"), mode
+    return None, quantity.get("mapping_status"), str(mode) if mode is not None else None
+
+
+def hs_codes_for_period(
+    item: dict[str, Any],
+    period: str,
+    value_type: str = "usd",
+) -> tuple[list[str], str | None]:
+    mapping, _status, _mode = _mapping_for_value_type(item, value_type)
+    if mapping is None:
+        if value_type == "quantity":
+            return [], "quantity mapping is not enabled or has an unsupported mode"
+        return [], "no mapping is enabled"
+    return _codes_for_mapping(mapping, period)
 
 
 def is_queryable_commodity(
@@ -76,11 +116,18 @@ def is_queryable_commodity(
     value_type: str = "usd",
     hs_codes: list[str] | None = None,
 ) -> tuple[bool, str | None]:
-    status = item.get("mapping_status", "")
-    if re.search(r"needs|sensitive|partial", status, flags=re.I):
+    mapping, status, mode = _mapping_for_value_type(item, value_type)
+    if value_type == "quantity":
+        if mapping is None:
+            return False, "quantity mapping is not explicitly enabled"
+        if mode not in {"same_as_value", "separate"}:
+            return False, f"unsupported quantity mapping mode: {mode}"
+        if status != "hs8_validated":
+            return False, f"quantity mapping must be hs8_validated; got {status}"
+    elif re.search(r"needs|sensitive|partial", str(status or ""), flags=re.I):
         return False, f"mapping status requires review: {status}"
 
-    codes = list(hs_codes if hs_codes is not None else item.get("hs_codes", []))
+    codes = list(hs_codes if hs_codes is not None else (mapping or item).get("hs_codes", []))
     if not codes:
         return False, "no HS codes are mapped for this period"
     bad = [code for code in codes if len(code) not in VALID_HS_LENGTHS]
@@ -91,6 +138,23 @@ def is_queryable_commodity(
         if non_hs8:
             return False, f"quantity requires HS8 mappings; got {', '.join(non_hs8)}"
     return True, None
+
+
+def _active_mapping_metadata(
+    commodity: dict[str, Any],
+    value_type: str,
+) -> tuple[str, list[str], str | None, bool]:
+    mapping, status, mode = _mapping_for_value_type(commodity, value_type)
+    quantity = commodity.get("quantity_mapping") if value_type == "quantity" else None
+    rollup = bool(quantity.get("rollup_to_value_mapping")) if isinstance(quantity, dict) else False
+    if mapping is None:
+        return commodity.get("mapping_status", ""), list(commodity.get("hs_codes", [])), mode, rollup
+    return (
+        str(status or commodity.get("mapping_status", "")),
+        list(mapping.get("hs_codes", commodity.get("hs_codes", []))),
+        mode,
+        rollup,
+    )
 
 
 def ingest_one(
@@ -131,6 +195,31 @@ def ingest_one(
     expected = len(hs_codes) * len(trade_types)
     status = "ok" if len(reports) == expected else "partial" if reports else "failed"
     metrics = aggregate_commodity(reports) if reports and value_type == "usd" else {}
+    active_mapping_status, canonical_hs_codes, quantity_mapping_mode, quantity_rollup = _active_mapping_metadata(
+        commodity, value_type
+    )
+    commodity_metadata: dict[str, Any] = {
+        "id": commodity["id"],
+        "name": commodity["name"],
+        "category": commodity["category"],
+        "priority": commodity["priority"],
+        "hs_codes": hs_codes,
+        "canonical_hs_codes": canonical_hs_codes,
+        "mapping_status": active_mapping_status,
+        "classification_note": classification_note,
+    }
+    # Preserve the existing observation identity for ordinary USD and
+    # same-as-value quantity mappings. Extra provenance is needed only when the
+    # quantity mapping intentionally differs from the monetary definition.
+    if value_type == "quantity" and quantity_mapping_mode == "separate":
+        commodity_metadata.update(
+            {
+                "monetary_mapping_status": commodity["mapping_status"],
+                "quantity_mapping_mode": quantity_mapping_mode,
+                "quantity_rollup_to_value_mapping": quantity_rollup,
+            }
+        )
+
     return {
         "schema_version": 3,
         "period": period,
@@ -138,16 +227,7 @@ def ingest_one(
         "year_type": year_type,
         "quantity_scale_to_source_unit": QUANTITY_SCALE_TO_SOURCE_UNIT if value_type == "quantity" else None,
         "quantity_scale_note": QUANTITY_SCALE_NOTE if value_type == "quantity" else None,
-        "commodity": {
-            "id": commodity["id"],
-            "name": commodity["name"],
-            "category": commodity["category"],
-            "priority": commodity["priority"],
-            "hs_codes": hs_codes,
-            "canonical_hs_codes": commodity.get("hs_codes", hs_codes),
-            "mapping_status": commodity["mapping_status"],
-            "classification_note": classification_note,
-        },
+        "commodity": commodity_metadata,
         "status": status,
         "reports": reports,
         "metrics": metrics,
@@ -263,7 +343,11 @@ def main() -> int:
     skipped = 0
 
     for commodity in commodities:
-        hs_codes, classification_note = hs_codes_for_period(commodity, period)
+        hs_codes, classification_note = hs_codes_for_period(
+            commodity,
+            period,
+            value_type=args.value_type,
+        )
         queryable, reason = is_queryable_commodity(
             commodity,
             value_type=args.value_type,

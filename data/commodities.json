@@ -1,11 +1,11 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "definition_date": "2026-09-14",
-  "notes": "User-facing critical commodity groups. Broad HS mappings are intentionally separated from exact ITC-HS8 mappings so classification changes can be versioned safely. Solar PV includes explicit pre/post ITC(HS) 2022 eras; the February 2022 transition month is intentionally not stitched automatically.",
+  "notes": "User-facing critical commodity groups. Monetary HS mappings and physical-quantity mappings are versioned separately so a broad validated USD series can coexist with exact ITC-HS8 quantity lines. Solar PV includes explicit pre/post ITC(HS) 2022 eras; the February 2022 transition month is intentionally not stitched automatically.",
   "commodities": [
     {"id":"crude_oil","name":"Crude Oil","category":"Energy","priority":"critical","hs_codes":["2709"],"mapping_status":"heading_validated","icon":"droplet"},
     {"id":"petroleum_products","name":"Petroleum Products","category":"Energy","priority":"critical","hs_codes":["2710"],"mapping_status":"heading_validated","icon":"fuel"},
-    {"id":"natural_gas_lng","name":"Natural Gas / LNG","category":"Energy","priority":"critical","hs_codes":["27111100","27112100"],"mapping_status":"hs8_validated","icon":"flame"},
+    {"id":"natural_gas_lng","name":"Natural Gas / LNG","category":"Energy","priority":"critical","hs_codes":["27111100","27112100"],"mapping_status":"hs8_validated","icon":"flame","quantity_mapping":{"enabled":true,"mode":"same_as_value","mapping_status":"hs8_validated","note":"Physical quantity uses the same exact HS8 tariff lines as the monetary series."}},
     {"id":"coal","name":"Coal","category":"Energy","priority":"critical","hs_codes":["2701"],"mapping_status":"heading_validated","icon":"mountain"},
     {"id":"gold","name":"Gold","category":"Precious Metals","priority":"critical","hs_codes":["7108"],"mapping_status":"heading_validated","icon":"gem"},
     {"id":"electronics","name":"Electronics","category":"Technology","priority":"critical","hs_codes":["85"],"mapping_status":"chapter_broad","icon":"cpu"},
@@ -20,10 +20,26 @@
     {"id":"organic_chemicals_apis","name":"Organic Chemicals / API Inputs","category":"Healthcare","priority":"critical","hs_codes":["29"],"mapping_status":"chapter_broad","icon":"flask"},
     {"id":"iron_steel","name":"Iron & Steel","category":"Industrial","priority":"critical","hs_codes":["72"],"mapping_status":"chapter_broad","icon":"factory"},
     {"id":"copper","name":"Copper","category":"Strategic Minerals","priority":"critical","hs_codes":["74","2603"],"mapping_status":"chapter_plus_ore","icon":"circle"},
-    {"id":"lithium","name":"Lithium & Compounds","category":"Strategic Minerals","priority":"critical","hs_codes":["28252000","28369100"],"mapping_status":"hs8_validated","icon":"battery"},
+    {"id":"lithium","name":"Lithium & Compounds","category":"Strategic Minerals","priority":"critical","hs_codes":["28252000","28369100"],"mapping_status":"hs8_validated","icon":"battery","quantity_mapping":{"enabled":true,"mode":"same_as_value","mapping_status":"hs8_validated","note":"Physical quantity uses the same exact HS8 tariff lines as the monetary series."}},
     {"id":"nickel","name":"Nickel","category":"Strategic Minerals","priority":"critical","hs_codes":["2604","75"],"mapping_status":"heading_plus_chapter","icon":"battery"},
     {"id":"cobalt","name":"Cobalt","category":"Strategic Minerals","priority":"critical","hs_codes":["2605","8105"],"mapping_status":"heading_set","icon":"battery"},
-    {"id":"rare_earths","name":"Rare Earths","category":"Strategic Minerals","priority":"critical","hs_codes":["2846"],"mapping_status":"heading_validated","icon":"atom"},
+    {
+      "id":"rare_earths",
+      "name":"Rare Earths",
+      "category":"Strategic Minerals",
+      "priority":"critical",
+      "hs_codes":["2846"],
+      "mapping_status":"heading_validated",
+      "icon":"atom",
+      "quantity_mapping":{
+        "enabled":true,
+        "mode":"separate",
+        "mapping_status":"hs8_validated",
+        "rollup_to_value_mapping":true,
+        "hs_codes":["28461010","28461090","28469010","28469020","28469030","28469090"],
+        "note":"Exact ITC-HS8 tariff items that exhaust heading 2846. Kept separate so the validated USD heading series remains unchanged while quantity is fetched only at HS8; aggregate unit value may roll up to the parent heading when units agree."
+      }
+    },
     {
       "id":"solar_pv",
       "name":"Solar Cells / Modules",
@@ -32,6 +48,7 @@
       "hs_codes":["85414200","85414300"],
       "mapping_status":"hs8_validated",
       "icon":"sun",
+      "quantity_mapping":{"enabled":true,"mode":"same_as_value","mapping_status":"hs8_validated","note":"Quantity inherits the same period-specific exact HS8 classification eras as the monetary series."},
       "classification_transition_periods":["2022-02"],
       "classification_eras":[
         {

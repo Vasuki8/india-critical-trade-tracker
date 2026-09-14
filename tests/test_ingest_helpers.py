@@ -27,25 +27,91 @@ def test_review_mapping_is_skipped():
     assert "review" in reason
 
 
-def test_quantity_accepts_only_hs8():
+def test_quantity_requires_explicit_mapping_contract():
     ok, reason = is_queryable_commodity(
         {"mapping_status": "hs8_validated", "hs_codes": ["28252000", "28369100"]},
         value_type="quantity",
+    )
+    assert not ok
+    assert "explicitly enabled" in reason
+
+
+def test_quantity_accepts_only_explicit_hs8_mapping():
+    ok, reason = is_queryable_commodity(
+        {
+            "mapping_status": "hs8_validated",
+            "hs_codes": ["28252000", "28369100"],
+            "quantity_mapping": {
+                "enabled": True,
+                "mode": "same_as_value",
+                "mapping_status": "hs8_validated",
+            },
+        },
+        value_type="quantity",
+        hs_codes=["28252000", "28369100"],
     )
     assert ok
     assert reason is None
 
     ok, reason = is_queryable_commodity(
-        {"mapping_status": "heading_validated", "hs_codes": ["2709"]},
+        {
+            "mapping_status": "heading_validated",
+            "hs_codes": ["2709"],
+            "quantity_mapping": {
+                "enabled": True,
+                "mode": "same_as_value",
+                "mapping_status": "hs8_validated",
+            },
+        },
         value_type="quantity",
+        hs_codes=["2709"],
     )
     assert not ok
     assert "HS8" in reason
 
 
+def test_separate_quantity_mapping_does_not_change_value_mapping():
+    rare_earths = {
+        "mapping_status": "heading_validated",
+        "hs_codes": ["2846"],
+        "quantity_mapping": {
+            "enabled": True,
+            "mode": "separate",
+            "mapping_status": "hs8_validated",
+            "hs_codes": [
+                "28461010",
+                "28461090",
+                "28469010",
+                "28469020",
+                "28469030",
+                "28469090",
+            ],
+        },
+    }
+
+    usd_codes, _ = hs_codes_for_period(rare_earths, "2026-06", value_type="usd")
+    quantity_codes, _ = hs_codes_for_period(rare_earths, "2026-06", value_type="quantity")
+
+    assert usd_codes == ["2846"]
+    assert quantity_codes == [
+        "28461010",
+        "28461090",
+        "28469010",
+        "28469020",
+        "28469030",
+        "28469090",
+    ]
+
+
 def test_solar_classification_eras_do_not_stitch_transition_month():
     solar = {
         "hs_codes": ["85414200", "85414300"],
+        "mapping_status": "hs8_validated",
+        "quantity_mapping": {
+            "enabled": True,
+            "mode": "same_as_value",
+            "mapping_status": "hs8_validated",
+        },
         "classification_transition_periods": ["2022-02"],
         "classification_eras": [
             {"from": "2018-01", "through": "2022-01", "hs_codes": ["85414011", "85414012"]},
@@ -53,9 +119,9 @@ def test_solar_classification_eras_do_not_stitch_transition_month():
         ],
     }
 
-    old_codes, _ = hs_codes_for_period(solar, "2022-01")
-    transition_codes, transition_note = hs_codes_for_period(solar, "2022-02")
-    new_codes, _ = hs_codes_for_period(solar, "2022-03")
+    old_codes, _ = hs_codes_for_period(solar, "2022-01", value_type="quantity")
+    transition_codes, transition_note = hs_codes_for_period(solar, "2022-02", value_type="quantity")
+    new_codes, _ = hs_codes_for_period(solar, "2022-03", value_type="quantity")
 
     assert old_codes == ["85414011", "85414012"]
     assert transition_codes == []
@@ -77,7 +143,7 @@ class _QuantityClient:
         }
 
 
-def test_quantity_ingestion_persists_direct_unit_scale_metadata():
+def test_quantity_ingestion_persists_direct_unit_scale_metadata_without_new_identity_fields():
     commodity = {
         "id": "lithium",
         "name": "Lithium & Compounds",
@@ -85,6 +151,11 @@ def test_quantity_ingestion_persists_direct_unit_scale_metadata():
         "priority": "critical",
         "hs_codes": ["28252000"],
         "mapping_status": "hs8_validated",
+        "quantity_mapping": {
+            "enabled": True,
+            "mode": "same_as_value",
+            "mapping_status": "hs8_validated",
+        },
     }
 
     doc = ingest_one(
@@ -101,6 +172,44 @@ def test_quantity_ingestion_persists_direct_unit_scale_metadata():
     assert "already expressed" in doc["quantity_scale_note"]
     assert doc["reports"][0]["quantity_scale_to_source_unit"] == 1
     assert "already expressed" in doc["reports"][0]["quantity_scale_note"]
+    assert doc["commodity"]["mapping_status"] == "hs8_validated"
+    assert "quantity_mapping_mode" not in doc["commodity"]
+    assert "quantity_rollup_to_value_mapping" not in doc["commodity"]
+
+
+def test_separate_quantity_ingestion_persists_rollup_provenance():
+    commodity = {
+        "id": "rare_earths",
+        "name": "Rare Earths",
+        "category": "Strategic Minerals",
+        "priority": "critical",
+        "hs_codes": ["2846"],
+        "mapping_status": "heading_validated",
+        "quantity_mapping": {
+            "enabled": True,
+            "mode": "separate",
+            "mapping_status": "hs8_validated",
+            "rollup_to_value_mapping": True,
+            "hs_codes": ["28461010", "28469090"],
+        },
+    }
+
+    doc = ingest_one(
+        _QuantityClient(),
+        commodity,
+        period="2026-06",
+        hs_codes=["28461010", "28469090"],
+        value_type="quantity",
+        year_type="calendar",
+        trade_types=["import"],
+    )
+
+    assert doc["commodity"]["hs_codes"] == ["28461010", "28469090"]
+    assert doc["commodity"]["canonical_hs_codes"] == ["28461010", "28469090"]
+    assert doc["commodity"]["mapping_status"] == "hs8_validated"
+    assert doc["commodity"]["monetary_mapping_status"] == "heading_validated"
+    assert doc["commodity"]["quantity_mapping_mode"] == "separate"
+    assert doc["commodity"]["quantity_rollup_to_value_mapping"] is True
 
 
 def _revision_doc(*, value: float = 10.0, retrieved_at: str = "2026-09-14T10:00:00+00:00") -> dict:
