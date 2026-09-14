@@ -60,6 +60,8 @@ jobs:
       - name: Ingest latest critical-commodity month
         if: steps.decision.outputs.ingest == 'true'
         run: uv run python scripts/ingest_tradestat.py --latest --trade-type both --value-type usd --year-type calendar
+      - name: Rebuild dashboard from stored observations
+        run: uv run python scripts/build_dashboard.py
       - name: Validate generated data
         if: steps.decision.outputs.ingest == 'true'
         run: |
