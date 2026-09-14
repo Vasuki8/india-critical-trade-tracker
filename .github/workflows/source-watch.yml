@@ -149,7 +149,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/source_status.json data/dashboard.json data/observations/ 2>/dev/null || true
+          git add data/source_status.json data/dashboard.json data/observations/ data/revisions/ 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No tracked data change"
             exit 0
