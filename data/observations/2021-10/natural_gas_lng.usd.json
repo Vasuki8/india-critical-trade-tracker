@@ -1,0 +1,525 @@
+{
+  "schema_version": 3,
+  "period": "2021-10",
+  "value_type": "usd",
+  "year_type": "calendar",
+  "quantity_scale_to_source_unit": null,
+  "quantity_scale_note": null,
+  "commodity": {
+    "id": "natural_gas_lng",
+    "name": "Natural Gas / LNG",
+    "category": "Energy",
+    "priority": "critical",
+    "hs_codes": [
+      "27111100",
+      "27112100"
+    ],
+    "canonical_hs_codes": [
+      "27111100",
+      "27112100"
+    ],
+    "mapping_status": "hs8_validated",
+    "classification_note": null
+  },
+  "status": "ok",
+  "reports": [
+    {
+      "schema_version": 1,
+      "period": "2021-10",
+      "trade_type": "import",
+      "hs_code": "27111100",
+      "hs_level": 8,
+      "value_type": "usd",
+      "value_selector_code": "1",
+      "value_unit": "USD million",
+      "year_type": "calendar",
+      "data_status": "ok",
+      "commodity_description": "LIQUIFIED NATURAL GAS",
+      "source_quantity_unit": "KGS",
+      "headers": [
+        "S.No.",
+        "Country",
+        "Oct-2020\n                                                (R)",
+        "Oct-2021\n                                                (R)",
+        "%Growth",
+        "Jan-Oct2020                    (R)",
+        "Jan-Oct2021                    (R)",
+        "%Growth"
+      ],
+      "rows": [
+        {
+          "rank": 1,
+          "partner_country": "ALGERIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 68.54,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 2,
+          "partner_country": "ANGOLA",
+          "previous_year_value": 54.74,
+          "value": 32.68,
+          "yoy_pct": -40.3,
+          "cumulative_previous_year_value": 520.16,
+          "cumulative_value": 399.56,
+          "cumulative_yoy_pct": -23.19
+        },
+        {
+          "rank": 3,
+          "partner_country": "AUSTRALIA",
+          "previous_year_value": 71.8,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 252.52,
+          "cumulative_value": 138.63,
+          "cumulative_yoy_pct": -45.1
+        },
+        {
+          "rank": 4,
+          "partner_country": "BELGIUM",
+          "previous_year_value": 23.54,
+          "value": 30.02,
+          "yoy_pct": 27.57,
+          "cumulative_previous_year_value": 70.97,
+          "cumulative_value": 130.2,
+          "cumulative_yoy_pct": 83.47
+        },
+        {
+          "rank": 5,
+          "partner_country": "BRUNEI",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 11.18,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 6,
+          "partner_country": "CAMEROON",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 95.41,
+          "cumulative_value": 62.04,
+          "cumulative_yoy_pct": -34.97
+        },
+        {
+          "rank": 7,
+          "partner_country": "CHINA P RP",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 8,
+          "partner_country": "EGYPT A RP",
+          "previous_year_value": 0.0,
+          "value": 31.37,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 373.5,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 9,
+          "partner_country": "EQUTL GUINEA",
+          "previous_year_value": 7.8,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 117.65,
+          "cumulative_value": 155.0,
+          "cumulative_yoy_pct": 31.74
+        },
+        {
+          "rank": 10,
+          "partner_country": "FRANCE",
+          "previous_year_value": 0.0,
+          "value": 49.07,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 61.82,
+          "cumulative_value": 218.74,
+          "cumulative_yoy_pct": 253.83
+        },
+        {
+          "rank": 11,
+          "partner_country": "MALAYSIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 13.48,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 12,
+          "partner_country": "NETHERLAND",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 41.33,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 13,
+          "partner_country": "NIGERIA",
+          "previous_year_value": 74.01,
+          "value": 124.34,
+          "yoy_pct": 68.01,
+          "cumulative_previous_year_value": 782.68,
+          "cumulative_value": 596.26,
+          "cumulative_yoy_pct": -23.82
+        },
+        {
+          "rank": 14,
+          "partner_country": "NORWAY",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 15,
+          "partner_country": "OMAN",
+          "previous_year_value": 66.81,
+          "value": 87.8,
+          "yoy_pct": 31.42,
+          "cumulative_previous_year_value": 294.74,
+          "cumulative_value": 506.24,
+          "cumulative_yoy_pct": 71.76
+        },
+        {
+          "rank": 16,
+          "partner_country": "PAPUA N GNA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 16.78,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 17,
+          "partner_country": "QATAR",
+          "previous_year_value": 324.56,
+          "value": 454.25,
+          "yoy_pct": 39.96,
+          "cumulative_previous_year_value": 2837.65,
+          "cumulative_value": 3696.6,
+          "cumulative_yoy_pct": 30.27
+        },
+        {
+          "rank": 18,
+          "partner_country": "RUSSIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 11.56,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 19,
+          "partner_country": "SPAIN",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 84.85,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 20,
+          "partner_country": "TRINIDAD",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 160.8,
+          "cumulative_value": 101.96,
+          "cumulative_yoy_pct": -36.59
+        },
+        {
+          "rank": 21,
+          "partner_country": "U ARAB EMTS",
+          "previous_year_value": 125.42,
+          "value": 236.02,
+          "yoy_pct": 88.18,
+          "cumulative_previous_year_value": 631.15,
+          "cumulative_value": 1233.36,
+          "cumulative_yoy_pct": 95.41
+        },
+        {
+          "rank": 22,
+          "partner_country": "U S A",
+          "previous_year_value": 16.64,
+          "value": 270.17,
+          "yoy_pct": 1524.09,
+          "cumulative_previous_year_value": 556.05,
+          "cumulative_value": 1732.66,
+          "cumulative_yoy_pct": 211.6
+        }
+      ],
+      "totals": {
+        "previous_year_value": 765.31,
+        "value": 1315.73,
+        "yoy_pct": 71.92,
+        "cumulative_previous_year_value": 6531.0,
+        "cumulative_value": 9443.07,
+        "cumulative_yoy_pct": 44.59
+      },
+      "source": {
+        "provider": "DGCI&S / Department of Commerce, Government of India",
+        "system": "TradeStat MEIDB",
+        "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
+        "report_date": "15 Sep 2026",
+        "retrieved_at": "2026-09-14T20:22:21+00:00",
+        "checksum_sha256": "762e1a53818a8180dfde9737eeb50976bd3733c4796902933b15553403f3da65"
+      }
+    },
+    {
+      "schema_version": 1,
+      "period": "2021-10",
+      "trade_type": "export",
+      "hs_code": "27111100",
+      "hs_level": 8,
+      "value_type": "usd",
+      "value_selector_code": "1",
+      "value_unit": "USD million",
+      "year_type": "calendar",
+      "data_status": "ok",
+      "commodity_description": "LIQUIFIED NATURAL GAS",
+      "source_quantity_unit": "KGS",
+      "headers": [
+        "S.No.",
+        "Country",
+        "Oct-2020\n                                                (R)",
+        "Oct-2021\n                                                (R)",
+        "%Growth",
+        "Jan-Oct2020                    (R)",
+        "Jan-Oct2021                    (R)",
+        "%Growth"
+      ],
+      "rows": [
+        {
+          "rank": 1,
+          "partner_country": "BHUTAN",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.33,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 2,
+          "partner_country": "NEPAL",
+          "previous_year_value": 0.03,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 14.8,
+          "cumulative_value": 0.95,
+          "cumulative_yoy_pct": -93.59
+        },
+        {
+          "rank": 3,
+          "partner_country": "U ARAB EMTS",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.01,
+          "cumulative_yoy_pct": 271.35
+        }
+      ],
+      "totals": {
+        "previous_year_value": 0.03,
+        "value": 0.0,
+        "yoy_pct": null,
+        "cumulative_previous_year_value": 15.12,
+        "cumulative_value": 0.95,
+        "cumulative_yoy_pct": -93.7
+      },
+      "source": {
+        "provider": "DGCI&S / Department of Commerce, Government of India",
+        "system": "TradeStat MEIDB",
+        "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
+        "report_date": "15 Sep 2026",
+        "retrieved_at": "2026-09-14T20:22:23+00:00",
+        "checksum_sha256": "2536543a610f6d1474fc409891faf29ea9663742e7a1dd168e9a14f4ff7f7139"
+      }
+    },
+    {
+      "schema_version": 1,
+      "period": "2021-10",
+      "trade_type": "import",
+      "hs_code": "27112100",
+      "hs_level": 8,
+      "value_type": "usd",
+      "value_selector_code": "1",
+      "value_unit": "USD million",
+      "year_type": "calendar",
+      "data_status": "no_data",
+      "commodity_description": null,
+      "source_quantity_unit": null,
+      "headers": [],
+      "rows": [],
+      "totals": {
+        "previous_year_value": null,
+        "value": 0.0,
+        "yoy_pct": null,
+        "cumulative_previous_year_value": null,
+        "cumulative_value": null,
+        "cumulative_yoy_pct": null
+      },
+      "source": {
+        "provider": "DGCI&S / Department of Commerce, Government of India",
+        "system": "TradeStat MEIDB",
+        "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
+        "report_date": "13/08/2026",
+        "retrieved_at": "2026-09-14T20:22:24+00:00",
+        "checksum_sha256": "bcd7ec9bc5fadd87d4eebd11830d787779c442caa11c5ff61a1d191bf2a7e746"
+      }
+    },
+    {
+      "schema_version": 1,
+      "period": "2021-10",
+      "trade_type": "export",
+      "hs_code": "27112100",
+      "hs_level": 8,
+      "value_type": "usd",
+      "value_selector_code": "1",
+      "value_unit": "USD million",
+      "year_type": "calendar",
+      "data_status": "ok",
+      "commodity_description": "NATURAL GAS IN GASEOUS STATE",
+      "source_quantity_unit": "KGS",
+      "headers": [
+        "S.No.",
+        "Country",
+        "Oct-2020\n                                                (R)",
+        "Oct-2021\n                                                (R)",
+        "%Growth",
+        "Jan-Oct2020                    (R)",
+        "Jan-Oct2021                    (R)",
+        "%Growth"
+      ],
+      "rows": [
+        {
+          "rank": 1,
+          "partner_country": "NIGERIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 2,
+          "partner_country": "U ARAB EMTS",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 3,
+          "partner_country": "U S A",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        }
+      ],
+      "totals": {
+        "previous_year_value": 0.0,
+        "value": 0.0,
+        "yoy_pct": null,
+        "cumulative_previous_year_value": 0.0,
+        "cumulative_value": 0.0,
+        "cumulative_yoy_pct": -50.2
+      },
+      "source": {
+        "provider": "DGCI&S / Department of Commerce, Government of India",
+        "system": "TradeStat MEIDB",
+        "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
+        "report_date": "15 Sep 2026",
+        "retrieved_at": "2026-09-14T20:22:25+00:00",
+        "checksum_sha256": "3c5a3aa7d9f85b8dc05b134786618d32396fb6a6134f5b2a6cc366c017010550"
+      }
+    }
+  ],
+  "metrics": {
+    "imports": 1315.73,
+    "exports": 0.0,
+    "balance": -1315.73,
+    "import_previous_year": 765.31,
+    "export_previous_year": 0.03,
+    "import_yoy_pct": 71.92,
+    "export_yoy_pct": -100.0,
+    "ytd_imports": 9443.07,
+    "ytd_exports": 0.95,
+    "ytd_balance": -9442.12,
+    "ytd_imports_previous_year": 6531.0,
+    "ytd_exports_previous_year": 15.12,
+    "ytd_import_yoy_pct": 44.59,
+    "ytd_export_yoy_pct": -93.72,
+    "unit": "USD million",
+    "supplier_concentration": {
+      "top_partner_share_pct": 34.52,
+      "hhi": 2100.2,
+      "top_partners": [
+        {
+          "partner_country": "QATAR",
+          "value": 454.25,
+          "share_pct": 34.52
+        },
+        {
+          "partner_country": "U S A",
+          "value": 270.17,
+          "share_pct": 20.53
+        },
+        {
+          "partner_country": "U ARAB EMTS",
+          "value": 236.02,
+          "share_pct": 17.94
+        },
+        {
+          "partner_country": "NIGERIA",
+          "value": 124.34,
+          "share_pct": 9.45
+        },
+        {
+          "partner_country": "OMAN",
+          "value": 87.8,
+          "share_pct": 6.67
+        }
+      ]
+    },
+    "export_destination_concentration": {
+      "top_partner_share_pct": null,
+      "hhi": null,
+      "top_partners": []
+    },
+    "dependency": {
+      "score": 71.8,
+      "risk": "high",
+      "import_reliance_pct": 100.0,
+      "method": "60% net-import reliance + 25% top-supplier share + 15% supplier HHI"
+    }
+  },
+  "failures": []
+}
