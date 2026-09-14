@@ -198,6 +198,28 @@ def ingest_one(
     active_mapping_status, canonical_hs_codes, quantity_mapping_mode, quantity_rollup = _active_mapping_metadata(
         commodity, value_type
     )
+    commodity_metadata: dict[str, Any] = {
+        "id": commodity["id"],
+        "name": commodity["name"],
+        "category": commodity["category"],
+        "priority": commodity["priority"],
+        "hs_codes": hs_codes,
+        "canonical_hs_codes": canonical_hs_codes,
+        "mapping_status": active_mapping_status,
+        "classification_note": classification_note,
+    }
+    # Preserve the existing observation identity for ordinary USD and
+    # same-as-value quantity mappings. Extra provenance is needed only when the
+    # quantity mapping intentionally differs from the monetary definition.
+    if value_type == "quantity" and quantity_mapping_mode == "separate":
+        commodity_metadata.update(
+            {
+                "monetary_mapping_status": commodity["mapping_status"],
+                "quantity_mapping_mode": quantity_mapping_mode,
+                "quantity_rollup_to_value_mapping": quantity_rollup,
+            }
+        )
+
     return {
         "schema_version": 3,
         "period": period,
@@ -205,19 +227,7 @@ def ingest_one(
         "year_type": year_type,
         "quantity_scale_to_source_unit": QUANTITY_SCALE_TO_SOURCE_UNIT if value_type == "quantity" else None,
         "quantity_scale_note": QUANTITY_SCALE_NOTE if value_type == "quantity" else None,
-        "commodity": {
-            "id": commodity["id"],
-            "name": commodity["name"],
-            "category": commodity["category"],
-            "priority": commodity["priority"],
-            "hs_codes": hs_codes,
-            "canonical_hs_codes": canonical_hs_codes,
-            "mapping_status": active_mapping_status,
-            "monetary_mapping_status": commodity["mapping_status"],
-            "quantity_mapping_mode": quantity_mapping_mode if value_type == "quantity" else None,
-            "quantity_rollup_to_value_mapping": quantity_rollup if value_type == "quantity" else None,
-            "classification_note": classification_note,
-        },
+        "commodity": commodity_metadata,
         "status": status,
         "reports": reports,
         "metrics": metrics,
