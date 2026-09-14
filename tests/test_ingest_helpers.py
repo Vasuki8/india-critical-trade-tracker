@@ -2,7 +2,9 @@ import json
 from pathlib import Path
 
 from scripts.ingest_tradestat import (
+    QUANTITY_SCALE_TO_SOURCE_UNIT,
     hs_codes_for_period,
+    ingest_one,
     is_queryable_commodity,
     latest_period_from_status,
 )
@@ -56,3 +58,42 @@ def test_solar_classification_eras_do_not_stitch_transition_month():
     assert transition_codes == []
     assert "transition" in transition_note
     assert new_codes == ["85414200", "85414300"]
+
+
+class _QuantityClient:
+    def fetch_commodity_all_countries(self, **kwargs):
+        return {
+            "period": f"{kwargs['year']:04d}-{kwargs['month']:02d}",
+            "trade_type": kwargs["trade_type"],
+            "hs_code": kwargs["hscode"],
+            "value_type": kwargs["value_type"],
+            "source_quantity_unit": "KGS",
+            "rows": [],
+            "totals": {"value": 12.5},
+        }
+
+
+def test_quantity_ingestion_persists_thousand_unit_scale_metadata():
+    commodity = {
+        "id": "lithium",
+        "name": "Lithium & Compounds",
+        "category": "Strategic Minerals",
+        "priority": "critical",
+        "hs_codes": ["28252000"],
+        "mapping_status": "hs8_validated",
+    }
+
+    doc = ingest_one(
+        _QuantityClient(),
+        commodity,
+        period="2026-06",
+        hs_codes=["28252000"],
+        value_type="quantity",
+        year_type="calendar",
+        trade_types=["import"],
+    )
+
+    assert doc["quantity_scale_to_source_unit"] == QUANTITY_SCALE_TO_SOURCE_UNIT == 1000
+    assert "thousands" in doc["quantity_scale_note"]
+    assert doc["reports"][0]["quantity_scale_to_source_unit"] == 1000
+    assert "thousands" in doc["reports"][0]["quantity_scale_note"]
