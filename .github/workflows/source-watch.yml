@@ -1,9 +1,17 @@
-name: Watch TradeStat source
+name: Update TradeStat data
 
 on:
   workflow_dispatch:
   schedule:
     - cron: "17 6 * * *"
+  push:
+    branches: [main]
+    paths:
+      - "src/tracker/**"
+      - "scripts/**"
+      - "data/commodities.json"
+      - "pyproject.toml"
+      - ".github/workflows/source-watch.yml"
 
 permissions:
   contents: write
@@ -13,25 +21,63 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  refresh-source-status:
+  refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
       - name: Install Python
         run: uv python install 3.12
       - name: Sync dependencies
-        run: uv sync
+        run: uv sync --dev
+      - name: Preserve previous source status
+        run: cp data/source_status.json /tmp/source_status_before.json
       - name: Check official TradeStat source
         run: uv run python scripts/check_source.py
-      - name: Commit status changes
+      - name: Decide whether data ingestion is needed
+        id: decision
+        shell: bash
         run: |
-          if git diff --quiet -- data/source_status.json; then
-            echo "No source-status change"
+          uv run python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          before = json.loads(Path('/tmp/source_status_before.json').read_text())
+          after = json.loads(Path('data/source_status.json').read_text())
+          dashboard = json.loads(Path('data/dashboard.json').read_text())
+          fields = ['data_available', 'last_updated', 'final_through', 'revised_final_through']
+          changed = any(before.get(k) != after.get(k) for k in fields)
+          awaiting = not dashboard.get('as_of') or dashboard.get('status') == 'awaiting_trade_ingestion'
+          ingest = changed or awaiting
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write(f"source_changed={'true' if changed else 'false'}\n")
+              f.write(f"ingest={'true' if ingest else 'false'}\n")
+          print({'source_changed': changed, 'awaiting_first_ingestion': awaiting, 'ingest': ingest})
+          PY
+      - name: Ingest latest critical-commodity month
+        if: steps.decision.outputs.ingest == 'true'
+        run: uv run python scripts/ingest_tradestat.py --latest --trade-type both --value-type usd --year-type calendar
+      - name: Validate generated data
+        if: steps.decision.outputs.ingest == 'true'
+        run: |
+          uv run python scripts/validate_data.py
+          uv run pytest -q
+      - name: Ignore timestamp-only source check
+        if: steps.decision.outputs.ingest != 'true'
+        run: git checkout -- data/source_status.json
+      - name: Commit official data changes
+        run: |
+          if git diff --quiet; then
+            echo "No repository data change"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/source_status.json
-          git commit -m "data: refresh TradeStat source status"
+          git add data/source_status.json data/dashboard.json data/observations/ 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No tracked data change"
+            exit 0
+          fi
+          git commit -m "data: update TradeStat critical commodities"
           git push
