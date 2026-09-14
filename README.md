@@ -4,7 +4,7 @@ A live tracker for India's strategically important commodity imports and exports
 
 ## Current build
 
-The tracker covers **23 critical commodity groups** and currently carries official monthly data through **June 2026**. The repository now has a validated, contiguous **January–June 2026** USD history for all 23 groups. Historical HS8 quantity observations and implied unit values are also present for the validated quantity-capable groups.
+The tracker covers **23 critical commodity groups** and currently carries official monthly data through **June 2026**. The repository has a validated, contiguous **January 2025–June 2026** USD history for all 23 groups: **414 commodity-month history rows**. Historical HS8 quantity observations and implied unit values are also present for the validated quantity-capable groups.
 
 The ingestion layer preserves partner-country detail and source provenance, then derives:
 
@@ -14,6 +14,7 @@ The ingestion layer preserves partner-country detail and source provenance, then
 - a transparent dependency score
 - physical quantity and implied USD per source unit for validated HS8 mappings
 - monthly commodity history from stored observations
+- revision history when an official observation changes semantically
 
 The source monitor checks TradeStat daily. Heavy ingestion runs only when the official release changes, a stored mapping becomes stale, or a quantity observation needs contract/provenance refresh.
 
@@ -62,6 +63,24 @@ Solar cell and module unit values are kept at HS8 level because a bare photovolt
 - Quantity-only months cannot advance the dashboard's headline `as_of` period.
 - The April 2026 TradeStat ITC-HS reallocation/unit warning remains a classification guardrail.
 
+### Revision-aware observations
+
+The dashboard continues to read one current document from:
+
+```text
+data/observations/YYYY-MM/<commodity>.<value_type>.json
+```
+
+Before replacing an existing current observation, the ingester computes a deterministic semantic fingerprint. Fetch-time-only provenance such as `retrieved_at` is excluded from that identity.
+
+If the refetched observation is semantically identical, the current file is left untouched and no revision is created. If official values, partner rows, headers/status markers, report date, checksum, HS mapping, units, totals or other semantic content changes, the previous current document is preserved at:
+
+```text
+data/revisions/YYYY-MM/<commodity>.<value_type>/<fingerprint>.json
+```
+
+This applies to both the daily source watcher and historical backfills because they share the same observation writer. Deterministic fingerprints also prevent duplicate archive copies when the same historical version is encountered again.
+
 ### Classification-aware series
 
 Solar PV is explicitly versioned around the ITC(HS) 2022 change:
@@ -81,9 +100,10 @@ This prevents the history layer from pretending the current solar codes existed 
 1. checks the official TradeStat release state;
 2. compares stored observations with current HS mappings and quantity provenance;
 3. fetches only the USD and/or quantity layers that are actually stale;
-4. rebuilds `data/dashboard.json`;
-5. validates the commodity master and runs the full test suite; and
-6. commits official-data changes back to `main`.
+4. archives a superseded semantic observation before replacing it;
+5. rebuilds `data/dashboard.json`;
+6. validates the commodity master and runs the full test suite; and
+7. commits official data plus any revision archives back to `main`.
 
 ### Validation
 
@@ -107,20 +127,20 @@ The backfill is **resumable**. Before any request, `scripts/backfill_tradestat.p
 - successful stored status; and
 - for quantity, selector code `2` plus direct-unit scale `1`.
 
-Current observations are skipped automatically. Missing, incomplete or stale observations are fetched. This lets interrupted or partially completed backfills be rerun without repeating every official-site request.
+Current observations are skipped automatically. Missing, incomplete or stale observations are fetched. If a forced or stale refetch produces a genuine revision, the prior version is archived by the shared observation writer.
 
 Safety limits remain in place: all-commodity USD runs are limited to 12 months per workflow run; single-commodity or quantity runs may cover up to 36 months.
 
-You can preview a local backfill without network writes:
+The next full-year batch is **2024**. Preview it locally without network writes:
 
 ```powershell
-uv run python scripts/backfill_tradestat.py --start-period 2025-01 --end-period 2025-12 --value-type usd --trade-type both --dry-run
+uv run python scripts/backfill_tradestat.py --start-period 2024-01 --end-period 2024-12 --value-type usd --trade-type both --dry-run
 ```
 
 Run the same resumable batch:
 
 ```powershell
-uv run python scripts/backfill_tradestat.py --start-period 2025-01 --end-period 2025-12 --value-type usd --trade-type both
+uv run python scripts/backfill_tradestat.py --start-period 2024-01 --end-period 2024-12 --value-type usd --trade-type both
 ```
 
 For GitHub Actions, select `both` in the **Backfill TradeStat history** workflow when USD and eligible HS8 quantity history should be filled together.
@@ -183,7 +203,8 @@ uv run python scripts/build_dashboard.py
 │   ├── commodities.json
 │   ├── dashboard.json
 │   ├── source_status.json
-│   └── observations/YYYY-MM/*.json
+│   ├── observations/YYYY-MM/*.json
+│   └── revisions/YYYY-MM/<commodity>.<value_type>/*.json
 ├── scripts/
 │   ├── backfill_tradestat.py
 │   ├── build_dashboard.py
@@ -217,8 +238,8 @@ GitHub Pages is enabled for the repository. Updates committed to `main` trigger 
 
 ## Next build priorities
 
-1. Continue the bounded resumable history backfill backward through **2025**, then toward **2018**.
+1. Continue the bounded resumable history backfill through **2024**, then backward toward **2018**.
 2. Extend HS8 quantity history alongside USD wherever an exact validated mapping is available, preserving historical implied unit values.
 3. Add interactive historical charts and country drill-downs from the stored monthly history.
-4. Separate first-release and revised observations so revisions can be measured rather than silently replacing prior values.
+4. Add revision comparison summaries so archived first/revised/final observations can be quantified instead of merely preserved.
 5. Continue promoting broad HS2/4/6 commodity groups to validated HS8 definitions where an exact, stable mapping is economically meaningful.
