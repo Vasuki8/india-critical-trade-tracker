@@ -26,6 +26,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@v6
       - name: Install Python
         run: uv python install 3.12
@@ -80,4 +82,5 @@ jobs:
             exit 0
           fi
           git commit -m "data: update TradeStat critical commodities"
-          git push
+          git pull --rebase origin main
+          git push origin HEAD:main
