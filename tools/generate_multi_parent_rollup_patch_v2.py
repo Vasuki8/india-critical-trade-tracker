@@ -1,5 +1,9 @@
+import sys
 from pathlib import Path
 from textwrap import dedent, indent
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 from tools.generate_multi_parent_rollup_patch import patch_derived, patch_tests, replace_between
 
