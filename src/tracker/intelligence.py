@@ -5,8 +5,10 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from .aggregation import aggregate_commodity, concentration_metrics
+from .aggregation import aggregate_commodity_details, concentration_metrics
 from .derived import derive_unit_values
+
+ObservationIndex = dict[str, dict[str, dict[str, Path]]]
 
 
 def _load(path: Path) -> dict[str, Any] | None:
@@ -17,62 +19,42 @@ def _load(path: Path) -> dict[str, Any] | None:
     return value if isinstance(value, dict) else None
 
 
-def _observation_path(period_dir: Path, commodity_id: str, value_type: str) -> Path | None:
-    explicit = period_dir / f"{commodity_id}.{value_type}.json"
-    if explicit.exists():
-        return explicit
-    if value_type == "usd":
-        legacy = period_dir / f"{commodity_id}.json"
-        if legacy.exists():
-            doc = _load(legacy)
-            if doc is not None and doc.get("value_type", "usd") == "usd":
-                return legacy
-    return None
+def _build_observation_index(observations_root: Path) -> ObservationIndex:
+    """Index archive paths once instead of probing every period for every commodity."""
+    index: ObservationIndex = {}
+    for period_dir in sorted(path for path in observations_root.glob("????-??") if path.is_dir()):
+        period_entries: dict[str, dict[str, Path]] = defaultdict(dict)
+        for path in period_dir.glob("*.json"):
+            name = path.name
+            if name.endswith(".usd.json"):
+                commodity_id = name[:-9]
+                period_entries[commodity_id]["usd"] = path
+            elif name.endswith(".quantity.json"):
+                commodity_id = name[:-14]
+                period_entries[commodity_id]["quantity"] = path
+            elif name.endswith(".json"):
+                commodity_id = name[:-5]
+                # Legacy observations were USD-only. Explicit v2+ files always win.
+                period_entries[commodity_id].setdefault("usd", path)
+        if period_entries:
+            index[period_dir.name] = dict(period_entries)
+    return index
 
 
 def _reports(doc: dict[str, Any], trade_type: str) -> list[dict[str, Any]]:
     return [report for report in doc.get("reports", []) if report.get("trade_type") == trade_type]
 
 
-def _partner_rollup(reports: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    values: dict[str, float] = defaultdict(float)
-    for report in reports:
-        for row in report.get("rows", []):
-            country = str(row.get("partner_country") or "").strip()
-            value = row.get("value")
-            if not country or value is None:
-                continue
-            try:
-                numeric = float(value)
-            except (TypeError, ValueError):
-                continue
-            if numeric > 0:
-                values[country] += numeric
-
-    total = sum(values.values())
+def _hs_breakdown(reports: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [
         {
-            "partner_country": country,
-            "value": round(value, 6),
-            "share_pct": round(value / total * 100, 2) if total > 0 else None,
+            "hs_code": report.get("hs_code"),
+            "description": report.get("description"),
+            "value": report.get("totals", {}).get("value"),
+            "source_unit": report.get("quantity_unit") or report.get("source_unit"),
         }
-        for country, value in sorted(values.items(), key=lambda item: item[1], reverse=True)
+        for report in reports
     ]
-
-
-def _hs_breakdown(reports: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    output = []
-    for report in reports:
-        totals = report.get("totals", {})
-        output.append(
-            {
-                "hs_code": report.get("hs_code"),
-                "description": report.get("description"),
-                "value": totals.get("value"),
-                "source_unit": report.get("quantity_unit") or report.get("source_unit"),
-            }
-        )
-    return output
 
 
 def _unit_value_summary(
@@ -94,7 +76,8 @@ def _month_entry(
     usd_doc: dict[str, Any],
     quantity_doc: dict[str, Any] | None,
 ) -> dict[str, Any]:
-    metrics = aggregate_commodity(usd_doc.get("reports", []))
+    reports = usd_doc.get("reports", [])
+    metrics, imports_by_country, exports_by_country = aggregate_commodity_details(reports)
     imports = _reports(usd_doc, "import")
     exports = _reports(usd_doc, "export")
     return {
@@ -109,8 +92,8 @@ def _month_entry(
         "dependency": metrics.get("dependency", {}),
         "supplier_concentration": metrics.get("supplier_concentration", {}),
         "export_destination_concentration": metrics.get("export_destination_concentration", {}),
-        "imports_by_country": _partner_rollup(imports),
-        "exports_by_country": _partner_rollup(exports),
+        "imports_by_country": imports_by_country,
+        "exports_by_country": exports_by_country,
         "import_hs_breakdown": _hs_breakdown(imports),
         "export_hs_breakdown": _hs_breakdown(exports),
         "unit_values": _unit_value_summary(usd_doc, quantity_doc),
@@ -125,7 +108,7 @@ def _annual_summary(months: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
     output = []
     for year in sorted(grouped):
-        year_months = sorted(grouped[year], key=lambda item: item["period"])
+        year_months = grouped[year]
         imports = round(sum(float(item.get("imports") or 0) for item in year_months), 6)
         exports = round(sum(float(item.get("exports") or 0) for item in year_months), 6)
         import_partners: dict[str, float] = defaultdict(float)
@@ -166,38 +149,39 @@ def _annual_summary(months: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _history_gaps(commodity: dict[str, Any], first_period: str, last_period: str) -> list[dict[str, str]]:
-    gaps = []
-    for period in commodity.get("classification_transition_periods", []):
-        if first_period <= period <= last_period:
-            gaps.append(
-                {
-                    "period": period,
-                    "reason": "classification_transition",
-                    "note": "Historical mapping intentionally omitted for this classification transition month; do not interpret the missing observation as zero trade.",
-                }
-            )
-    return gaps
+    return [
+        {
+            "period": period,
+            "reason": "classification_transition",
+            "note": "Historical mapping intentionally omitted for this classification transition month; do not interpret the missing observation as zero trade.",
+        }
+        for period in commodity.get("classification_transition_periods", [])
+        if first_period <= period <= last_period
+    ]
 
 
 def build_commodity_intelligence(
     observations_root: Path,
     commodity: dict[str, Any],
+    *,
+    observation_index: ObservationIndex | None = None,
 ) -> dict[str, Any] | None:
     commodity_id = str(commodity.get("id") or "")
     if not commodity_id:
         return None
 
+    index = observation_index if observation_index is not None else _build_observation_index(observations_root)
     months = []
-    for period_dir in sorted(path for path in observations_root.glob("????-??") if path.is_dir()):
-        usd_path = _observation_path(period_dir, commodity_id, "usd")
-        if usd_path is None:
+    for period, period_entries in index.items():
+        paths = period_entries.get(commodity_id)
+        if not paths or "usd" not in paths:
             continue
-        usd_doc = _load(usd_path)
-        if usd_doc is None:
+        usd_doc = _load(paths["usd"])
+        if usd_doc is None or usd_doc.get("value_type", "usd") != "usd":
             continue
-        quantity_path = _observation_path(period_dir, commodity_id, "quantity")
+        quantity_path = paths.get("quantity")
         quantity_doc = _load(quantity_path) if quantity_path is not None else None
-        months.append(_month_entry(period_dir.name, usd_doc, quantity_doc))
+        months.append(_month_entry(period, usd_doc, quantity_doc))
 
     if not months:
         return None
@@ -243,11 +227,16 @@ def build_all_commodity_intelligence(
     if master is None:
         raise ValueError(f"Unable to load commodity master: {master_path}")
 
+    observation_index = _build_observation_index(observations_root)
     output_root.mkdir(parents=True, exist_ok=True)
     expected_files: set[Path] = set()
     built = []
     for commodity in master.get("commodities", []):
-        doc = build_commodity_intelligence(observations_root, commodity)
+        doc = build_commodity_intelligence(
+            observations_root,
+            commodity,
+            observation_index=observation_index,
+        )
         if doc is None:
             continue
         path = output_root / f"{commodity['id']}.json"
