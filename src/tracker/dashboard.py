@@ -25,6 +25,11 @@ def _observation_value_type(doc: dict[str, Any]) -> str | None:
     return None
 
 
+def _is_usd_observation(doc: dict[str, Any]) -> bool:
+    """Compatibility helper retained for callers and value-type contract tests."""
+    return _observation_value_type(doc) == "usd"
+
+
 def _documents_by_value_type(period_dir: Path) -> dict[str, dict[str, dict[str, Any]]]:
     """Load a period directory once and select one observation per commodity/value type."""
     selected: dict[str, dict[str, tuple[tuple[int, int], dict[str, Any]]]] = defaultdict(dict)
