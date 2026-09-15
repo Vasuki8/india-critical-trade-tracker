@@ -1,0 +1,52 @@
+name: Apply parent-child unit-value payload pruning
+
+on:
+  push:
+    branches:
+      - ops/apply-prune-parent-child-components
+    paths:
+      - ".github/workflows/apply-prune-parent-child-components.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: perf/prune-parent-child-unit-components
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync dependencies
+        run: uv sync --dev
+      - name: Apply payload pruning patch
+        run: |
+          uv run python tools/apply_prune_parent_child_components.py
+          rm tools/apply_prune_parent_child_components.py
+      - name: Run focused regression tests
+        run: uv run pytest -q tests/test_pruned_parent_child_components.py tests/test_derived.py tests/test_mixed_unit_availability.py
+      - name: Run full validation
+        run: |
+          uv run python scripts/build_intelligence.py
+          uv run python scripts/validate_data.py
+          uv run pytest -q
+          node --check assets/js/app.js
+          node --check assets/js/intelligence.js
+          node --check assets/js/portfolio.js
+      - name: Commit tested patch to feature branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/tracker/derived.py tests/test_pruned_parent_child_components.py tools/apply_prune_parent_child_components.py
+          if git diff --cached --quiet; then
+            echo "No patch changes to commit"
+            exit 0
+          fi
+          git commit -m "perf: prune redundant parent-child unit components"
+          git push origin HEAD:perf/prune-parent-child-unit-components
