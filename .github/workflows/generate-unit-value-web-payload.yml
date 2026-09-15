@@ -1,0 +1,50 @@
+name: Generate compact unit-value web payload patch
+
+on:
+  push:
+    branches:
+      - ops/generate-unit-value-web-payload
+    paths:
+      - ".github/workflows/generate-unit-value-web-payload.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: perf/compact-unit-value-web-payload
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync dependencies
+        run: uv sync --dev
+      - name: Apply payload patch
+        run: uv run python tools/patch_unit_value_web_payload.py
+      - name: Run focused tests
+        run: uv run pytest -q tests/test_unit_value_web_payload.py tests/test_dashboard_efficiency.py tests/test_intelligence.py
+      - name: Run full validation
+        run: |
+          uv run python scripts/build_intelligence.py
+          uv run python scripts/validate_data.py
+          uv run pytest -q
+          node --check assets/js/app.js
+          node --check assets/js/intelligence.js
+          node --check assets/js/portfolio.js
+      - name: Commit tested patch to feature branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/tracker/dashboard.py src/tracker/intelligence.py tests/test_unit_value_web_payload.py
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Compact unit-value web payloads"
+          git push origin HEAD:perf/compact-unit-value-web-payload
