@@ -1,0 +1,669 @@
+{
+  "schema_version": 3,
+  "period": "2020-03",
+  "value_type": "quantity",
+  "year_type": "calendar",
+  "quantity_scale_to_source_unit": 1,
+  "quantity_scale_note": "TradeStat MEIDB quantity values are already expressed in the displayed source unit (for example KGS or NOS).",
+  "commodity": {
+    "id": "crude_oil",
+    "name": "Crude Oil",
+    "category": "Energy",
+    "priority": "critical",
+    "hs_codes": [
+      "27090000"
+    ],
+    "canonical_hs_codes": [
+      "27090010",
+      "27090090"
+    ],
+    "mapping_status": "hs8_validated",
+    "classification_note": "Pre-ITC(HS) 2022 tariff item for heading 2709. The official HS 2022 correlation records 27090010 and 27090090 as subdivisions of former 27090000.",
+    "monetary_mapping_status": "heading_validated",
+    "quantity_mapping_mode": "separate",
+    "quantity_rollup_to_value_mapping": true
+  },
+  "status": "ok",
+  "reports": [
+    {
+      "schema_version": 1,
+      "period": "2020-03",
+      "trade_type": "import",
+      "hs_code": "27090000",
+      "hs_level": 8,
+      "value_type": "quantity",
+      "value_selector_code": "2",
+      "value_unit": "source unit",
+      "year_type": "calendar",
+      "data_status": "ok",
+      "commodity_description": "PETROLEUM OILS AND OILS OBTAINED FROM BITUMINOUS MINERALS CRUDE",
+      "source_quantity_unit": "KGS",
+      "headers": [
+        "S.No.",
+        "Country",
+        "Mar-2019\n                                                (R)",
+        "Mar-2020\n                                                (R)",
+        "%Growth",
+        "Jan-Mar2019                    (R)",
+        "Jan-Mar2020                    (R)",
+        "%Growth"
+      ],
+      "rows": [
+        {
+          "rank": 1,
+          "partner_country": "ALGERIA",
+          "previous_year_value": 168518.0,
+          "value": 216262.0,
+          "yoy_pct": 28.0,
+          "cumulative_previous_year_value": 568019.0,
+          "cumulative_value": 697540.0,
+          "cumulative_yoy_pct": 23.0
+        },
+        {
+          "rank": 2,
+          "partner_country": "ANGOLA",
+          "previous_year_value": 530735.0,
+          "value": 519211.0,
+          "yoy_pct": -2.0,
+          "cumulative_previous_year_value": 1459907.0,
+          "cumulative_value": 1006234.0,
+          "cumulative_yoy_pct": -31.0
+        },
+        {
+          "rank": 3,
+          "partner_country": "ARGENTINA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 4,
+          "partner_country": "AUSTRALIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 5,
+          "partner_country": "AZERBAIJAN",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 135365.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 6,
+          "partner_country": "BELGIUM",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 7,
+          "partner_country": "BRAZIL",
+          "previous_year_value": 415883.0,
+          "value": 527727.0,
+          "yoy_pct": 27.0,
+          "cumulative_previous_year_value": 940532.0,
+          "cumulative_value": 1169346.0,
+          "cumulative_yoy_pct": 24.0
+        },
+        {
+          "rank": 8,
+          "partner_country": "BRUNEI",
+          "previous_year_value": 158267.0,
+          "value": 230046.0,
+          "yoy_pct": 45.0,
+          "cumulative_previous_year_value": 471818.0,
+          "cumulative_value": 462648.0,
+          "cumulative_yoy_pct": -2.0
+        },
+        {
+          "rank": 9,
+          "partner_country": "CAMEROON",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 93944.0,
+          "cumulative_value": 389402.0,
+          "cumulative_yoy_pct": 315.0
+        },
+        {
+          "rank": 10,
+          "partner_country": "CANADA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 146522.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 11,
+          "partner_country": "CHAD",
+          "previous_year_value": 132898.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 132898.0,
+          "cumulative_value": 132420.0,
+          "cumulative_yoy_pct": 0.0
+        },
+        {
+          "rank": 12,
+          "partner_country": "CHINA P RP",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 13,
+          "partner_country": "COLOMBIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 14,
+          "partner_country": "CONGO P REP",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 123570.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 15,
+          "partner_country": "COTE D' IVOIRE",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 16,
+          "partner_country": "ECUADOR",
+          "previous_year_value": 0.0,
+          "value": 149909.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 149909.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 17,
+          "partner_country": "EGYPT A RP",
+          "previous_year_value": 147838.0,
+          "value": 290679.0,
+          "yoy_pct": 97.0,
+          "cumulative_previous_year_value": 436572.0,
+          "cumulative_value": 623331.0,
+          "cumulative_yoy_pct": 43.0
+        },
+        {
+          "rank": 18,
+          "partner_country": "EQUTL GUINEA",
+          "previous_year_value": 0.0,
+          "value": 66794.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 180225.0,
+          "cumulative_value": 184657.0,
+          "cumulative_yoy_pct": 2.0
+        },
+        {
+          "rank": 19,
+          "partner_country": "ESTONIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 20,
+          "partner_country": "GABON",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 21,
+          "partner_country": "GERMANY",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 22,
+          "partner_country": "GHANA",
+          "previous_year_value": 183868.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 346561.0,
+          "cumulative_value": 128945.0,
+          "cumulative_yoy_pct": -63.0
+        },
+        {
+          "rank": 23,
+          "partner_country": "INDONESIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 24,
+          "partner_country": "IRAN",
+          "previous_year_value": 1446930.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 4152206.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 25,
+          "partner_country": "IRAQ",
+          "previous_year_value": 3770715.0,
+          "value": 4647965.0,
+          "yoy_pct": 23.0,
+          "cumulative_previous_year_value": 12359897.0,
+          "cumulative_value": 14730795.0,
+          "cumulative_yoy_pct": 19.0
+        },
+        {
+          "rank": 26,
+          "partner_country": "ISRAEL",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 27,
+          "partner_country": "KAZAKHSTAN",
+          "previous_year_value": 0.0,
+          "value": 407465.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 133626.0,
+          "cumulative_value": 1481818.0,
+          "cumulative_yoy_pct": 1009.0
+        },
+        {
+          "rank": 28,
+          "partner_country": "KUWAIT",
+          "previous_year_value": 954452.0,
+          "value": 753469.0,
+          "yoy_pct": -21.0,
+          "cumulative_previous_year_value": 3325197.0,
+          "cumulative_value": 2961288.0,
+          "cumulative_yoy_pct": -11.0
+        },
+        {
+          "rank": 29,
+          "partner_country": "LIBERIA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 30,
+          "partner_country": "LIBYA",
+          "previous_year_value": 79920.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 79920.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 31,
+          "partner_country": "MALAYSIA",
+          "previous_year_value": 383673.0,
+          "value": 166976.0,
+          "yoy_pct": -56.0,
+          "cumulative_previous_year_value": 858727.0,
+          "cumulative_value": 628174.0,
+          "cumulative_yoy_pct": -27.0
+        },
+        {
+          "rank": 32,
+          "partner_country": "MEXICO",
+          "previous_year_value": 1175232.0,
+          "value": 1242776.0,
+          "yoy_pct": 6.0,
+          "cumulative_previous_year_value": 3828884.0,
+          "cumulative_value": 2683937.0,
+          "cumulative_yoy_pct": -30.0
+        },
+        {
+          "rank": 33,
+          "partner_country": "MONACO",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 34,
+          "partner_country": "NETHERLAND",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 35,
+          "partner_country": "NIGERIA",
+          "previous_year_value": 1920936.0,
+          "value": 1704522.0,
+          "yoy_pct": -11.0,
+          "cumulative_previous_year_value": 5221777.0,
+          "cumulative_value": 4016015.0,
+          "cumulative_yoy_pct": -23.0
+        },
+        {
+          "rank": 36,
+          "partner_country": "NORWAY",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 37,
+          "partner_country": "OMAN",
+          "previous_year_value": 136213.0,
+          "value": 273453.0,
+          "yoy_pct": 101.0,
+          "cumulative_previous_year_value": 361011.0,
+          "cumulative_value": 547632.0,
+          "cumulative_yoy_pct": 52.0
+        },
+        {
+          "rank": 38,
+          "partner_country": "PAKISTAN IR",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 39,
+          "partner_country": "PHILIPPINES",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 40,
+          "partner_country": "QATAR",
+          "previous_year_value": 121202.0,
+          "value": 287177.0,
+          "yoy_pct": 137.0,
+          "cumulative_previous_year_value": 519996.0,
+          "cumulative_value": 924235.0,
+          "cumulative_yoy_pct": 78.0
+        },
+        {
+          "rank": 41,
+          "partner_country": "RUSSIA",
+          "previous_year_value": 0.0,
+          "value": 239353.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 139757.0,
+          "cumulative_value": 746640.0,
+          "cumulative_yoy_pct": 434.0
+        },
+        {
+          "rank": 42,
+          "partner_country": "SAUDI ARAB",
+          "previous_year_value": 3890206.0,
+          "value": 3859761.0,
+          "yoy_pct": -1.0,
+          "cumulative_previous_year_value": 11155366.0,
+          "cumulative_value": 10774133.0,
+          "cumulative_yoy_pct": -3.0
+        },
+        {
+          "rank": 43,
+          "partner_country": "SINGAPORE",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 44,
+          "partner_country": "SOUTH AFRICA",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 45,
+          "partner_country": "SOUTH SUDAN",
+          "previous_year_value": 86923.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 86923.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 46,
+          "partner_country": "SRI LANKA DSR",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 47,
+          "partner_country": "SUDAN",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 166184.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 48,
+          "partner_country": "SWITZERLAND",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 49,
+          "partner_country": "THAILAND",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 50,
+          "partner_country": "TOGO",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 51,
+          "partner_country": "TRINIDAD",
+          "previous_year_value": 0.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 0.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 52,
+          "partner_country": "TURKEY",
+          "previous_year_value": 371486.0,
+          "value": 277876.0,
+          "yoy_pct": -25.0,
+          "cumulative_previous_year_value": 649215.0,
+          "cumulative_value": 425359.0,
+          "cumulative_yoy_pct": -34.0
+        },
+        {
+          "rank": 53,
+          "partner_country": "U ARAB EMTS",
+          "previous_year_value": 1344700.0,
+          "value": 2418032.0,
+          "yoy_pct": 80.0,
+          "cumulative_previous_year_value": 4513399.0,
+          "cumulative_value": 6773910.0,
+          "cumulative_yoy_pct": 50.0
+        },
+        {
+          "rank": 54,
+          "partner_country": "U K",
+          "previous_year_value": 79827.0,
+          "value": 0.0,
+          "yoy_pct": null,
+          "cumulative_previous_year_value": 169635.0,
+          "cumulative_value": 0.0,
+          "cumulative_yoy_pct": null
+        },
+        {
+          "rank": 55,
+          "partner_country": "U S A",
+          "previous_year_value": 784795.0,
+          "value": 615697.0,
+          "yoy_pct": -22.0,
+          "cumulative_previous_year_value": 1822864.0,
+          "cumulative_value": 2276100.0,
+          "cumulative_yoy_pct": 25.0
+        },
+        {
+          "rank": 56,
+          "partner_country": "VENEZUELA",
+          "previous_year_value": 1890052.0,
+          "value": 1902540.0,
+          "yoy_pct": 1.0,
+          "cumulative_previous_year_value": 4052567.0,
+          "cumulative_value": 5397886.0,
+          "cumulative_yoy_pct": 33.0
+        }
+      ],
+      "totals": {
+        "previous_year_value": 20175269.0,
+        "value": 20797690.0,
+        "yoy_pct": 3.09,
+        "cumulative_previous_year_value": 58633084.0,
+        "cumulative_value": 59312354.0,
+        "cumulative_yoy_pct": 1.16
+      },
+      "source": {
+        "provider": "DGCI&S / Department of Commerce, Government of India",
+        "system": "TradeStat MEIDB",
+        "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_import",
+        "report_date": "15 Sep 2026",
+        "retrieved_at": "2026-09-15T03:51:20+00:00",
+        "checksum_sha256": "fd7588883d480cab4738d01ee2a2331271cc307de42a52a1262b102018dc4e4f"
+      },
+      "quantity_scale_to_source_unit": 1,
+      "quantity_scale_note": "TradeStat MEIDB quantity values are already expressed in the displayed source unit (for example KGS or NOS)."
+    },
+    {
+      "schema_version": 1,
+      "period": "2020-03",
+      "trade_type": "export",
+      "hs_code": "27090000",
+      "hs_level": 8,
+      "value_type": "quantity",
+      "value_selector_code": "2",
+      "value_unit": "source unit",
+      "year_type": "calendar",
+      "data_status": "no_data",
+      "commodity_description": null,
+      "source_quantity_unit": null,
+      "headers": [],
+      "rows": [],
+      "totals": {
+        "previous_year_value": null,
+        "value": 0.0,
+        "yoy_pct": null,
+        "cumulative_previous_year_value": null,
+        "cumulative_value": null,
+        "cumulative_yoy_pct": null
+      },
+      "source": {
+        "provider": "DGCI&S / Department of Commerce, Government of India",
+        "system": "TradeStat MEIDB",
+        "url": "https://tradestat.commerce.gov.in/meidb/commodity_wise_all_countries_export",
+        "report_date": "13/08/2026",
+        "retrieved_at": "2026-09-15T03:51:21+00:00",
+        "checksum_sha256": "bcd7ec9bc5fadd87d4eebd11830d787779c442caa11c5ff61a1d191bf2a7e746"
+      },
+      "quantity_scale_to_source_unit": 1,
+      "quantity_scale_note": "TradeStat MEIDB quantity values are already expressed in the displayed source unit (for example KGS or NOS)."
+    }
+  ],
+  "metrics": {},
+  "failures": []
+}
