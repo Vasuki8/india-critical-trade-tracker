@@ -36,7 +36,7 @@ def test_crude_oil_quantity_mapping_is_exact_hs8_and_rolls_up_to_value_heading()
     assert quantity["mode"] == "separate"
     assert quantity["mapping_status"] == "hs8_validated"
     assert quantity["rollup_to_value_mapping"] is True
-    assert "history_complete_from" not in quantity
+    assert quantity["history_complete_from"] == "2018-01"
 
     for period in ("2018-01", "2022-01", "2022-03", "2026-06"):
         codes, _ = hs_codes_for_period(crude, period, value_type="quantity")
