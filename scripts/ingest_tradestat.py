@@ -236,33 +236,54 @@ def ingest_one(
     }
 
 
-def _revision_payload(value: Any) -> Any:
-    """Return stable semantic content, excluding fetch/render-time provenance.
+def _hash_json_token(hasher: Any, token: str) -> None:
+    hasher.update(token.encode("utf-8"))
 
-    TradeStat's report_date is the date the HTML report is rendered, not the
-    official release date. It therefore changes on a refetch even when the
-    checksum, rows and official source release are unchanged. The official
-    publication state is tracked separately in data/source_status.json.
+
+def _update_revision_hash(hasher: Any, value: Any) -> None:
+    """Stream the legacy canonical revision JSON directly into ``hasher``.
+
+    This deliberately reproduces ``json.dumps(_revision_payload(...),
+    sort_keys=True, separators=(",", ":"), ensure_ascii=False)`` byte-for-byte
+    without allocating a second full observation tree or a full JSON string.
     """
     if isinstance(value, dict):
-        return {
-            key: _revision_payload(item)
-            for key, item in sorted(value.items())
-            if key not in FETCH_TIME_ONLY_KEYS
-        }
+        _hash_json_token(hasher, "{")
+        first = True
+        for key in sorted(value):
+            if key in FETCH_TIME_ONLY_KEYS:
+                continue
+            if not first:
+                _hash_json_token(hasher, ",")
+            _hash_json_token(
+                hasher,
+                json.dumps(key, ensure_ascii=False, separators=(",", ":")),
+            )
+            _hash_json_token(hasher, ":")
+            _update_revision_hash(hasher, value[key])
+            first = False
+        _hash_json_token(hasher, "}")
+        return
+
     if isinstance(value, list):
-        return [_revision_payload(item) for item in value]
-    return value
+        _hash_json_token(hasher, "[")
+        for index, item in enumerate(value):
+            if index:
+                _hash_json_token(hasher, ",")
+            _update_revision_hash(hasher, item)
+        _hash_json_token(hasher, "]")
+        return
+
+    _hash_json_token(
+        hasher,
+        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False),
+    )
 
 
 def observation_fingerprint(doc: dict[str, Any]) -> str:
-    payload = json.dumps(
-        _revision_payload(doc),
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=False,
-    )
-    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    hasher = hashlib.sha256()
+    _update_revision_hash(hasher, doc)
+    return hasher.hexdigest()
 
 
 def write_observation(
