@@ -4,130 +4,412 @@
   "notes": "User-facing critical commodity groups. Monetary HS mappings and physical-quantity mappings are versioned separately so a broad validated USD series can coexist with exact ITC-HS8 quantity lines. Solar PV, Crude Oil, and Batteries include explicit pre/post ITC(HS) 2022 eras; February 2022 transition months are intentionally not stitched automatically.",
   "commodities": [
     {
-      "id":"crude_oil",
-      "name":"Crude Oil",
-      "category":"Energy",
-      "priority":"critical",
-      "hs_codes":["2709"],
-      "mapping_status":"heading_validated",
-      "icon":"droplet",
-      "quantity_mapping":{
-        "enabled":true,
-        "mode":"separate",
-        "mapping_status":"hs8_validated",
-        "history_complete_from":"2018-01",
-        "rollup_to_value_mapping":true,
-        "hs_codes":["27090010","27090090"],
-        "classification_transition_periods":["2022-02"],
-        "classification_eras":[
+      "id": "crude_oil",
+      "name": "Crude Oil",
+      "category": "Energy",
+      "priority": "critical",
+      "hs_codes": [
+        "2709"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "droplet",
+      "quantity_mapping": {
+        "enabled": true,
+        "mode": "separate",
+        "mapping_status": "hs8_validated",
+        "history_complete_from": "2018-01",
+        "rollup_to_value_mapping": true,
+        "hs_codes": [
+          "27090010",
+          "27090090"
+        ],
+        "classification_transition_periods": [
+          "2022-02"
+        ],
+        "classification_eras": [
           {
-            "from":"2018-01",
-            "through":"2022-01",
-            "hs_codes":["27090000"],
-            "note":"Pre-ITC(HS) 2022 tariff item for heading 2709. The official HS 2022 correlation records 27090010 and 27090090 as subdivisions of former 27090000."
+            "from": "2018-01",
+            "through": "2022-01",
+            "hs_codes": [
+              "27090000"
+            ],
+            "note": "Pre-ITC(HS) 2022 tariff item for heading 2709. The official HS 2022 correlation records 27090010 and 27090090 as subdivisions of former 27090000."
           },
           {
-            "from":"2022-03",
-            "through":null,
-            "hs_codes":["27090010","27090090"],
-            "note":"ITC(HS) 2022 split of heading 2709 into Petroleum Crude and Other. February 2022 is intentionally excluded because Notification 54/2015-2020 took immediate effect on 9 February 2022, creating a mid-month classification transition."
+            "from": "2022-03",
+            "through": null,
+            "hs_codes": [
+              "27090010",
+              "27090090"
+            ],
+            "note": "ITC(HS) 2022 split of heading 2709 into Petroleum Crude and Other. February 2022 is intentionally excluded because Notification 54/2015-2020 took immediate effect on 9 February 2022, creating a mid-month classification transition."
           }
         ],
-        "note":"Exact period-specific ITC-HS8 tariff items that exhaust heading 2709. Quantity remains separate from the validated USD heading series and may roll up to heading 2709 after compatible source-unit normalization."
-      }
-    },
-    {"id":"petroleum_products","name":"Petroleum Products","category":"Energy","priority":"critical","hs_codes":["2710"],"mapping_status":"heading_validated","icon":"fuel"},
-    {"id":"natural_gas_lng","name":"Natural Gas / LNG","category":"Energy","priority":"critical","hs_codes":["27111100","27112100"],"mapping_status":"hs8_validated","icon":"flame","quantity_mapping":{"enabled":true,"mode":"same_as_value","mapping_status":"hs8_validated","history_complete_from":"2018-01","note":"Physical quantity uses the same exact HS8 tariff lines as the monetary series."}},
-    {"id":"coal","name":"Coal","category":"Energy","priority":"critical","hs_codes":["2701"],"mapping_status":"heading_validated","icon":"mountain"},
-    {"id":"gold","name":"Gold","category":"Precious Metals","priority":"critical","hs_codes":["7108"],"mapping_status":"heading_validated","icon":"gem"},
-    {"id":"electronics","name":"Electronics","category":"Technology","priority":"critical","hs_codes":["85"],"mapping_status":"chapter_broad","icon":"cpu"},
-    {"id":"semiconductors","name":"Semiconductors","category":"Technology","priority":"critical","hs_codes":["8541"],"mapping_status":"heading_validated","icon":"chip"},
-    {"id":"telecom_equipment","name":"Telecom Equipment","category":"Technology","priority":"critical","hs_codes":["8517"],"mapping_status":"heading_validated","icon":"radio"},
-    {"id":"computers","name":"Computers / Data Processing","category":"Technology","priority":"critical","hs_codes":["8471"],"mapping_status":"heading_validated","icon":"monitor"},
-    {"id":"machinery","name":"Machinery","category":"Industrial","priority":"critical","hs_codes":["84"],"mapping_status":"chapter_broad","icon":"cog"},
-    {"id":"fertilizers","name":"Fertilizers","category":"Agriculture","priority":"critical","hs_codes":["31"],"mapping_status":"chapter_broad","icon":"sprout"},
-    {"id":"edible_oils","name":"Edible Oils","category":"Food Security","priority":"critical","hs_codes":["1507","1511","1512"],"mapping_status":"heading_set","icon":"leaf"},
-    {"id":"pulses","name":"Pulses","category":"Food Security","priority":"critical","hs_codes":["0713"],"mapping_status":"heading_validated","icon":"wheat"},
-    {"id":"pharmaceuticals","name":"Pharmaceuticals","category":"Healthcare","priority":"critical","hs_codes":["30"],"mapping_status":"chapter_broad","icon":"pill"},
-    {"id":"organic_chemicals_apis","name":"Organic Chemicals / API Inputs","category":"Healthcare","priority":"critical","hs_codes":["29"],"mapping_status":"chapter_broad","icon":"flask"},
-    {"id":"iron_steel","name":"Iron & Steel","category":"Industrial","priority":"critical","hs_codes":["72"],"mapping_status":"chapter_broad","icon":"factory"},
-    {"id":"copper","name":"Copper","category":"Strategic Minerals","priority":"critical","hs_codes":["74","2603"],"mapping_status":"chapter_plus_ore","icon":"circle"},
-    {"id":"lithium","name":"Lithium & Compounds","category":"Strategic Minerals","priority":"critical","hs_codes":["28252000","28369100"],"mapping_status":"hs8_validated","icon":"battery","quantity_mapping":{"enabled":true,"mode":"same_as_value","mapping_status":"hs8_validated","history_complete_from":"2018-01","note":"Physical quantity uses the same exact HS8 tariff lines as the monetary series."}},
-    {"id":"nickel","name":"Nickel","category":"Strategic Minerals","priority":"critical","hs_codes":["2604","75"],"mapping_status":"heading_plus_chapter","icon":"battery"},
-    {"id":"cobalt","name":"Cobalt","category":"Strategic Minerals","priority":"critical","hs_codes":["2605","8105"],"mapping_status":"heading_set","icon":"battery"},
-    {
-      "id":"rare_earths",
-      "name":"Rare Earths",
-      "category":"Strategic Minerals",
-      "priority":"critical",
-      "hs_codes":["2846"],
-      "mapping_status":"heading_validated",
-      "icon":"atom",
-      "quantity_mapping":{
-        "enabled":true,
-        "mode":"separate",
-        "mapping_status":"hs8_validated",
-        "history_complete_from":"2018-01",
-        "rollup_to_value_mapping":true,
-        "hs_codes":["28461010","28461090","28469010","28469020","28469030","28469090"],
-        "note":"Exact ITC-HS8 tariff items that exhaust heading 2846. Kept separate so the validated USD heading series remains unchanged while quantity is fetched only at HS8; aggregate unit value may roll up to the parent heading when units agree."
+        "note": "Exact period-specific ITC-HS8 tariff items that exhaust heading 2709. Quantity remains separate from the validated USD heading series and may roll up to heading 2709 after compatible source-unit normalization."
       }
     },
     {
-      "id":"solar_pv",
-      "name":"Solar Cells / Modules",
-      "category":"Clean Energy",
-      "priority":"critical",
-      "hs_codes":["85414200","85414300"],
-      "mapping_status":"hs8_validated",
-      "icon":"sun",
-      "quantity_mapping":{"enabled":true,"mode":"same_as_value","mapping_status":"hs8_validated","history_complete_from":"2018-01","note":"Quantity inherits the same period-specific exact HS8 classification eras as the monetary series."},
-      "classification_transition_periods":["2022-02"],
-      "classification_eras":[
+      "id": "petroleum_products",
+      "name": "Petroleum Products",
+      "category": "Energy",
+      "priority": "critical",
+      "hs_codes": [
+        "2710"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "fuel"
+    },
+    {
+      "id": "natural_gas_lng",
+      "name": "Natural Gas / LNG",
+      "category": "Energy",
+      "priority": "critical",
+      "hs_codes": [
+        "27111100",
+        "27112100"
+      ],
+      "mapping_status": "hs8_validated",
+      "icon": "flame",
+      "quantity_mapping": {
+        "enabled": true,
+        "mode": "same_as_value",
+        "mapping_status": "hs8_validated",
+        "history_complete_from": "2018-01",
+        "note": "Physical quantity uses the same exact HS8 tariff lines as the monetary series."
+      }
+    },
+    {
+      "id": "coal",
+      "name": "Coal",
+      "category": "Energy",
+      "priority": "critical",
+      "hs_codes": [
+        "2701"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "mountain"
+    },
+    {
+      "id": "gold",
+      "name": "Gold",
+      "category": "Precious Metals",
+      "priority": "critical",
+      "hs_codes": [
+        "7108"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "gem"
+    },
+    {
+      "id": "electronics",
+      "name": "Electronics",
+      "category": "Technology",
+      "priority": "critical",
+      "hs_codes": [
+        "85"
+      ],
+      "mapping_status": "chapter_broad",
+      "icon": "cpu"
+    },
+    {
+      "id": "semiconductors",
+      "name": "Semiconductors",
+      "category": "Technology",
+      "priority": "critical",
+      "hs_codes": [
+        "8541"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "chip"
+    },
+    {
+      "id": "telecom_equipment",
+      "name": "Telecom Equipment",
+      "category": "Technology",
+      "priority": "critical",
+      "hs_codes": [
+        "8517"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "radio"
+    },
+    {
+      "id": "computers",
+      "name": "Computers / Data Processing",
+      "category": "Technology",
+      "priority": "critical",
+      "hs_codes": [
+        "8471"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "monitor"
+    },
+    {
+      "id": "machinery",
+      "name": "Machinery",
+      "category": "Industrial",
+      "priority": "critical",
+      "hs_codes": [
+        "84"
+      ],
+      "mapping_status": "chapter_broad",
+      "icon": "cog"
+    },
+    {
+      "id": "fertilizers",
+      "name": "Fertilizers",
+      "category": "Agriculture",
+      "priority": "critical",
+      "hs_codes": [
+        "31"
+      ],
+      "mapping_status": "chapter_broad",
+      "icon": "sprout"
+    },
+    {
+      "id": "edible_oils",
+      "name": "Edible Oils",
+      "category": "Food Security",
+      "priority": "critical",
+      "hs_codes": [
+        "1507",
+        "1511",
+        "1512"
+      ],
+      "mapping_status": "heading_set",
+      "icon": "leaf"
+    },
+    {
+      "id": "pulses",
+      "name": "Pulses",
+      "category": "Food Security",
+      "priority": "critical",
+      "hs_codes": [
+        "0713"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "wheat"
+    },
+    {
+      "id": "pharmaceuticals",
+      "name": "Pharmaceuticals",
+      "category": "Healthcare",
+      "priority": "critical",
+      "hs_codes": [
+        "30"
+      ],
+      "mapping_status": "chapter_broad",
+      "icon": "pill"
+    },
+    {
+      "id": "organic_chemicals_apis",
+      "name": "Organic Chemicals / API Inputs",
+      "category": "Healthcare",
+      "priority": "critical",
+      "hs_codes": [
+        "29"
+      ],
+      "mapping_status": "chapter_broad",
+      "icon": "flask"
+    },
+    {
+      "id": "iron_steel",
+      "name": "Iron & Steel",
+      "category": "Industrial",
+      "priority": "critical",
+      "hs_codes": [
+        "72"
+      ],
+      "mapping_status": "chapter_broad",
+      "icon": "factory"
+    },
+    {
+      "id": "copper",
+      "name": "Copper",
+      "category": "Strategic Minerals",
+      "priority": "critical",
+      "hs_codes": [
+        "74",
+        "2603"
+      ],
+      "mapping_status": "chapter_plus_ore",
+      "icon": "circle"
+    },
+    {
+      "id": "lithium",
+      "name": "Lithium & Compounds",
+      "category": "Strategic Minerals",
+      "priority": "critical",
+      "hs_codes": [
+        "28252000",
+        "28369100"
+      ],
+      "mapping_status": "hs8_validated",
+      "icon": "battery",
+      "quantity_mapping": {
+        "enabled": true,
+        "mode": "same_as_value",
+        "mapping_status": "hs8_validated",
+        "history_complete_from": "2018-01",
+        "note": "Physical quantity uses the same exact HS8 tariff lines as the monetary series."
+      }
+    },
+    {
+      "id": "nickel",
+      "name": "Nickel",
+      "category": "Strategic Minerals",
+      "priority": "critical",
+      "hs_codes": [
+        "2604",
+        "75"
+      ],
+      "mapping_status": "heading_plus_chapter",
+      "icon": "battery"
+    },
+    {
+      "id": "cobalt",
+      "name": "Cobalt",
+      "category": "Strategic Minerals",
+      "priority": "critical",
+      "hs_codes": [
+        "2605",
+        "8105"
+      ],
+      "mapping_status": "heading_set",
+      "icon": "battery"
+    },
+    {
+      "id": "rare_earths",
+      "name": "Rare Earths",
+      "category": "Strategic Minerals",
+      "priority": "critical",
+      "hs_codes": [
+        "2846"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "atom",
+      "quantity_mapping": {
+        "enabled": true,
+        "mode": "separate",
+        "mapping_status": "hs8_validated",
+        "history_complete_from": "2018-01",
+        "rollup_to_value_mapping": true,
+        "hs_codes": [
+          "28461010",
+          "28461090",
+          "28469010",
+          "28469020",
+          "28469030",
+          "28469090"
+        ],
+        "note": "Exact ITC-HS8 tariff items that exhaust heading 2846. Kept separate so the validated USD heading series remains unchanged while quantity is fetched only at HS8; aggregate unit value may roll up to the parent heading when units agree."
+      }
+    },
+    {
+      "id": "solar_pv",
+      "name": "Solar Cells / Modules",
+      "category": "Clean Energy",
+      "priority": "critical",
+      "hs_codes": [
+        "85414200",
+        "85414300"
+      ],
+      "mapping_status": "hs8_validated",
+      "icon": "sun",
+      "quantity_mapping": {
+        "enabled": true,
+        "mode": "same_as_value",
+        "mapping_status": "hs8_validated",
+        "history_complete_from": "2018-01",
+        "note": "Quantity inherits the same period-specific exact HS8 classification eras as the monetary series."
+      },
+      "classification_transition_periods": [
+        "2022-02"
+      ],
+      "classification_eras": [
         {
-          "from":"2018-01",
-          "through":"2022-01",
-          "hs_codes":["85414011","85414012"],
-          "note":"Pre-ITC(HS) 2022 solar tariff lines. DGFT Notification 54/2015-2020 deleted these codes when ITC(HS) 2022 took immediate effect on 9 February 2022."
+          "from": "2018-01",
+          "through": "2022-01",
+          "hs_codes": [
+            "85414011",
+            "85414012"
+          ],
+          "note": "Pre-ITC(HS) 2022 solar tariff lines. DGFT Notification 54/2015-2020 deleted these codes when ITC(HS) 2022 took immediate effect on 9 February 2022."
         },
         {
-          "from":"2022-03",
-          "through":null,
-          "hs_codes":["85414200","85414300"],
-          "note":"ITC(HS) 2022 solar PV cells and module/panel tariff lines. February 2022 is intentionally excluded from automatic stitching because the classification changed mid-month."
+          "from": "2022-03",
+          "through": null,
+          "hs_codes": [
+            "85414200",
+            "85414300"
+          ],
+          "note": "ITC(HS) 2022 solar PV cells and module/panel tariff lines. February 2022 is intentionally excluded from automatic stitching because the classification changed mid-month."
         }
       ]
     },
     {
-      "id":"batteries",
-      "name":"Electric Accumulators / Batteries",
-      "category":"Clean Energy",
-      "priority":"critical",
-      "hs_codes":["8507"],
-      "mapping_status":"heading_validated",
-      "icon":"battery",
-      "quantity_mapping":{
-        "enabled":true,
-        "mode":"separate",
-        "mapping_status":"hs8_validated",
-        "rollup_to_value_mapping":false,
-        "hs_codes":["85071000","85072000","85073000","85075000","85076000","85078000","85079010","85079090"],
-        "classification_transition_periods":["2022-02"],
-        "classification_eras":[
+      "id": "batteries",
+      "name": "Electric Accumulators / Batteries",
+      "category": "Clean Energy",
+      "priority": "critical",
+      "hs_codes": [
+        "8507"
+      ],
+      "mapping_status": "heading_validated",
+      "icon": "battery",
+      "quantity_mapping": {
+        "enabled": true,
+        "mode": "separate",
+        "mapping_status": "hs8_validated",
+        "rollup_to_value_mapping": false,
+        "hs_codes": [
+          "85071000",
+          "85072000",
+          "85073000",
+          "85075000",
+          "85076000",
+          "85078000",
+          "85079010",
+          "85079090"
+        ],
+        "classification_transition_periods": [
+          "2022-02"
+        ],
+        "classification_eras": [
           {
-            "from":"2018-01",
-            "through":"2022-01",
-            "hs_codes":["85071000","85072000","85073000","85074000","85075000","85076000","85078000","85079010","85079090"],
-            "note":"Pre-ITC(HS) 2022 heading 8507 included nickel-iron accumulators under 85074000. DGFT records confirm 85074000 existed before the 2022 revision."
+            "from": "2018-01",
+            "through": "2022-01",
+            "hs_codes": [
+              "85071000",
+              "85072000",
+              "85073000",
+              "85074000",
+              "85075000",
+              "85076000",
+              "85078000",
+              "85079010",
+              "85079090"
+            ],
+            "note": "Pre-ITC(HS) 2022 heading 8507 included nickel-iron accumulators under 85074000. DGFT records confirm 85074000 existed before the 2022 revision."
           },
           {
-            "from":"2022-03",
-            "through":null,
-            "hs_codes":["85071000","85072000","85073000","85075000","85076000","85078000","85079010","85079090"],
-            "note":"ITC(HS) 2022 deleted 85074000 (nickel-iron). February 2022 is intentionally excluded because Notification 54/2015-2020 took immediate effect on 9 February 2022, creating a mid-month classification transition."
+            "from": "2022-03",
+            "through": null,
+            "hs_codes": [
+              "85071000",
+              "85072000",
+              "85073000",
+              "85075000",
+              "85076000",
+              "85078000",
+              "85079010",
+              "85079090"
+            ],
+            "note": "ITC(HS) 2022 deleted 85074000 (nickel-iron). February 2022 is intentionally excluded because Notification 54/2015-2020 took immediate effect on 9 February 2022, creating a mid-month classification transition."
           }
         ],
-        "note":"Exact period-specific ITC-HS8 tariff items under heading 8507. Parent quantity rollup is deliberately disabled: official DGFT UQC schedules report accumulator lines in units while 85079010/85079090 parts are in kilograms, so summing the full heading would mix incompatible physical units."
+        "note": "Exact period-specific ITC-HS8 tariff items under heading 8507. Parent quantity rollup is deliberately disabled: official DGFT UQC schedules report accumulator lines in units while 85079010/85079090 parts are in kilograms, so summing the full heading would mix incompatible physical units.",
+        "history_complete_from": "2018-01"
       }
     }
   ]
