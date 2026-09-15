@@ -26,6 +26,19 @@ function impliedUnitValue(metric) {
   return `$${unitValueFmt.format(metric.unit_value_usd_per_source_unit)}/${metric.quantity_unit || 'unit'}`;
 }
 
+function quantityAvailability(metric) {
+  if (!metric) return null;
+  const units = metric.component_units || metric.source_quantity_units || [];
+  const unitText = units.length ? ` (${units.join(' + ')})` : '';
+  if (metric.status === 'mixed_quantity_units') {
+    return `Mixed physical units${unitText} · aggregate unavailable`;
+  }
+  if (metric.status === 'rollup_disabled') {
+    return `HS8 quantities kept separate${unitText} · aggregate unavailable`;
+  }
+  return null;
+}
+
 async function loadJSON(path) {
   const res = await fetch(path, { cache: 'no-store' });
   if (!res.ok) throw new Error(`${path}: ${res.status}`);
@@ -42,25 +55,28 @@ function riskClass(risk) {
 
 function quantityBlock(metrics) {
   const aggregate = metrics?.unit_values?.aggregate || {};
-  const imports = aggregate.import;
-  const exports = aggregate.export;
   const rows = [];
 
-  if (imports?.status === 'ok') {
-    rows.push(`
-      <div class="quantity-row" title="TradeStat quantity is used directly in the displayed source unit before implied unit-value calculation.">
-        <span>Import quantity <strong>${physicalQuantity(imports)}</strong></span>
-        <span>Implied import unit <strong>${impliedUnitValue(imports)}</strong></span>
-      </div>`);
-  }
-  if (exports?.status === 'ok') {
-    rows.push(`
-      <div class="quantity-row" title="TradeStat quantity is used directly in the displayed source unit before implied unit-value calculation.">
-        <span>Export quantity <strong>${physicalQuantity(exports)}</strong></span>
-        <span>Implied export unit <strong>${impliedUnitValue(exports)}</strong></span>
-      </div>`);
-  }
+  const appendTrade = (label, metric) => {
+    if (metric?.status === 'ok') {
+      rows.push(`
+        <div class="quantity-row" title="TradeStat quantity is used directly in the displayed source unit before implied unit-value calculation.">
+          <span>${label} quantity <strong>${physicalQuantity(metric)}</strong></span>
+          <span>Implied ${label.toLowerCase()} unit <strong>${impliedUnitValue(metric)}</strong></span>
+        </div>`);
+      return;
+    }
+    const availability = quantityAvailability(metric);
+    if (availability) {
+      rows.push(`
+        <div class="quantity-row" title="Exact HS8 quantities remain available in the source observations; incompatible physical units are never summed.">
+          <span>${label} quantity <strong>${availability}</strong></span>
+        </div>`);
+    }
+  };
 
+  appendTrade('Import', aggregate.import);
+  appendTrade('Export', aggregate.export);
   return rows.join('');
 }
 
