@@ -10,7 +10,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: tradestat-history-backfill
+  # Share one writer lock with source-watch so historical backfills cannot race
+  # the live updater while committing observations and derived data.
+  group: tradestat-data-writer
   cancel-in-progress: false
 
 jobs:
