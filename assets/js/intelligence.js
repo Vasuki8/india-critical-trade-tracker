@@ -1,7 +1,15 @@
 const intelligenceState = {
   data: null,
   commodityId: null,
+  monthByPeriod: new Map(),
+  countrySeries: new Map(),
+  countries: [],
 };
+
+const intelligencePeriodFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  year: 'numeric',
+});
 
 function esc(value) {
   return String(value ?? '')
@@ -15,7 +23,7 @@ function esc(value) {
 function periodLabel(period) {
   if (!period || !/^\d{4}-\d{2}$/.test(period)) return period || '—';
   const [year, month] = period.split('-').map(Number);
-  return new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(Date.UTC(year, month - 1, 1)));
+  return intelligencePeriodFormatter.format(new Date(Date.UTC(year, month - 1, 1)));
 }
 
 function rangeMonths(months, range) {
@@ -47,8 +55,10 @@ function renderLineChart(targetId, rows, series) {
   const width = 900;
   const height = 300;
   const padding = 34;
-  const allValues = series.flatMap(item => rows.map(row => Number(item.value(row)) || 0));
-  const maxValue = Math.max(...allValues, 1);
+  let maxValue = 1;
+  series.forEach(item => rows.forEach(row => {
+    maxValue = Math.max(maxValue, Number(item.value(row)) || 0);
+  }));
   const gridLines = [0, .25, .5, .75, 1].map(fraction => {
     const y = padding + (height - padding * 2) * (1 - fraction);
     return `<line x1="${padding}" y1="${y}" x2="${width - padding}" y2="${y}" class="chart-grid-line" />`;
@@ -72,6 +82,13 @@ function renderLineChart(targetId, rows, series) {
   `;
 }
 
+function partnerShare(row, total) {
+  if (row?.share_pct !== null && row?.share_pct !== undefined) return row.share_pct;
+  const value = Number(row?.value || 0);
+  const denominator = Number(total || 0);
+  return denominator > 0 ? Math.round((value / denominator) * 10000) / 100 : null;
+}
+
 function aggregatePartners(months, key) {
   const totals = new Map();
   months.forEach(month => {
@@ -84,6 +101,38 @@ function aggregatePartners(months, key) {
     .sort((a, b) => b.value - a.value);
 }
 
+function buildIntelligenceIndexes(data) {
+  const months = data.monthly || [];
+  const monthByPeriod = new Map();
+  const countryTotals = new Map();
+  const countrySeries = new Map();
+
+  months.forEach((month, monthIndex) => {
+    monthByPeriod.set(month.period, month);
+    const visit = (rows, key) => {
+      (rows || []).forEach(row => {
+        const country = row.partner_country;
+        if (!country) return;
+        countryTotals.set(country, (countryTotals.get(country) || 0) + Number(row.value || 0));
+        let series = countrySeries.get(country);
+        if (!series) {
+          series = months.map(item => ({ period: item.period, imports: 0, exports: 0 }));
+          countrySeries.set(country, series);
+        }
+        series[monthIndex][key] = Number(row.value || 0);
+      });
+    };
+    visit(month.imports_by_country, 'imports');
+    visit(month.exports_by_country, 'exports');
+  });
+
+  intelligenceState.monthByPeriod = monthByPeriod;
+  intelligenceState.countrySeries = countrySeries;
+  intelligenceState.countries = [...countryTotals.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([country]) => country);
+}
+
 function renderOverall(data) {
   const months = data.monthly || [];
   const latest = months.at(-1) || {};
@@ -92,7 +141,7 @@ function renderOverall(data) {
   const topAllTime = aggregatePartners(months, 'imports_by_country')[0];
   const peakImport = months.reduce((best, month) => !best || Number(month.imports || 0) > Number(best.imports || 0) ? month : best, null);
   const dependency = latest.dependency || {};
-  const supplier = latest.supplier_concentration?.top_partners?.[0];
+  const supplier = (latest.imports_by_country || [])[0];
 
   document.querySelector('#intel-overall-kpis').innerHTML = `
     <article class="intel-kpi"><span>Historical imports</span><strong>${usdMillions(totalImports)}</strong><small>${esc(data.coverage.first_period)} → ${esc(data.coverage.last_period)}</small></article>
@@ -103,7 +152,7 @@ function renderOverall(data) {
 
   document.querySelector('#intel-insights').innerHTML = `
     <div class="insight-card"><span>Peak import month</span><strong>${peakImport ? periodLabel(peakImport.period) : '—'}</strong><small>${peakImport ? usdMillions(peakImport.imports) : '—'}</small></div>
-    <div class="insight-card"><span>Latest top supplier</span><strong>${esc(supplier?.partner_country || '—')}</strong><small>${supplier?.share_pct ?? '—'}% of latest imports</small></div>
+    <div class="insight-card"><span>Latest top supplier</span><strong>${esc(supplier?.partner_country || '—')}</strong><small>${partnerShare(supplier, latest.imports) ?? '—'}% of latest imports</small></div>
     <div class="insight-card"><span>Largest supplier over history</span><strong>${esc(topAllTime?.partner_country || '—')}</strong><small>${topAllTime ? usdMillions(topAllTime.value) : '—'}</small></div>
     <div class="insight-card"><span>Latest supplier HHI</span><strong>${latest.supplier_concentration?.hhi ?? '—'}</strong><small>Higher means more concentrated</small></div>
   `;
@@ -127,9 +176,9 @@ function countryRows(month) {
   return [...countries].map(country => ({
     country,
     importValue: imports.get(country)?.value || 0,
-    importShare: imports.get(country)?.share_pct,
+    importShare: partnerShare(imports.get(country), month.imports),
     exportValue: exports.get(country)?.value || 0,
-    exportShare: exports.get(country)?.share_pct,
+    exportShare: partnerShare(exports.get(country), month.exports),
   })).sort((a, b) => b.importValue - a.importValue || b.exportValue - a.exportValue);
 }
 
@@ -137,7 +186,7 @@ function renderMonthDetail() {
   const data = intelligenceState.data;
   if (!data) return;
   const period = document.querySelector('#intel-month').value;
-  const month = (data.monthly || []).find(item => item.period === period);
+  const month = intelligenceState.monthByPeriod.get(period);
   if (!month) return;
 
   document.querySelector('#intel-month-summary').innerHTML = `
@@ -164,7 +213,7 @@ function renderMonthDetail() {
     <div class="country-bar-row">
       <span>${esc(row.partner_country)}</span>
       <div class="country-bar-track"><i style="width:${Math.max((Number(row.value || 0) / max) * 100, 1)}%"></i></div>
-      <strong>${row.share_pct ?? '—'}%</strong>
+      <strong>${partnerShare(row, month.imports) ?? '—'}%</strong>
     </div>
   `).join('') || '<div class="intel-empty">No supplier data for this month.</div>';
 
@@ -179,29 +228,11 @@ function renderMonthDetail() {
   `;
 }
 
-function allCountries(data) {
-  const totals = new Map();
-  (data.monthly || []).forEach(month => {
-    [...(month.imports_by_country || []), ...(month.exports_by_country || [])].forEach(row => {
-      totals.set(row.partner_country, (totals.get(row.partner_country) || 0) + Number(row.value || 0));
-    });
-  });
-  return [...totals.entries()].sort((a, b) => b[1] - a[1]).map(([country]) => country);
-}
-
 function renderCountryHistory() {
   const data = intelligenceState.data;
   if (!data) return;
   const country = document.querySelector('#intel-country').value;
-  const rows = (data.monthly || []).map(month => {
-    const importRow = (month.imports_by_country || []).find(row => row.partner_country === country);
-    const exportRow = (month.exports_by_country || []).find(row => row.partner_country === country);
-    return {
-      period: month.period,
-      imports: importRow?.value || 0,
-      exports: exportRow?.value || 0,
-    };
-  });
+  const rows = intelligenceState.countrySeries.get(country) || [];
   renderLineChart('intel-country-chart', rows, [
     { label: `${country} imports`, className: 'imports-line', value: row => row.imports },
     { label: `${country} exports`, className: 'exports-line', value: row => row.exports },
@@ -210,7 +241,7 @@ function renderCountryHistory() {
 
 function renderAnnual(data) {
   document.querySelector('#intel-annual-table-body').innerHTML = (data.annual || []).slice().reverse().map(row => {
-    const supplier = row.top_import_partners?.[0];
+    const supplier = row.top_import_partners?.[0] || row.supplier_concentration?.top_partners?.[0];
     return `
       <tr>
         <td>${esc(row.year)}</td>
@@ -237,9 +268,8 @@ function initializeIntelligenceControls(data) {
   month.innerHTML = (data.monthly || []).slice().reverse().map(row => `<option value="${esc(row.period)}">${esc(periodLabel(row.period))}</option>`).join('');
   month.value = data.monthly.at(-1)?.period || '';
 
-  const countries = allCountries(data);
   const country = document.querySelector('#intel-country');
-  country.innerHTML = countries.map(name => `<option value="${esc(name)}">${esc(name)}</option>`).join('');
+  country.innerHTML = intelligenceState.countries.map(name => `<option value="${esc(name)}">${esc(name)}</option>`).join('');
 
   month.onchange = renderMonthDetail;
   country.onchange = renderCountryHistory;
@@ -259,6 +289,7 @@ async function openCommodityIntelligence(commodityId, commodityName) {
     const data = await loadJSON(`data/intelligence/${commodityId}.json`);
     intelligenceState.data = data;
     intelligenceState.commodityId = commodityId;
+    buildIntelligenceIndexes(data);
     document.querySelector('#intel-title').textContent = data.commodity?.name || commodityName || commodityId;
     document.querySelector('#intel-subtitle').textContent = `${data.commodity?.category || ''} · ${data.coverage?.first_period || '—'} to ${data.coverage?.last_period || '—'} · ${data.coverage?.months_observed || 0} observed months`;
     initializeIntelligenceControls(data);
