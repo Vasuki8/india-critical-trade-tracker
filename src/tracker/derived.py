@@ -96,6 +96,149 @@ def _rollup_requested(quantity_observation: dict[str, Any] | None) -> bool:
     return quantity_observation.get("commodity", {}).get("quantity_rollup_to_value_mapping") is True
 
 
+def _parent_value_child_quantity_availability(
+    usd_observation: dict[str, Any],
+    quantity_observation: dict[str, Any] | None,
+    trade_type: str,
+) -> dict[str, Any] | None:
+    """Explain why a validated parent/child quantity mapping cannot be rolled up.
+
+    Some commodities intentionally keep monetary data at a parent heading while
+    collecting physical quantities at exhaustive HS8 children. When provenance
+    explicitly disables the parent rollup, surface the physical-unit constraint
+    rather than falling back to generic missing-report statuses.
+    """
+    if not quantity_observation:
+        return None
+    commodity = quantity_observation.get("commodity", {})
+    if commodity.get("quantity_mapping_mode") != "separate":
+        return None
+    if commodity.get("quantity_rollup_to_value_mapping") is not False:
+        return None
+
+    usd_reports = [
+        report for report in usd_observation.get("reports", []) if report.get("trade_type") == trade_type
+    ]
+    quantity_reports = [
+        report
+        for report in quantity_observation.get("reports", [])
+        if report.get("trade_type") == trade_type
+    ]
+    if len(usd_reports) != 1 or not quantity_reports:
+        return None
+
+    usd_report = usd_reports[0]
+    parent_code = str(usd_report.get("hs_code") or "")
+    child_codes = [str(report.get("hs_code") or "") for report in quantity_reports]
+    if not parent_code or any(
+        not code or not code.startswith(parent_code) or code == parent_code
+        for code in child_codes
+    ):
+        return None
+
+    canonical_children = {
+        str(code)
+        for code in commodity.get("canonical_hs_codes", [])
+        if str(code)
+    }
+    if canonical_children and set(child_codes) != canonical_children:
+        return None
+
+    usd_million = _total_value(usd_report)
+    if usd_million is None:
+        return None
+
+    source_units: set[str] = set()
+    units: set[str] = set()
+    positive_quantity_seen = False
+    for report in quantity_reports:
+        if not _quantity_selector_verified(report):
+            return {
+                "status": "unverified_quantity_selector",
+                "usd_million": round(usd_million, 6),
+                "raw_quantity_source_units": None,
+                "quantity": None,
+                "quantity_unit": None,
+                "unit_value_usd_per_source_unit": None,
+                "availability_reason": "quantity_selector_not_verified",
+                "mapping_method": "parent_value_child_hs8_separate",
+            }
+        raw_quantity = _total_value(report)
+        if raw_quantity is None or raw_quantity < 0:
+            return {
+                "status": "quantity_not_available",
+                "usd_million": round(usd_million, 6),
+                "raw_quantity_source_units": None,
+                "quantity": None,
+                "quantity_unit": None,
+                "unit_value_usd_per_source_unit": None,
+                "availability_reason": "quantity_not_available",
+                "mapping_method": "parent_value_child_hs8_separate",
+            }
+        scale = _quantity_scale(report)
+        if scale <= 0:
+            return {
+                "status": "invalid_quantity_scale",
+                "usd_million": round(usd_million, 6),
+                "raw_quantity_source_units": None,
+                "quantity": None,
+                "quantity_unit": None,
+                "unit_value_usd_per_source_unit": None,
+                "availability_reason": "invalid_quantity_scale",
+                "mapping_method": "parent_value_child_hs8_separate",
+            }
+        if raw_quantity == 0:
+            continue
+
+        positive_quantity_seen = True
+        source_unit = _quantity_unit(report)
+        unit, normalization_factor = _canonical_quantity_unit(source_unit)
+        if unit is None or normalization_factor is None:
+            return {
+                "status": "missing_quantity_unit",
+                "usd_million": round(usd_million, 6),
+                "raw_quantity_source_units": None,
+                "quantity": None,
+                "quantity_unit": None,
+                "unit_value_usd_per_source_unit": None,
+                "availability_reason": "missing_quantity_unit",
+                "mapping_method": "parent_value_child_hs8_separate",
+            }
+        source_units.add(str(source_unit).upper())
+        units.add(unit)
+
+    if not positive_quantity_seen:
+        return {
+            "status": "quantity_not_available",
+            "usd_million": round(usd_million, 6),
+            "raw_quantity_source_units": None,
+            "source_quantity_units": [],
+            "quantity": None,
+            "quantity_unit": None,
+            "unit_value_usd_per_source_unit": None,
+            "availability_reason": "no_positive_child_quantity",
+            "mapping_method": "parent_value_child_hs8_separate",
+            "value_hs_code": parent_code,
+            "quantity_hs_codes": sorted(child_codes),
+        }
+
+    mixed_units = len(units) > 1
+    return {
+        "status": "mixed_quantity_units" if mixed_units else "rollup_disabled",
+        "usd_million": round(usd_million, 6),
+        "raw_quantity_source_units": None,
+        "source_quantity_units": sorted(source_units),
+        "quantity": None,
+        "quantity_unit": None,
+        "unit_value_usd_per_source_unit": None,
+        "component_units": sorted(units),
+        "availability_reason": "mixed_physical_units" if mixed_units else "explicit_rollup_disabled",
+        "mapping_method": "parent_value_child_hs8_separate",
+        "value_hs_code": parent_code,
+        "quantity_hs_codes": sorted(child_codes),
+    }
+
+
 def _parent_value_child_quantity_rollup(
     usd_observation: dict[str, Any],
     quantity_observation: dict[str, Any] | None,
@@ -261,6 +404,8 @@ def derive_unit_values(
     only derived from reports carrying the verified live quantity selector code
     (2). An explicit parent-heading rollup may derive only the aggregate unit
     value when the quantity observation records an exhaustive child-HS8 mapping.
+    Explicitly disabled rollups preserve HS8 quantities while exposing why an
+    aggregate unit value is unavailable.
     """
     usd_reports = _report_index(usd_observation)
     quantity_reports = _report_index(quantity_observation)
@@ -334,6 +479,14 @@ def derive_unit_values(
             )
             if rollup is not None:
                 aggregate[trade_type] = rollup
+                continue
+            availability = _parent_value_child_quantity_availability(
+                usd_observation,
+                quantity_observation,
+                trade_type,
+            )
+            if availability is not None:
+                aggregate[trade_type] = availability
                 continue
             aggregate[trade_type] = {
                 "status": "not_available",
