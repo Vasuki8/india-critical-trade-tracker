@@ -54,7 +54,13 @@ def test_batteries_quantity_mapping_is_exact_but_not_parent_rollup_safe():
     assert quantity["mode"] == "separate"
     assert quantity["mapping_status"] == "hs8_validated"
     assert quantity["rollup_to_value_mapping"] is False
-    assert "history_complete_from" not in quantity
+
+    # Before the one-time archive bootstrap this field is absent. The bootstrap
+    # adds it only after all historical fetches, derived builds, and validation
+    # succeed. Both repository states are valid; any declared completion must
+    # start at the known archive boundary.
+    history_complete_from = quantity.get("history_complete_from")
+    assert history_complete_from in {None, "2018-01"}
 
     codes, _ = hs_codes_for_period(batteries, "2026-06", value_type="quantity")
     queryable, reason = is_queryable_commodity(
