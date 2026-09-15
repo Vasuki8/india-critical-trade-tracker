@@ -77,7 +77,7 @@ def test_mapping_status_counts_expose_exact_hs8_coverage():
 
 def test_quantity_mapping_count_exposes_explicit_hs8_quantity_coverage():
     doc = load_json(ROOT / "data" / "commodities.json")
-    assert quantity_mapping_count(doc) == 4
+    assert quantity_mapping_count(doc) == 5
 
 
 def test_mapping_quality_rejects_unknown_status():
