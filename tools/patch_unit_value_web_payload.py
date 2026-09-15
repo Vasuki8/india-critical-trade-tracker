@@ -18,13 +18,21 @@ def patch_dashboard() -> None:
 
 '''
     helper = marker + '''def _compact_unit_values(unit_values: dict[str, Any]) -> dict[str, Any]:
-    """Keep only browser-consumed unit-value fields in the eager dashboard payload."""
+    """Keep browser-relevant unit-value fields while retaining real validation errors."""
     compact = {
         "status": unit_values.get("status", "not_available"),
         "method": unit_values.get("method"),
         "quantity_scale_note": unit_values.get("quantity_scale_note"),
         "aggregate": unit_values.get("aggregate", {}),
     }
+    structural_mismatches = {"missing_usd_report", "missing_quantity_report"}
+    diagnostics = [
+        item
+        for item in unit_values.get("by_hs_code", [])
+        if item.get("status") not in structural_mismatches
+    ]
+    if diagnostics:
+        compact["by_hs_code"] = diagnostics
     return {key: value for key, value in compact.items() if value is not None}
 
 
@@ -93,7 +101,7 @@ def _report(trade_type, hs_code, value, *, value_type, unit=None):
     return report
 
 
-def test_dashboard_compaction_drops_per_hs_diagnostics_but_keeps_aggregate():
+def test_dashboard_compaction_drops_parent_child_structural_mismatches():
     derived = {
         "status": "not_available",
         "method": "demo method",
@@ -105,7 +113,10 @@ def test_dashboard_compaction_drops_per_hs_diagnostics_but_keeps_aggregate():
                 "quantity": None,
             }
         },
-        "by_hs_code": [{"hs_code": "85071000", "status": "missing_usd_report"}],
+        "by_hs_code": [
+            {"hs_code": "8507", "status": "missing_quantity_report"},
+            {"hs_code": "85071000", "status": "missing_usd_report"},
+        ],
     }
 
     compact = _compact_unit_values(derived)
@@ -113,6 +124,23 @@ def test_dashboard_compaction_drops_per_hs_diagnostics_but_keeps_aggregate():
     assert compact["status"] == "not_available"
     assert compact["aggregate"]["import"]["status"] == "mixed_quantity_units"
     assert "by_hs_code" not in compact
+
+
+def test_dashboard_compaction_preserves_meaningful_validation_diagnostic():
+    derived = {
+        "status": "not_available",
+        "aggregate": {"import": {"status": "not_available"}},
+        "by_hs_code": [
+            {"hs_code": "28252000", "status": "unverified_quantity_selector"},
+            {"hs_code": "28369100", "status": "missing_usd_report"},
+        ],
+    }
+
+    compact = _compact_unit_values(derived)
+
+    assert compact["by_hs_code"] == [
+        {"hs_code": "28252000", "status": "unverified_quantity_selector"}
+    ]
 
 
 def test_intelligence_keeps_meaningful_mixed_unit_aggregate():
