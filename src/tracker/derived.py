@@ -6,6 +6,28 @@ USD_MILLION_TO_USD = 1_000_000.0
 DEFAULT_QUANTITY_SCALE_TO_SOURCE_UNIT = 1.0
 VERIFIED_QUANTITY_SELECTOR_CODE = "2"
 
+# TradeStat explicitly notes that an HS8 commodity's displayed unit can change
+# across history (for example TON before a revision and KGS afterward). Keep raw
+# source units for provenance, but normalize only physically equivalent mass
+# units before aggregating or deriving unit values. Unknown units remain in their
+# own uppercase unit and are never converted implicitly.
+MASS_UNIT_NORMALIZATION: dict[str, tuple[str, float]] = {
+    "KGS": ("KGS", 1.0),
+    "KG": ("KGS", 1.0),
+    "KILOGRAM": ("KGS", 1.0),
+    "KILOGRAMS": ("KGS", 1.0),
+    "TON": ("KGS", 1_000.0),
+    "TONS": ("KGS", 1_000.0),
+    "TONNE": ("KGS", 1_000.0),
+    "TONNES": ("KGS", 1_000.0),
+    "MT": ("KGS", 1_000.0),
+    "MTS": ("KGS", 1_000.0),
+    "GMS": ("KGS", 0.001),
+    "GM": ("KGS", 0.001),
+    "GRAM": ("KGS", 0.001),
+    "GRAMS": ("KGS", 0.001),
+}
+
 
 def _report_index(doc: dict[str, Any] | None) -> dict[tuple[str, str], dict[str, Any]]:
     if not doc:
@@ -36,6 +58,21 @@ def _quantity_unit(report: dict[str, Any] | None) -> str | None:
         return None
     unit = str(unit).strip()
     return unit or None
+
+
+def _canonical_quantity_unit(unit: str | None) -> tuple[str | None, float | None]:
+    """Return a conservative canonical unit and source-to-canonical factor.
+
+    Only known mass-unit equivalents are converted. Any other non-empty unit is
+    kept as its own uppercase canonical unit with factor 1, preserving the prior
+    behavior while preventing false equivalence across unrelated unit families.
+    """
+    if unit is None:
+        return None, None
+    cleaned = " ".join(str(unit).strip().upper().split())
+    if not cleaned:
+        return None, None
+    return MASS_UNIT_NORMALIZATION.get(cleaned, (cleaned, 1.0))
 
 
 def _quantity_scale(report: dict[str, Any] | None) -> float:
@@ -76,7 +113,7 @@ def _parent_value_child_quantity_rollup(
     TradeStat can leave the source unit blank when a child line has exactly zero
     quantity. Such a zero line contributes no physical amount, so it may omit its
     unit without blocking the aggregate. Every positive child quantity must still
-    report a verified common physical unit.
+    report a verified unit that resolves to one common canonical unit.
     """
     if not _rollup_requested(quantity_observation):
         return None
@@ -111,6 +148,7 @@ def _parent_value_child_quantity_rollup(
         return None
 
     units: set[str] = set()
+    source_units: set[str] = set()
     total_raw_quantity = 0.0
     total_quantity = 0.0
     for report in quantity_reports:
@@ -148,12 +186,12 @@ def _parent_value_child_quantity_rollup(
             }
 
         total_raw_quantity += raw_quantity
-        total_quantity += raw_quantity * scale
         if raw_quantity == 0:
             continue
 
-        unit = _quantity_unit(report)
-        if unit is None:
+        source_unit = _quantity_unit(report)
+        unit, normalization_factor = _canonical_quantity_unit(source_unit)
+        if unit is None or normalization_factor is None:
             return {
                 "status": "missing_quantity_unit",
                 "usd_million": round(usd_million, 6),
@@ -163,13 +201,17 @@ def _parent_value_child_quantity_rollup(
                 "unit_value_usd_per_source_unit": None,
                 "rollup_method": "parent_value_child_hs8_quantity",
             }
-        units.add(unit.upper())
+        source_units.add(str(source_unit).upper())
+        units.add(unit)
+        total_quantity += raw_quantity * scale * normalization_factor
 
+    raw_output = round(total_raw_quantity, 6) if len(source_units) <= 1 else None
     if total_quantity <= 0:
         return {
             "status": "quantity_not_available",
             "usd_million": round(usd_million, 6),
-            "raw_quantity_source_units": round(total_raw_quantity, 6),
+            "raw_quantity_source_units": raw_output,
+            "source_quantity_units": sorted(source_units),
             "quantity": round(total_quantity, 6),
             "quantity_unit": next(iter(units)) if len(units) == 1 else None,
             "unit_value_usd_per_source_unit": None,
@@ -179,7 +221,8 @@ def _parent_value_child_quantity_rollup(
         return {
             "status": "mixed_quantity_units",
             "usd_million": round(usd_million, 6),
-            "raw_quantity_source_units": round(total_raw_quantity, 6),
+            "raw_quantity_source_units": raw_output,
+            "source_quantity_units": sorted(source_units),
             "quantity": None,
             "quantity_unit": None,
             "unit_value_usd_per_source_unit": None,
@@ -191,7 +234,8 @@ def _parent_value_child_quantity_rollup(
     return {
         "status": "ok",
         "usd_million": round(usd_million, 6),
-        "raw_quantity_source_units": round(total_raw_quantity, 6),
+        "raw_quantity_source_units": raw_output,
+        "source_quantity_units": sorted(source_units),
         "quantity": round(total_quantity, 6),
         "quantity_unit": unit,
         "unit_value_usd_per_source_unit": round(
@@ -207,14 +251,16 @@ def derive_unit_values(
     usd_observation: dict[str, Any],
     quantity_observation: dict[str, Any] | None,
 ) -> dict[str, Any]:
-    """Derive implied USD per displayed physical source unit from MEIDB reports.
+    """Derive implied USD per canonical physical unit from MEIDB reports.
 
     TradeStat monetary observations are USD million. The MEIDB quantity endpoint
-    returns quantity directly in the displayed HS8 source unit (for example KGS
-    or NOS), so the physical-unit scale is 1. Unit values are only derived from
-    reports carrying the verified live quantity selector code (2). An explicit
-    parent-heading rollup may derive only the aggregate unit value when the
-    quantity observation records an exhaustive child-HS8 mapping.
+    returns quantity directly in the displayed HS8 source unit, so the physical-
+    unit scale is 1. Verified equivalent mass units are normalized to KGS before
+    aggregation so historical TradeStat unit changes do not create artificial
+    level shifts. Unrelated unit families are never combined. Unit values are
+    only derived from reports carrying the verified live quantity selector code
+    (2). An explicit parent-heading rollup may derive only the aggregate unit
+    value when the quantity observation records an exhaustive child-HS8 mapping.
     """
     usd_reports = _report_index(usd_observation)
     quantity_reports = _report_index(quantity_observation)
@@ -226,9 +272,15 @@ def derive_unit_values(
         quantity_report = quantity_reports.get((trade_type, hs_code))
         usd_million = _total_value(usd_report)
         raw_quantity = _total_value(quantity_report)
-        quantity_unit = _quantity_unit(quantity_report)
+        source_quantity_unit = _quantity_unit(quantity_report)
+        quantity_unit, normalization_factor = _canonical_quantity_unit(source_quantity_unit)
         scale = _quantity_scale(quantity_report)
         quantity_source_units = raw_quantity * scale if raw_quantity is not None else None
+        quantity = (
+            quantity_source_units * normalization_factor
+            if quantity_source_units is not None and normalization_factor is not None
+            else None
+        )
 
         if usd_report is None:
             status = "missing_usd_report"
@@ -238,7 +290,7 @@ def derive_unit_values(
             status = "unverified_quantity_selector"
         elif raw_quantity is None or raw_quantity <= 0:
             status = "quantity_not_available"
-        elif quantity_unit is None:
+        elif quantity_unit is None or normalization_factor is None:
             status = "missing_quantity_unit"
         elif scale <= 0:
             status = "invalid_quantity_scale"
@@ -248,8 +300,8 @@ def derive_unit_values(
             status = "ok"
 
         unit_value = None
-        if status == "ok" and quantity_source_units:
-            unit_value = round(usd_million * USD_MILLION_TO_USD / quantity_source_units, 6)
+        if status == "ok" and quantity:
+            unit_value = round(usd_million * USD_MILLION_TO_USD / quantity, 6)
 
         components.append(
             {
@@ -259,7 +311,9 @@ def derive_unit_values(
                 "usd_million": usd_million,
                 "raw_quantity_source_units": raw_quantity,
                 "quantity_scale_to_source_unit": scale,
-                "quantity": round(quantity_source_units, 6) if quantity_source_units is not None else None,
+                "source_quantity_unit": source_quantity_unit,
+                "quantity_normalization_factor": normalization_factor,
+                "quantity": round(quantity, 6) if quantity is not None else None,
                 "quantity_unit": quantity_unit,
                 "unit_value_usd_per_source_unit": unit_value,
             }
@@ -292,11 +346,17 @@ def derive_unit_values(
             continue
 
         units = {str(item["quantity_unit"]).upper() for item in valid}
+        source_units = {
+            str(item["source_quantity_unit"]).upper()
+            for item in valid
+            if item.get("source_quantity_unit")
+        }
         if len(units) != 1:
             aggregate[trade_type] = {
                 "status": "mixed_quantity_units",
                 "usd_million": round(sum(float(item["usd_million"]) for item in valid), 6),
                 "raw_quantity_source_units": None,
+                "source_quantity_units": sorted(source_units),
                 "quantity": None,
                 "quantity_unit": None,
                 "unit_value_usd_per_source_unit": None,
@@ -305,13 +365,18 @@ def derive_unit_values(
             continue
 
         total_usd_million = sum(float(item["usd_million"]) for item in valid)
-        total_raw_quantity = sum(float(item["raw_quantity_source_units"]) for item in valid)
+        total_raw_quantity = (
+            sum(float(item["raw_quantity_source_units"]) for item in valid)
+            if len(source_units) <= 1
+            else None
+        )
         total_quantity = sum(float(item["quantity"]) for item in valid)
         unit = valid[0]["quantity_unit"]
         aggregate[trade_type] = {
             "status": "ok",
             "usd_million": round(total_usd_million, 6),
-            "raw_quantity_source_units": round(total_raw_quantity, 6),
+            "raw_quantity_source_units": round(total_raw_quantity, 6) if total_raw_quantity is not None else None,
+            "source_quantity_units": sorted(source_units),
             "quantity": round(total_quantity, 6),
             "quantity_unit": unit,
             "unit_value_usd_per_source_unit": round(
@@ -324,8 +389,8 @@ def derive_unit_values(
     )
     return {
         "status": "ok" if has_value else "not_available",
-        "method": "USD million × 1,000,000 divided by TradeStat MEIDB quantity in the displayed physical source unit",
-        "quantity_scale_note": "MEIDB quantity values are used directly in the displayed HS8 source unit; no thousand-unit multiplier is applied.",
+        "method": "USD million × 1,000,000 divided by normalized TradeStat MEIDB quantity; verified mass units are canonicalized to KGS",
+        "quantity_scale_note": "MEIDB quantity values are used directly in each displayed HS8 source unit; verified equivalent mass units are normalized before aggregation, with raw source units retained for provenance.",
         "aggregate": aggregate,
         "by_hs_code": components,
     }
