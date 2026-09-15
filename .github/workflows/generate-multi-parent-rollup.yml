@@ -25,7 +25,7 @@ jobs:
       - name: Sync dependencies
         run: uv sync --dev
       - name: Apply rollup patch
-        run: uv run python tools/generate_multi_parent_rollup_patch.py
+        run: uv run python tools/generate_multi_parent_rollup_patch_v2.py
       - name: Run focused regression tests
         run: uv run pytest -q tests/test_derived.py tests/test_commodity_master.py
       - name: Run full validation
@@ -39,7 +39,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm tools/generate_multi_parent_rollup_patch.py
+          git rm tools/generate_multi_parent_rollup_patch.py tools/generate_multi_parent_rollup_patch_v2.py
           git add src/tracker/derived.py src/tracker/mapping_quality.py tests/test_derived.py tests/test_commodity_master.py
           git commit -m "Support multi-parent quantity rollups"
           git push origin HEAD:feature/multi-parent-quantity-rollup-v2
