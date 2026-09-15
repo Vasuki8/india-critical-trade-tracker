@@ -1,0 +1,84 @@
+name: Bootstrap Cobalt quantity history
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  # Serialize with source-watch and every other TradeStat data writer.
+  group: tradestat-data-writer
+  cancel-in-progress: false
+
+jobs:
+  backfill-cobalt-quantity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync dependencies
+        run: uv sync --dev
+      - name: Preview Cobalt quantity plan
+        run: |
+          uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 2020-12 --commodity cobalt --value-type quantity --trade-type both --dry-run
+          uv run python scripts/backfill_tradestat.py --start-period 2021-01 --end-period 2023-12 --commodity cobalt --value-type quantity --trade-type both --dry-run
+          uv run python scripts/backfill_tradestat.py --start-period 2024-01 --end-period 2026-06 --commodity cobalt --value-type quantity --trade-type both --dry-run
+      - name: Backfill Cobalt quantity 2018-2020
+        run: uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 2020-12 --commodity cobalt --value-type quantity --trade-type both --no-build-dashboard
+      - name: Backfill Cobalt quantity 2021-2023
+        run: uv run python scripts/backfill_tradestat.py --start-period 2021-01 --end-period 2023-12 --commodity cobalt --value-type quantity --trade-type both --no-build-dashboard
+      - name: Backfill Cobalt quantity 2024-2026
+        run: uv run python scripts/backfill_tradestat.py --start-period 2024-01 --end-period 2026-06 --commodity cobalt --value-type quantity --trade-type both --no-build-dashboard
+      - name: Mark Cobalt quantity history complete
+        run: |
+          uv run python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('data/commodities.json')
+          doc = json.loads(path.read_text(encoding='utf-8'))
+          cobalt = next(item for item in doc['commodities'] if item['id'] == 'cobalt')
+          quantity = cobalt.get('quantity_mapping')
+          if not isinstance(quantity, dict) or quantity.get('enabled') is not True:
+              raise SystemExit('Cobalt quantity mapping is not enabled')
+          quantity['history_complete_from'] = '2018-01'
+          path.write_text(json.dumps(doc, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Rebuild dashboard from stored observations
+        run: uv run python scripts/build_dashboard.py
+      - name: Rebuild revision comparison summary
+        run: uv run python scripts/build_revision_summary.py
+      - name: Rebuild commodity intelligence
+        run: uv run python scripts/build_intelligence.py
+      - name: Validate generated data
+        run: |
+          uv run python scripts/validate_data.py
+          uv run pytest -q
+          node --check assets/js/app.js
+          node --check assets/js/intelligence.js
+          node --check assets/js/portfolio.js
+      - name: Commit Cobalt quantity history
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/commodities.json data/dashboard.json data/revision_summary.json data/observations/
+          if [[ -d data/intelligence ]]; then
+            git add data/intelligence/
+          fi
+          if [[ -d data/revisions ]]; then
+            git add data/revisions/
+          fi
+          if git diff --cached --quiet; then
+            echo "No tracked data change"
+            exit 0
+          fi
+          git commit -m "data: backfill Cobalt quantity history"
+          git pull --rebase origin main
+          git push origin HEAD:main
