@@ -13,6 +13,15 @@ def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _write_dashboard(path: Path, value: dict[str, Any]) -> None:
+    """Write the eagerly loaded derived dashboard without pretty-print overhead."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(value, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+
+
 def _observation_value_type(doc: dict[str, Any]) -> str | None:
     explicit = doc.get("value_type")
     if explicit:
@@ -65,6 +74,7 @@ def _commodity_card(
     quantity_doc: dict[str, Any] | None,
     *,
     metrics: dict[str, Any] | None = None,
+    unit_values: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     metrics = metrics if metrics is not None else _live_metrics(usd_doc)
     card = {
@@ -76,7 +86,7 @@ def _commodity_card(
         **metrics,
         "status": usd_doc.get("status", "ok"),
     }
-    unit_values = derive_unit_values(usd_doc, quantity_doc)
+    unit_values = unit_values if unit_values is not None else derive_unit_values(usd_doc, quantity_doc)
     if quantity_doc is not None or unit_values["status"] == "ok":
         card["unit_values"] = unit_values
     return card
@@ -88,10 +98,11 @@ def _history_point(
     quantity_doc: dict[str, Any] | None,
     *,
     metrics: dict[str, Any] | None = None,
+    unit_values: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     metrics = metrics if metrics is not None else _live_metrics(usd_doc)
     dependency = metrics.get("dependency", {})
-    unit_values = derive_unit_values(usd_doc, quantity_doc)
+    unit_values = unit_values if unit_values is not None else derive_unit_values(usd_doc, quantity_doc)
     return {
         "period": period,
         "imports": metrics.get("imports"),
@@ -184,7 +195,7 @@ def build_dashboard(
     period_dirs = sorted(p for p in observations_root.glob("????-??") if p.is_dir())
     if not period_dirs:
         doc = _empty_dashboard()
-        out_path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+        _write_dashboard(out_path, doc)
         return doc
 
     master = _commodity_master(commodity_master_path)
@@ -221,9 +232,23 @@ def build_dashboard(
             usd_doc = usd_docs[commodity_id]
             quantity_doc = quantity_docs.get(commodity_id)
             metrics = _live_metrics(usd_doc)
-            cards.append(_commodity_card(usd_doc, quantity_doc, metrics=metrics))
+            unit_values = derive_unit_values(usd_doc, quantity_doc)
+            cards.append(
+                _commodity_card(
+                    usd_doc,
+                    quantity_doc,
+                    metrics=metrics,
+                    unit_values=unit_values,
+                )
+            )
             commodity_history[commodity_id].append(
-                _history_point(period_dir.name, usd_doc, quantity_doc, metrics=metrics)
+                _history_point(
+                    period_dir.name,
+                    usd_doc,
+                    quantity_doc,
+                    metrics=metrics,
+                    unit_values=unit_values,
+                )
             )
 
         latest_period = period_dir.name
@@ -231,7 +256,7 @@ def build_dashboard(
 
     if latest_period is None or not monthly:
         doc = _empty_dashboard()
-        out_path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+        _write_dashboard(out_path, doc)
         return doc
 
     latest_summary = monthly[-1].copy()
@@ -249,6 +274,5 @@ def build_dashboard(
         "commodity_history": dict(sorted(commodity_history.items())),
         "history_gaps": _history_gaps(master, first_period=first_period, last_period=latest_period),
     }
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(dashboard, indent=2) + "\n", encoding="utf-8")
+    _write_dashboard(out_path, dashboard)
     return dashboard
