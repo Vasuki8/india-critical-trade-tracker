@@ -25,29 +25,29 @@ def _observation_value_type(doc: dict[str, Any]) -> str | None:
     return None
 
 
-def _is_usd_observation(doc: dict[str, Any]) -> bool:
-    return _observation_value_type(doc) == "usd"
-
-
-def _documents_by_commodity(period_dir: Path, value_type: str) -> dict[str, dict[str, Any]]:
-    """Return one observation per commodity/value type, preferring explicit v2+ files."""
-    selected: dict[str, tuple[tuple[int, int], dict[str, Any]]] = {}
-    suffix = f".{value_type}.json"
+def _documents_by_value_type(period_dir: Path) -> dict[str, dict[str, dict[str, Any]]]:
+    """Load a period directory once and select one observation per commodity/value type."""
+    selected: dict[str, dict[str, tuple[tuple[int, int], dict[str, Any]]]] = defaultdict(dict)
     for path in sorted(period_dir.glob("*.json")):
         doc = _load(path)
-        if _observation_value_type(doc) != value_type:
+        value_type = _observation_value_type(doc)
+        if value_type is None:
             continue
         commodity_id = str(doc.get("commodity", {}).get("id") or "")
         if not commodity_id:
             continue
+        suffix = f".{value_type}.json"
         score = (
             1 if doc.get("value_type") == value_type else 0,
             1 if path.name.endswith(suffix) else 0,
         )
-        previous = selected.get(commodity_id)
+        previous = selected[value_type].get(commodity_id)
         if previous is None or score > previous[0]:
-            selected[commodity_id] = (score, doc)
-    return {commodity_id: pair[1] for commodity_id, pair in selected.items()}
+            selected[value_type][commodity_id] = (score, doc)
+    return {
+        value_type: {commodity_id: pair[1] for commodity_id, pair in entries.items()}
+        for value_type, entries in selected.items()
+    }
 
 
 def _live_metrics(doc: dict[str, Any]) -> dict[str, Any]:
@@ -58,8 +58,10 @@ def _live_metrics(doc: dict[str, Any]) -> dict[str, Any]:
 def _commodity_card(
     usd_doc: dict[str, Any],
     quantity_doc: dict[str, Any] | None,
+    *,
+    metrics: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    metrics = _live_metrics(usd_doc)
+    metrics = metrics if metrics is not None else _live_metrics(usd_doc)
     card = {
         "id": usd_doc["commodity"]["id"],
         "name": usd_doc["commodity"]["name"],
@@ -79,8 +81,10 @@ def _history_point(
     period: str,
     usd_doc: dict[str, Any],
     quantity_doc: dict[str, Any] | None,
+    *,
+    metrics: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    metrics = _live_metrics(usd_doc)
+    metrics = metrics if metrics is not None else _live_metrics(usd_doc)
     dependency = metrics.get("dependency", {})
     unit_values = derive_unit_values(usd_doc, quantity_doc)
     return {
@@ -138,16 +142,15 @@ def _history_gaps(
         commodity_id = str(commodity.get("id") or "")
         if not commodity_id:
             continue
-        gaps = []
-        for period in commodity.get("classification_transition_periods", []):
-            if first_period <= period <= last_period:
-                gaps.append(
-                    {
-                        "period": period,
-                        "reason": "classification_transition",
-                        "note": "Historical mapping intentionally omitted for this classification transition month; do not interpret the missing observation as zero trade.",
-                    }
-                )
+        gaps = [
+            {
+                "period": period,
+                "reason": "classification_transition",
+                "note": "Historical mapping intentionally omitted for this classification transition month; do not interpret the missing observation as zero trade.",
+            }
+            for period in commodity.get("classification_transition_periods", [])
+            if first_period <= period <= last_period
+        ]
         if gaps:
             output[commodity_id] = gaps
     return output
@@ -192,13 +195,18 @@ def build_dashboard(
     latest_period: str | None = None
 
     for period_dir in period_dirs:
-        usd_docs = _documents_by_commodity(period_dir, "usd")
+        docs_by_type = _documents_by_value_type(period_dir)
+        usd_docs = docs_by_type.get("usd", {})
         if not usd_docs:
             # A quantity-only backfill must never advance the dashboard's headline period.
             continue
-        quantity_docs = _documents_by_commodity(period_dir, "quantity")
+        quantity_docs = docs_by_type.get("quantity", {})
 
-        reports = [report for doc in usd_docs.values() for report in doc.get("reports", [])]
+        reports = (
+            report
+            for doc in usd_docs.values()
+            for report in doc.get("reports", [])
+        )
         summary = portfolio_summary(reports)
         coverage = _coverage_metadata(set(usd_docs), expected_ids)
         monthly.append({"period": period_dir.name, **summary, **coverage})
@@ -207,9 +215,10 @@ def build_dashboard(
         for commodity_id in sorted(usd_docs):
             usd_doc = usd_docs[commodity_id]
             quantity_doc = quantity_docs.get(commodity_id)
-            cards.append(_commodity_card(usd_doc, quantity_doc))
+            metrics = _live_metrics(usd_doc)
+            cards.append(_commodity_card(usd_doc, quantity_doc, metrics=metrics))
             commodity_history[commodity_id].append(
-                _history_point(period_dir.name, usd_doc, quantity_doc)
+                _history_point(period_dir.name, usd_doc, quantity_doc, metrics=metrics)
             )
 
         latest_period = period_dir.name
