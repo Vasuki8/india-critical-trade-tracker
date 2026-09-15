@@ -19,6 +19,11 @@ def _load(path: Path) -> dict[str, Any] | None:
     return value if isinstance(value, dict) else None
 
 
+def _compact_json(value: Any) -> str:
+    """Serialize generated web artifacts without readability-only whitespace."""
+    return json.dumps(value, ensure_ascii=False, separators=(",", ":")) + "\n"
+
+
 def _build_observation_index(observations_root: Path) -> ObservationIndex:
     """Index archive paths once instead of probing every period for every commodity."""
     index: ObservationIndex = {}
@@ -41,19 +46,30 @@ def _build_observation_index(observations_root: Path) -> ObservationIndex:
     return index
 
 
-def _reports(doc: dict[str, Any], trade_type: str) -> list[dict[str, Any]]:
-    return [report for report in doc.get("reports", []) if report.get("trade_type") == trade_type]
+def _compact_dependency(metrics: dict[str, Any]) -> dict[str, Any]:
+    dependency = metrics.get("dependency", {})
+    return {
+        "score": dependency.get("score"),
+        "risk": dependency.get("risk"),
+        "import_reliance_pct": dependency.get("import_reliance_pct"),
+    }
 
 
-def _hs_breakdown(reports: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _compact_concentration(value: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "top_partner_share_pct": value.get("top_partner_share_pct"),
+        "hhi": value.get("hhi"),
+    }
+
+
+def _compact_partner_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Drop share_pct because it is derivable from the values in the same list."""
     return [
         {
-            "hs_code": report.get("hs_code"),
-            "description": report.get("description"),
-            "value": report.get("totals", {}).get("value"),
-            "source_unit": report.get("quantity_unit") or report.get("source_unit"),
+            "partner_country": row.get("partner_country"),
+            "value": row.get("value"),
         }
-        for report in reports
+        for row in rows
     ]
 
 
@@ -64,10 +80,11 @@ def _unit_value_summary(
     derived = derive_unit_values(usd_doc, quantity_doc)
     if derived.get("status") != "ok":
         return {"status": derived.get("status", "unavailable")}
+    # The browser currently renders aggregate implied unit values. Per-HS details
+    # remain preserved in source observations and need not be duplicated here.
     return {
         "status": "ok",
         "aggregate": derived.get("aggregate", {}),
-        "hs_codes": derived.get("hs_codes", {}),
     }
 
 
@@ -76,10 +93,9 @@ def _month_entry(
     usd_doc: dict[str, Any],
     quantity_doc: dict[str, Any] | None,
 ) -> dict[str, Any]:
-    reports = usd_doc.get("reports", [])
-    metrics, imports_by_country, exports_by_country = aggregate_commodity_details(reports)
-    imports = _reports(usd_doc, "import")
-    exports = _reports(usd_doc, "export")
+    metrics, imports_by_country, exports_by_country = aggregate_commodity_details(
+        usd_doc.get("reports", [])
+    )
     return {
         "period": period,
         "imports": metrics.get("imports"),
@@ -89,13 +105,15 @@ def _month_entry(
         "export_yoy_pct": metrics.get("export_yoy_pct"),
         "ytd_imports": metrics.get("ytd_imports"),
         "ytd_exports": metrics.get("ytd_exports"),
-        "dependency": metrics.get("dependency", {}),
-        "supplier_concentration": metrics.get("supplier_concentration", {}),
-        "export_destination_concentration": metrics.get("export_destination_concentration", {}),
-        "imports_by_country": imports_by_country,
-        "exports_by_country": exports_by_country,
-        "import_hs_breakdown": _hs_breakdown(imports),
-        "export_hs_breakdown": _hs_breakdown(exports),
+        "dependency": _compact_dependency(metrics),
+        "supplier_concentration": _compact_concentration(
+            metrics.get("supplier_concentration", {})
+        ),
+        "export_destination_concentration": _compact_concentration(
+            metrics.get("export_destination_concentration", {})
+        ),
+        "imports_by_country": _compact_partner_rows(imports_by_country),
+        "exports_by_country": _compact_partner_rows(exports_by_country),
         "unit_values": _unit_value_summary(usd_doc, quantity_doc),
         "status": usd_doc.get("status", "ok"),
     }
@@ -115,9 +133,9 @@ def _annual_summary(months: list[dict[str, Any]]) -> list[dict[str, Any]]:
         export_partners: dict[str, float] = defaultdict(float)
         for item in year_months:
             for partner in item.get("imports_by_country", []):
-                import_partners[partner["partner_country"]] += float(partner.get("value") or 0)
+                import_partners[str(partner["partner_country"])] += float(partner.get("value") or 0)
             for partner in item.get("exports_by_country", []):
-                export_partners[partner["partner_country"]] += float(partner.get("value") or 0)
+                export_partners[str(partner["partner_country"])] += float(partner.get("value") or 0)
 
         import_rows = [
             {"partner_country": country, "value": round(value, 6)}
@@ -137,12 +155,8 @@ def _annual_summary(months: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "imports": imports,
                 "exports": exports,
                 "balance": round(exports - imports, 6),
-                "average_monthly_imports": round(imports / len(year_months), 6) if year_months else None,
-                "average_monthly_exports": round(exports / len(year_months), 6) if year_months else None,
                 "supplier_concentration": import_concentration,
                 "export_destination_concentration": export_concentration,
-                "top_import_partners": import_concentration.get("top_partners", []),
-                "top_export_partners": export_concentration.get("top_partners", []),
             }
         )
     return output
@@ -190,7 +204,7 @@ def build_commodity_intelligence(
     last_period = months[-1]["period"]
     latest = months[-1]
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "commodity": {
             "id": commodity_id,
             "name": commodity.get("name"),
@@ -240,7 +254,7 @@ def build_all_commodity_intelligence(
         if doc is None:
             continue
         path = output_root / f"{commodity['id']}.json"
-        path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+        path.write_text(_compact_json(doc), encoding="utf-8")
         expected_files.add(path)
         built.append(commodity["id"])
 
@@ -249,7 +263,7 @@ def build_all_commodity_intelligence(
             stale.unlink()
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "commodity_count": len(built),
         "commodities": sorted(built),
     }
