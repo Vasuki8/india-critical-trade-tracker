@@ -61,20 +61,22 @@ def test_commodity_intelligence_exposes_month_country_and_annual_views(tmp_path:
     doc = build_commodity_intelligence(observations, commodity)
 
     assert doc is not None
+    assert doc["schema_version"] == 2
     assert doc["coverage"]["first_period"] == "2025-01"
     assert doc["coverage"]["last_period"] == "2025-02"
     assert doc["coverage"]["months_observed"] == 2
     assert doc["monthly"][0]["imports_by_country"][0] == {
         "partner_country": "A",
         "value": 75.0,
-        "share_pct": 75.0,
     }
+    assert "import_hs_breakdown" not in doc["monthly"][0]
+    assert "export_hs_breakdown" not in doc["monthly"][0]
     assert doc["annual"][0]["imports"] == 220.0
     assert doc["annual"][0]["exports"] == 30.0
     assert doc["annual"][0]["balance"] == -190.0
     assert doc["annual"][0]["months_observed"] == 2
     assert doc["annual"][0]["coverage_status"] == "partial"
-    assert doc["annual"][0]["top_import_partners"][0]["partner_country"] == "A"
+    assert doc["annual"][0]["supplier_concentration"]["top_partners"][0]["partner_country"] == "A"
 
 
 def test_commodity_intelligence_preserves_classification_transition_gap(tmp_path: Path):
@@ -102,7 +104,7 @@ def test_commodity_intelligence_preserves_classification_transition_gap(tmp_path
     ]
 
 
-def test_build_all_writes_one_lazy_load_file_per_commodity(tmp_path: Path):
+def test_build_all_writes_compact_lazy_load_file_per_commodity(tmp_path: Path):
     observations = tmp_path / "observations"
     _write(observations / "2025-01" / "crude_oil.usd.json", _observation("2025-01", imports=100, exports=10))
     master = tmp_path / "commodities.json"
@@ -126,8 +128,11 @@ def test_build_all_writes_one_lazy_load_file_per_commodity(tmp_path: Path):
 
     summary = build_all_commodity_intelligence(observations, master, output)
 
+    assert summary["schema_version"] == 2
     assert summary["commodity_count"] == 1
     assert summary["commodities"] == ["crude_oil"]
-    saved = json.loads((output / "crude_oil.json").read_text(encoding="utf-8"))
+    rendered = (output / "crude_oil.json").read_text(encoding="utf-8")
+    assert "\n  \"" not in rendered
+    saved = json.loads(rendered)
     assert saved["commodity"]["name"] == "Crude Oil"
     assert saved["monthly"][0]["imports"] == 100.0
