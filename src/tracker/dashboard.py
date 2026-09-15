@@ -69,6 +69,25 @@ def _live_metrics(doc: dict[str, Any]) -> dict[str, Any]:
     return aggregate_commodity(reports) if reports else doc.get("metrics", {})
 
 
+def _compact_unit_values(unit_values: dict[str, Any]) -> dict[str, Any]:
+    """Keep browser-relevant unit-value fields while retaining real validation errors."""
+    compact = {
+        "status": unit_values.get("status", "not_available"),
+        "method": unit_values.get("method"),
+        "quantity_scale_note": unit_values.get("quantity_scale_note"),
+        "aggregate": unit_values.get("aggregate", {}),
+    }
+    structural_mismatches = {"missing_usd_report", "missing_quantity_report"}
+    diagnostics = [
+        item
+        for item in unit_values.get("by_hs_code", [])
+        if item.get("status") not in structural_mismatches
+    ]
+    if diagnostics:
+        compact["by_hs_code"] = diagnostics
+    return {key: value for key, value in compact.items() if value is not None}
+
+
 def _commodity_card(
     usd_doc: dict[str, Any],
     quantity_doc: dict[str, Any] | None,
@@ -88,7 +107,7 @@ def _commodity_card(
     }
     unit_values = unit_values if unit_values is not None else derive_unit_values(usd_doc, quantity_doc)
     if quantity_doc is not None or unit_values["status"] == "ok":
-        card["unit_values"] = unit_values
+        card["unit_values"] = _compact_unit_values(unit_values)
     return card
 
 

@@ -78,15 +78,19 @@ def _unit_value_summary(
     quantity_doc: dict[str, Any] | None,
 ) -> dict[str, Any]:
     derived = derive_unit_values(usd_doc, quantity_doc)
-    if derived.get("status") != "ok":
-        return {"status": derived.get("status", "unavailable")}
-    # The browser currently renders aggregate implied unit values. Per-HS details
-    # remain preserved in source observations and need not be duplicated here.
-    return {
-        "status": "ok",
-        "aggregate": derived.get("aggregate", {}),
+    summary: dict[str, Any] = {
+        "status": derived.get("status", "unavailable"),
     }
-
+    aggregate = derived.get("aggregate", {})
+    meaningful_aggregate = any(
+        isinstance(metric, dict) and metric.get("status") not in {None, "not_available"}
+        for metric in aggregate.values()
+    )
+    if quantity_doc is not None and meaningful_aggregate:
+        # Preserve mixed-unit / disabled-rollup explanations as well as successful
+        # aggregate unit values. Per-HS diagnostics remain in source observations.
+        summary["aggregate"] = aggregate
+    return summary
 
 def _month_entry(
     period: str,
