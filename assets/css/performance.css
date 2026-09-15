@@ -1,7 +1,6 @@
 /* Scroll-performance overrides.
    Avoid expensive backdrop filtering on dozens of cards and isolate repeated
-   commodity paints so Chromium can scroll the dashboard without repainting the
-   full page. */
+   paints so Chromium can scroll the dashboard without repainting the full page. */
 .card {
   background: #101d30;
   backdrop-filter: none;
@@ -12,8 +11,35 @@
 .commodity-card {
   contain: paint;
   content-visibility: auto;
-  contain-intrinsic-size: 320px;
+  contain-intrinsic-size: auto 320px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+}
+
+/* Keep complete page sections out of style/layout/paint work when they are well
+   outside the viewport. The `auto` intrinsic size lets Chromium remember the
+   measured size after first render, while the fallback keeps scroll geometry
+   stable before that happens. */
+.summary-grid,
+.portfolio-history-card,
+.source-grid,
+.intelligence-workspace {
+  content-visibility: auto;
+}
+
+.summary-grid {
+  contain-intrinsic-size: auto 180px;
+}
+
+.portfolio-history-card {
+  contain-intrinsic-size: auto 560px;
+}
+
+.source-grid {
+  contain-intrinsic-size: auto 280px;
+}
+
+.intelligence-workspace {
+  contain-intrinsic-size: auto 1600px;
 }
 
 .chart-panel,
@@ -24,5 +50,13 @@
 @media (max-width: 720px) {
   .card {
     box-shadow: 0 4px 14px rgba(0, 0, 0, .1);
+  }
+
+  .portfolio-history-card {
+    contain-intrinsic-size: auto 720px;
+  }
+
+  .source-grid {
+    contain-intrinsic-size: auto 520px;
   }
 }
