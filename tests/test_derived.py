@@ -50,6 +50,51 @@ def test_explicit_quantity_scale_is_respected():
     assert result["by_hs_code"][0]["unit_value_usd_per_source_unit"] == 1.0
 
 
+def test_tonnes_are_normalized_to_kilograms_before_unit_value_derivation():
+    usd = {"reports": [_report("import", "27090010", 2.0, value_type="usd")]}
+    quantity = {
+        "reports": [
+            _report("import", "27090010", 1_000, value_type="quantity", unit="TON", scale=1),
+        ]
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    component = result["by_hs_code"][0]
+    assert component["status"] == "ok"
+    assert component["raw_quantity_source_units"] == 1_000
+    assert component["source_quantity_unit"] == "TON"
+    assert component["quantity_normalization_factor"] == 1_000
+    assert component["quantity"] == 1_000_000
+    assert component["quantity_unit"] == "KGS"
+    assert component["unit_value_usd_per_source_unit"] == 2.0
+
+
+def test_equivalent_mass_units_can_be_aggregated_after_normalization():
+    usd = {
+        "reports": [
+            _report("import", "27090010", 0.5, value_type="usd"),
+            _report("import", "27090090", 2.0, value_type="usd"),
+        ]
+    }
+    quantity = {
+        "reports": [
+            _report("import", "27090010", 500_000, value_type="quantity", unit="KGS"),
+            _report("import", "27090090", 2_000, value_type="quantity", unit="TON"),
+        ]
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    aggregate = result["aggregate"]["import"]
+    assert aggregate["status"] == "ok"
+    assert aggregate["quantity"] == 2_500_000
+    assert aggregate["quantity_unit"] == "KGS"
+    assert aggregate["source_quantity_units"] == ["KGS", "TON"]
+    assert aggregate["raw_quantity_source_units"] is None
+    assert aggregate["unit_value_usd_per_source_unit"] == 1.0
+
+
 def test_unverified_quantity_selector_is_rejected():
     usd = {"reports": [_report("import", "28252000", 1.0, value_type="usd")]}
     quantity = {
@@ -200,6 +245,30 @@ def test_parent_heading_rollup_rejects_mixed_child_units():
     assert result["status"] == "not_available"
     assert result["aggregate"]["import"]["status"] == "mixed_quantity_units"
     assert result["aggregate"]["import"]["unit_value_usd_per_source_unit"] is None
+
+
+def test_parent_heading_rollup_normalizes_equivalent_child_mass_units():
+    usd = {"reports": [_report("import", "2846", 3.0, value_type="usd")]}
+    quantity = {
+        "commodity": {
+            "canonical_hs_codes": ["28461010", "28469090"],
+            "quantity_rollup_to_value_mapping": True,
+        },
+        "reports": [
+            _report("import", "28461010", 1_000_000, value_type="quantity", unit="KGS"),
+            _report("import", "28469090", 2_000, value_type="quantity", unit="TON"),
+        ],
+    }
+
+    result = derive_unit_values(usd, quantity)
+
+    aggregate = result["aggregate"]["import"]
+    assert aggregate["status"] == "ok"
+    assert aggregate["quantity"] == 3_000_000
+    assert aggregate["quantity_unit"] == "KGS"
+    assert aggregate["source_quantity_units"] == ["KGS", "TON"]
+    assert aggregate["raw_quantity_source_units"] is None
+    assert aggregate["unit_value_usd_per_source_unit"] == 1.0
 
 
 def test_parent_heading_rollup_requires_complete_expected_child_set():
