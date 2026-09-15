@@ -239,56 +239,111 @@ def _parent_value_child_quantity_availability(
     }
 
 
+
 def _parent_value_child_quantity_rollup(
     usd_observation: dict[str, Any],
     quantity_observation: dict[str, Any] | None,
     trade_type: str,
 ) -> dict[str, Any] | None:
-    """Blend one parent value report with an exhaustive HS8 quantity set.
+    """Blend one or more parent value reports with exhaustive HS8 quantities.
 
-    This path is intentionally opt-in through observation provenance. It is used
-    when the monetary series is stored at a validated parent heading while the
-    quantity endpoint is queried at exact HS8 children that exhaust that heading.
-    Component-level unit values remain unavailable because value is not observed
-    separately for each child; only the aggregate parent-heading unit value is
-    derived.
+    This path is intentionally opt-in through observation provenance. Every
+    quantity child must belong to exactly one monetary parent, every parent
+    must have at least one child, and the observed child set must match the
+    canonical quantity mapping. Component-level unit values remain unavailable
+    because monetary value is not observed separately for each child; only the
+    combined validated-parent unit value is derived.
 
-    TradeStat can leave the source unit blank when a child line has exactly zero
-    quantity. Such a zero line contributes no physical amount, so it may omit its
-    unit without blocking the aggregate. Every positive child quantity must still
-    report a verified unit that resolves to one common canonical unit.
+    TradeStat can leave the source unit blank when a child line has exactly
+    zero quantity. Such a zero line contributes no physical amount, so it may
+    omit its unit without blocking the aggregate. Every positive child quantity
+    must still report a verified unit that resolves to one common canonical
+    unit.
     """
     if not _rollup_requested(quantity_observation):
         return None
 
     usd_reports = [
-        report for report in usd_observation.get("reports", []) if report.get("trade_type") == trade_type
+        report
+        for report in usd_observation.get("reports", [])
+        if report.get("trade_type") == trade_type
     ]
     quantity_reports = [
         report
         for report in (quantity_observation or {}).get("reports", [])
         if report.get("trade_type") == trade_type
     ]
-    if len(usd_reports) != 1 or not quantity_reports:
+    if not usd_reports or not quantity_reports:
         return None
 
-    usd_report = usd_reports[0]
-    parent_code = str(usd_report.get("hs_code") or "")
+    parent_codes = [str(report.get("hs_code") or "") for report in usd_reports]
     child_codes = [str(report.get("hs_code") or "") for report in quantity_reports]
-    if not parent_code or any(not code or not code.startswith(parent_code) or code == parent_code for code in child_codes):
+    if (
+        any(not code for code in parent_codes)
+        or len(parent_codes) != len(set(parent_codes))
+        or any(not code for code in child_codes)
+        or len(child_codes) != len(set(child_codes))
+    ):
+        return None
+
+    children_by_parent: dict[str, list[str]] = {code: [] for code in parent_codes}
+    for child_code in child_codes:
+        matches = [
+            parent_code
+            for parent_code in parent_codes
+            if len(parent_code) < len(child_code) and child_code.startswith(parent_code)
+        ]
+        if len(matches) != 1:
+            return None
+        children_by_parent[matches[0]].append(child_code)
+    if any(not children for children in children_by_parent.values()):
         return None
 
     canonical_children = {
         str(code)
-        for code in (quantity_observation or {}).get("commodity", {}).get("canonical_hs_codes", [])
+        for code in (quantity_observation or {}).get("commodity", {}).get(
+            "canonical_hs_codes", []
+        )
         if str(code)
     }
     if canonical_children and set(child_codes) != canonical_children:
         return None
 
-    usd_million = _total_value(usd_report)
-    if usd_million is None:
+    usd_values = [_total_value(report) for report in usd_reports]
+    if any(value is None for value in usd_values):
         return None
+    usd_million = sum(float(value) for value in usd_values if value is not None)
+
+    metadata: dict[str, Any] = {
+        "rollup_method": "parent_value_child_hs8_quantity",
+        "value_hs_codes": sorted(parent_codes),
+        "quantity_hs_codes": sorted(child_codes),
+    }
+    if len(parent_codes) == 1:
+        metadata["value_hs_code"] = parent_codes[0]
+
+    def unavailable(
+        status: str,
+        *,
+        raw_quantity: float | None = None,
+        source_units: set[str] | None = None,
+        units: set[str] | None = None,
+        quantity: float | None = None,
+    ) -> dict[str, Any]:
+        result: dict[str, Any] = {
+            "status": status,
+            "usd_million": round(usd_million, 6),
+            "raw_quantity_source_units": raw_quantity,
+            "quantity": round(quantity, 6) if quantity is not None else None,
+            "quantity_unit": next(iter(units)) if units and len(units) == 1 else None,
+            "unit_value_usd_per_source_unit": None,
+            **metadata,
+        }
+        if source_units is not None:
+            result["source_quantity_units"] = sorted(source_units)
+        if units is not None and len(units) > 1:
+            result["component_units"] = sorted(units)
+        return result
 
     units: set[str] = set()
     source_units: set[str] = set()
@@ -296,37 +351,13 @@ def _parent_value_child_quantity_rollup(
     total_quantity = 0.0
     for report in quantity_reports:
         if not _quantity_selector_verified(report):
-            return {
-                "status": "unverified_quantity_selector",
-                "usd_million": round(usd_million, 6),
-                "raw_quantity_source_units": None,
-                "quantity": None,
-                "quantity_unit": None,
-                "unit_value_usd_per_source_unit": None,
-                "rollup_method": "parent_value_child_hs8_quantity",
-            }
+            return unavailable("unverified_quantity_selector")
         raw_quantity = _total_value(report)
         if raw_quantity is None or raw_quantity < 0:
-            return {
-                "status": "quantity_not_available",
-                "usd_million": round(usd_million, 6),
-                "raw_quantity_source_units": None,
-                "quantity": None,
-                "quantity_unit": None,
-                "unit_value_usd_per_source_unit": None,
-                "rollup_method": "parent_value_child_hs8_quantity",
-            }
+            return unavailable("quantity_not_available")
         scale = _quantity_scale(report)
         if scale <= 0:
-            return {
-                "status": "invalid_quantity_scale",
-                "usd_million": round(usd_million, 6),
-                "raw_quantity_source_units": None,
-                "quantity": None,
-                "quantity_unit": None,
-                "unit_value_usd_per_source_unit": None,
-                "rollup_method": "parent_value_child_hs8_quantity",
-            }
+            return unavailable("invalid_quantity_scale")
 
         total_raw_quantity += raw_quantity
         if raw_quantity == 0:
@@ -335,43 +366,30 @@ def _parent_value_child_quantity_rollup(
         source_unit = _quantity_unit(report)
         unit, normalization_factor = _canonical_quantity_unit(source_unit)
         if unit is None or normalization_factor is None:
-            return {
-                "status": "missing_quantity_unit",
-                "usd_million": round(usd_million, 6),
-                "raw_quantity_source_units": round(total_raw_quantity, 6),
-                "quantity": None,
-                "quantity_unit": None,
-                "unit_value_usd_per_source_unit": None,
-                "rollup_method": "parent_value_child_hs8_quantity",
-            }
+            return unavailable(
+                "missing_quantity_unit",
+                raw_quantity=round(total_raw_quantity, 6),
+            )
         source_units.add(str(source_unit).upper())
         units.add(unit)
         total_quantity += raw_quantity * scale * normalization_factor
 
     raw_output = round(total_raw_quantity, 6) if len(source_units) <= 1 else None
     if total_quantity <= 0:
-        return {
-            "status": "quantity_not_available",
-            "usd_million": round(usd_million, 6),
-            "raw_quantity_source_units": raw_output,
-            "source_quantity_units": sorted(source_units),
-            "quantity": round(total_quantity, 6),
-            "quantity_unit": next(iter(units)) if len(units) == 1 else None,
-            "unit_value_usd_per_source_unit": None,
-            "rollup_method": "parent_value_child_hs8_quantity",
-        }
+        return unavailable(
+            "quantity_not_available",
+            raw_quantity=raw_output,
+            source_units=source_units,
+            units=units,
+            quantity=total_quantity,
+        )
     if len(units) != 1:
-        return {
-            "status": "mixed_quantity_units",
-            "usd_million": round(usd_million, 6),
-            "raw_quantity_source_units": raw_output,
-            "source_quantity_units": sorted(source_units),
-            "quantity": None,
-            "quantity_unit": None,
-            "unit_value_usd_per_source_unit": None,
-            "component_units": sorted(units),
-            "rollup_method": "parent_value_child_hs8_quantity",
-        }
+        return unavailable(
+            "mixed_quantity_units",
+            raw_quantity=raw_output,
+            source_units=source_units,
+            units=units,
+        )
 
     unit = next(iter(units))
     return {
@@ -384,9 +402,7 @@ def _parent_value_child_quantity_rollup(
         "unit_value_usd_per_source_unit": round(
             usd_million * USD_MILLION_TO_USD / total_quantity, 6
         ),
-        "rollup_method": "parent_value_child_hs8_quantity",
-        "value_hs_code": parent_code,
-        "quantity_hs_codes": sorted(child_codes),
+        **metadata,
     }
 
 

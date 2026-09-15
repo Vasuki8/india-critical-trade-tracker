@@ -165,3 +165,36 @@ def test_quantity_rollup_requires_children_of_value_mapping():
     )
     errors = validate_mapping_quality(_master_with(item))
     assert any("rollup quantity codes must be children" in error for error in errors)
+
+
+
+def test_quantity_rollup_rejects_ambiguous_value_parents():
+    item = _commodity(
+        hs_codes=["81", "8105"],
+        mapping_status="chapter_plus_ore",
+        quantity_mapping={
+            "enabled": True,
+            "mode": "separate",
+            "mapping_status": "hs8_validated",
+            "rollup_to_value_mapping": True,
+            "hs_codes": ["81052010"],
+        },
+    )
+    errors = validate_mapping_quality(_master_with(item))
+    assert any("exactly one monetary parent" in error for error in errors)
+
+
+def test_quantity_rollup_requires_each_value_parent_to_have_child():
+    item = _commodity(
+        hs_codes=["2605", "8105"],
+        mapping_status="heading_set",
+        quantity_mapping={
+            "enabled": True,
+            "mode": "separate",
+            "mapping_status": "hs8_validated",
+            "rollup_to_value_mapping": True,
+            "hs_codes": ["81052010"],
+        },
+    )
+    errors = validate_mapping_quality(_master_with(item))
+    assert any("each have at least one quantity child" in error for error in errors)
