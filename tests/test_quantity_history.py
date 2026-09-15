@@ -114,3 +114,17 @@ def test_enabled_mapping_without_completeness_declaration_is_not_forced(tmp_path
     dashboard = _dashboard("2018-01")
 
     assert validate_quantity_history(master, dashboard, tmp_path) == []
+
+
+def test_quantity_history_rejects_malformed_or_pre_meidb_start(tmp_path: Path):
+    dashboard = _dashboard("2018-01")
+
+    malformed = _commodity()
+    malformed["quantity_mapping"]["history_complete_from"] = "January 2018"
+    errors = validate_quantity_history({"commodities": [malformed]}, dashboard, tmp_path)
+    assert any("must be YYYY-MM" in error for error in errors)
+
+    too_early = _commodity()
+    too_early["quantity_mapping"]["history_complete_from"] = "2017-12"
+    errors = validate_quantity_history({"commodities": [too_early]}, dashboard, tmp_path)
+    assert any("cannot predate 2018-01" in error for error in errors)
