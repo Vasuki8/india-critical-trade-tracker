@@ -1,10 +1,7 @@
 name: Bootstrap Rare Earth quantity history
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/bootstrap-rare-earth-quantity.yml"
+  workflow_dispatch:
 
 permissions:
   contents: write
