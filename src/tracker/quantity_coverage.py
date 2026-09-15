@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
+
+PERIOD_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
 
 
 def _period_in_range(period: str, start: str | None, through: str | None) -> bool:
@@ -93,11 +96,19 @@ def validate_quantity_history(
         quantity, mapping = _quantity_mapping(item)
         if quantity is None or mapping is None:
             continue
-        start = quantity.get("history_complete_from")
-        if not isinstance(start, str):
+        if "history_complete_from" not in quantity:
             continue
 
+        start = quantity.get("history_complete_from")
         commodity_id = str(item.get("id") or "")
+        prefix = f"quantity history[{commodity_id}]"
+        if not isinstance(start, str) or not PERIOD_RE.fullmatch(start):
+            errors.append(f"{prefix}: history_complete_from must be YYYY-MM")
+            continue
+        if start < "2018-01":
+            errors.append(f"{prefix}: history_complete_from cannot predate 2018-01")
+            continue
+
         required_periods = [period for period in monthly_periods if period >= start]
         missing: list[str] = []
         invalid: list[str] = []
@@ -156,7 +167,6 @@ def validate_quantity_history(
             if reasons:
                 invalid.append(f"{period} ({'/'.join(sorted(set(reasons)))})")
 
-        prefix = f"quantity history[{commodity_id}]"
         if mapping_gaps:
             errors.append(
                 f"{prefix}: declared complete from {start} but has no active mapping for "
