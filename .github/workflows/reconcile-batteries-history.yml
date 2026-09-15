@@ -1,0 +1,97 @@
+name: Reconcile Batteries history onto current main
+
+on:
+  push:
+    branches:
+      - ops/reconcile-batteries-history
+    paths:
+      - ".github/workflows/reconcile-batteries-history.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tradestat-data-writer
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RECOVERY_COMMIT: 93df4fee50d2ff317ce1a0f3db5721f7dc1078b9
+      TARGET_BRANCH: data/batteries-quantity-history-reconciled
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync dependencies
+        run: uv sync --dev
+      - name: Copy only recovered Batteries observations
+        shell: bash
+        run: |
+          git fetch origin ops/recover-batteries-history-20260915
+          git checkout -B "$TARGET_BRANCH" origin/main
+          mapfile -t quantity_files < <(
+            git diff-tree --no-commit-id --name-only -r "$RECOVERY_COMMIT" \
+              | grep -E '^data/observations/[0-9]{4}-[0-9]{2}/batteries\.quantity\.json$'
+          )
+          if [[ "${#quantity_files[@]}" -ne 100 ]]; then
+            echo "Expected 100 recovered historical files, found ${#quantity_files[@]}" >&2
+            exit 1
+          fi
+          git checkout "$RECOVERY_COMMIT" -- "${quantity_files[@]}"
+          printf 'Copied %s recovered Batteries quantity files\n' "${#quantity_files[@]}"
+      - name: Mark Batteries history complete and verify transition
+        run: |
+          uv run python - <<'PY'
+          import json
+          from pathlib import Path
+
+          master_path = Path('data/commodities.json')
+          master = json.loads(master_path.read_text(encoding='utf-8'))
+          batteries = next(item for item in master['commodities'] if item['id'] == 'batteries')
+          batteries['quantity_mapping']['history_complete_from'] = '2018-01'
+          master_path.write_text(json.dumps(master, indent=2) + '\n', encoding='utf-8')
+
+          jan = json.loads(Path('data/observations/2022-01/batteries.quantity.json').read_text(encoding='utf-8'))
+          mar = json.loads(Path('data/observations/2022-03/batteries.quantity.json').read_text(encoding='utf-8'))
+          feb = Path('data/observations/2022-02/batteries.quantity.json')
+          assert '85074000' in jan['commodity']['hs_codes']
+          assert not feb.exists()
+          assert '85074000' not in mar['commodity']['hs_codes']
+          PY
+      - name: Rebuild generated data on current code
+        run: |
+          uv run python scripts/build_dashboard.py
+          uv run python scripts/build_revision_summary.py
+          uv run python scripts/build_intelligence.py
+      - name: Validate reconciled archive
+        run: |
+          uv run python scripts/validate_data.py
+          uv run pytest -q
+          node --check assets/js/app.js
+          node --check assets/js/intelligence.js
+          node --check assets/js/portfolio.js
+      - name: Commit reconciled Batteries history
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/commodities.json data/dashboard.json data/revision_summary.json data/observations/
+          if [[ -d data/intelligence ]]; then
+            git add data/intelligence/
+          fi
+          if [[ -d data/revisions ]]; then
+            git add data/revisions/
+          fi
+          if git diff --cached --quiet; then
+            echo "No tracked data change"
+            exit 0
+          fi
+          git commit -m "data: recover Batteries quantity history"
+          git push origin HEAD:"$TARGET_BRANCH"
