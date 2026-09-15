@@ -46,7 +46,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: tradestat-history-backfill
+  # Serialize every workflow that can commit TradeStat data. This keeps manual
+  # history repairs from racing source-watch or commodity bootstrap jobs.
+  group: tradestat-data-writer
   cancel-in-progress: false
 
 jobs:
