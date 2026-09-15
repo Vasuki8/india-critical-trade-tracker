@@ -1,0 +1,28 @@
+/* Scroll-performance overrides.
+   Avoid expensive backdrop filtering on dozens of cards and isolate repeated
+   commodity paints so Chromium can scroll the dashboard without repainting the
+   full page. */
+.card {
+  background: #101d30;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+}
+
+.commodity-card {
+  contain: paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 320px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+}
+
+.chart-panel,
+.table-wrap {
+  contain: paint;
+}
+
+@media (max-width: 720px) {
+  .card {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .1);
+  }
+}
