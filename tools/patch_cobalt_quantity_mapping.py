@@ -92,8 +92,10 @@ def test_cobalt_quantity_mapping_is_stable_across_archive_and_queryable():
 
     assert first_codes == EXPECTED_CODES
     assert latest_codes == EXPECTED_CODES
-    assert first_note is None
-    assert latest_note is None
+    assert first_note == latest_note
+    assert first_note is not None
+    assert "Exact ITC-HS8 lines" in first_note
+    assert "2018-2026" in first_note
 
     queryable, reason = is_queryable_commodity(
         cobalt,
