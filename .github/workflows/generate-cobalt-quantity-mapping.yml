@@ -1,0 +1,50 @@
+name: Generate Cobalt quantity mapping patch
+
+on:
+  push:
+    branches:
+      - ops/generate-cobalt-quantity-mapping
+    paths:
+      - ".github/workflows/generate-cobalt-quantity-mapping.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: feat/cobalt-hs8-quantity
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Sync dependencies
+        run: uv sync --dev
+      - name: Apply Cobalt mapping patch
+        run: uv run python tools/patch_cobalt_quantity_mapping.py
+      - name: Run focused tests
+        run: uv run pytest -q tests/test_cobalt_quantity_mapping.py tests/test_commodity_master.py tests/test_derived.py
+      - name: Run full validation
+        run: |
+          uv run python scripts/validate_data.py
+          uv run pytest -q
+          node --check assets/js/app.js
+          node --check assets/js/intelligence.js
+          node --check assets/js/portfolio.js
+      - name: Commit tested mapping to feature branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/commodities.json tests/test_commodity_master.py tests/test_cobalt_quantity_mapping.py
+          git add -u tools/patch_cobalt_quantity_mapping.py
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Enable exact Cobalt quantity mapping"
+          git push origin HEAD:feat/cobalt-hs8-quantity
