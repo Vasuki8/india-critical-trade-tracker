@@ -2,10 +2,6 @@ name: Bootstrap Batteries quantity history
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/bootstrap-batteries-quantity.yml"
 
 permissions:
   contents: write
