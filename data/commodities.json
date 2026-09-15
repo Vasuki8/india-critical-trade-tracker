@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "definition_date": "2026-09-14",
-  "notes": "User-facing critical commodity groups. Monetary HS mappings and physical-quantity mappings are versioned separately so a broad validated USD series can coexist with exact ITC-HS8 quantity lines. Solar PV and Crude Oil include explicit pre/post ITC(HS) 2022 eras; February 2022 transition months are intentionally not stitched automatically.",
+  "definition_date": "2026-09-15",
+  "notes": "User-facing critical commodity groups. Monetary HS mappings and physical-quantity mappings are versioned separately so a broad validated USD series can coexist with exact ITC-HS8 quantity lines. Solar PV, Crude Oil, and Batteries include explicit pre/post ITC(HS) 2022 eras; February 2022 transition months are intentionally not stitched automatically.",
   "commodities": [
     {
       "id":"crude_oil",
@@ -98,6 +98,37 @@
         }
       ]
     },
-    {"id":"batteries","name":"Electric Accumulators / Batteries","category":"Clean Energy","priority":"critical","hs_codes":["8507"],"mapping_status":"heading_validated","icon":"battery"}
+    {
+      "id":"batteries",
+      "name":"Electric Accumulators / Batteries",
+      "category":"Clean Energy",
+      "priority":"critical",
+      "hs_codes":["8507"],
+      "mapping_status":"heading_validated",
+      "icon":"battery",
+      "quantity_mapping":{
+        "enabled":true,
+        "mode":"separate",
+        "mapping_status":"hs8_validated",
+        "rollup_to_value_mapping":false,
+        "hs_codes":["85071000","85072000","85073000","85075000","85076000","85078000","85079010","85079090"],
+        "classification_transition_periods":["2022-02"],
+        "classification_eras":[
+          {
+            "from":"2018-01",
+            "through":"2022-01",
+            "hs_codes":["85071000","85072000","85073000","85074000","85075000","85076000","85078000","85079010","85079090"],
+            "note":"Pre-ITC(HS) 2022 heading 8507 included nickel-iron accumulators under 85074000. DGFT records confirm 85074000 existed before the 2022 revision."
+          },
+          {
+            "from":"2022-03",
+            "through":null,
+            "hs_codes":["85071000","85072000","85073000","85075000","85076000","85078000","85079010","85079090"],
+            "note":"ITC(HS) 2022 deleted 85074000 (nickel-iron). February 2022 is intentionally excluded because Notification 54/2015-2020 took immediate effect on 9 February 2022, creating a mid-month classification transition."
+          }
+        ],
+        "note":"Exact period-specific ITC-HS8 tariff items under heading 8507. Parent quantity rollup is deliberately disabled: official DGFT UQC schedules report accumulator lines in units while 85079010/85079090 parts are in kilograms, so summing the full heading would mix incompatible physical units."
+      }
+    }
   ]
 }
