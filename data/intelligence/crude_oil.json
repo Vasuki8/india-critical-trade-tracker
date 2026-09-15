@@ -16740,7 +16740,37 @@
         }
       ],
       "unit_values": {
-        "status": "not_available"
+        "status": "ok",
+        "aggregate": {
+          "import": {
+            "status": "ok",
+            "usd_million": 14765.56,
+            "raw_quantity_source_units": 18213983547.0,
+            "source_quantity_units": [
+              "KGS"
+            ],
+            "quantity": 18213983547.0,
+            "quantity_unit": "KGS",
+            "unit_value_usd_per_source_unit": 0.810672,
+            "rollup_method": "parent_value_child_hs8_quantity",
+            "value_hs_code": "2709",
+            "quantity_hs_codes": [
+              "27090010",
+              "27090090"
+            ]
+          },
+          "export": {
+            "status": "quantity_not_available",
+            "usd_million": 0.0,
+            "raw_quantity_source_units": 0.0,
+            "source_quantity_units": [],
+            "quantity": 0.0,
+            "quantity_unit": null,
+            "unit_value_usd_per_source_unit": null,
+            "rollup_method": "parent_value_child_hs8_quantity"
+          }
+        },
+        "hs_codes": {}
       },
       "status": "ok"
     }
