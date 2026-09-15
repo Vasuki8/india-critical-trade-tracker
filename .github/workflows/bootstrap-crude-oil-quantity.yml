@@ -1,10 +1,7 @@
 name: Bootstrap Crude Oil quantity history
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/bootstrap-crude-oil-quantity.yml"
+  workflow_dispatch:
 
 permissions:
   contents: write
