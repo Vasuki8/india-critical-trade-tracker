@@ -17,7 +17,10 @@ permissions:
   contents: write
 
 concurrency:
-  group: tradestat-source-watch
+  # Every workflow that can commit TradeStat observations/derived data must use
+  # this same group. Historical backfills and the live updater otherwise race on
+  # dashboard/intelligence files and can fail during the final rebase/push.
+  group: tradestat-data-writer
   cancel-in-progress: false
 
 jobs:
