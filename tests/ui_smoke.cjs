@@ -172,6 +172,10 @@ async function waitForServer() {
         }
       }
     });
+    await check('small nonzero trade values never disappear into rounded zero millions', async () => {
+      const values = await page.evaluate(() => [usdMillions(.04), usdMillions(-.04), usdMillions(0), usdMillions(null)]);
+      assert.deepEqual(values, ['$40K', '-$40K', '$0M', '—']);
+    });
     await check('portfolio chart keyboard and selected-range totals work together', async () => {
       await view('overview');
       await chartKeyboard('portfolio-history-chart');

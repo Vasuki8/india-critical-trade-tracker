@@ -7,7 +7,9 @@ function usdMillions(v) {
   const sign = v < 0 ? '-' : '';
   const n = Math.abs(v);
   if (n >= 1000) return `${sign}$${fmt.format(n / 1000)}B`;
-  return `${sign}$${fmt.format(n)}M`;
+  if (n >= 1 || n === 0) return `${sign}$${fmt.format(n)}M`;
+  if (n >= .001) return `${sign}$${fmt.format(n * 1000)}K`;
+  return `${sign}$${unitValueFmt.format(n * 1000000)}`;
 }
 
 function pct(v) {
