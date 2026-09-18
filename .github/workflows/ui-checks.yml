@@ -1,0 +1,52 @@
+name: Check tracker UI
+
+on:
+  push:
+    paths:
+      - index.html
+      - 'assets/**'
+      - data/commodities.json
+      - data/dashboard.json
+      - data/source_status.json
+      - 'data/intelligence/**'
+      - tests/ui_smoke.cjs
+      - .github/workflows/ui-checks.yml
+  pull_request:
+    paths:
+      - index.html
+      - 'assets/**'
+      - data/commodities.json
+      - data/dashboard.json
+      - data/source_status.json
+      - 'data/intelligence/**'
+      - tests/ui_smoke.cjs
+      - .github/workflows/ui-checks.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install browser test tools
+        run: |
+          npm install --no-save --no-package-lock playwright@1.62.1
+          npx playwright install chromium --with-deps
+      - name: Check interactions and responsive layout
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 > /tmp/tracker-ui-http.log 2>&1 &
+          tracker_server_pid=$!
+          trap 'kill "$tracker_server_pid"' EXIT
+          node tests/ui_smoke.cjs
+      - name: Save UI screenshots
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tracker-ui-screenshots
+          path: ui-artifacts/
+          if-no-files-found: warn
+          retention-days: 14
