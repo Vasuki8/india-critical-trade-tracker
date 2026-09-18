@@ -204,3 +204,4 @@ footer { display: flex; justify-content: space-between; gap: 15px; color: var(--
 /* Keep controls comfortable to use without triggering mobile browser zoom. */
 @media (max-width: 560px) { .search, select { font-size: 16px; min-height: 44px; } }
 @media (max-width: 360px) { .primary-nav a { flex: 1; min-width: 0; justify-content: center; text-align: center; } .primary-nav .icon { display: none; } }
+@media (max-width: 560px) { select { padding-right: 10px; } }

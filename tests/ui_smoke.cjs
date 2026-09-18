@@ -46,6 +46,15 @@ async function check(name, action) {
   console.log(`PASS ${name}`);
 }
 
+async function bounded(promise, message) {
+  let timer;
+  try {
+    return await Promise.race([promise, new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error(message)), 15000);
+    })]);
+  } finally { clearTimeout(timer); }
+}
+
 async function openCommodity(id, target = page) {
   await view('commodities', target);
   const button = target.locator(`.intelligence-button[data-commodity-id="${id}"]`);
@@ -194,6 +203,9 @@ async function waitForServer() {
       await expect(page.locator('#intel-unit-values')).toContainText(/mixed physical units/i);
       await expect(page.locator('#intel-unit-values')).toContainText('KGS');
       await expect(page.locator('#intel-unit-values')).toContainText('NOS');
+      await page.locator('#intel-month').selectOption('2018-01');
+      await expect(page.locator('#intel-unit-values')).toContainText('Validated quantity unavailable for this month.');
+      await expect(page.locator('#intel-unit-values')).not.toContainText(/mixed physical units/i);
       await page.locator('#intel-close').click();
     });
     await check('classification gaps remain missing rather than zero trade', async () => {
@@ -234,13 +246,13 @@ async function waitForServer() {
         delivered();
       });
       await racePage.locator('.intelligence-button[data-commodity-id="crude_oil"]').click();
-      await Promise.race([requestArrived, new Promise((_, reject) => setTimeout(() => reject(new Error('Intelligence request did not start')), 5000))]);
+      await bounded(requestArrived, 'Intelligence request did not start');
       await expect(racePage.locator('#intel-body')).toBeHidden();
       await racePage.locator('#intel-close').click();
       await expect(racePage.locator('#intelligence-section')).toBeHidden();
       await openCommodity('natural_gas_lng', racePage);
       release();
-      await Promise.race([requestDelivered, new Promise((_, reject) => setTimeout(() => reject(new Error('Delayed intelligence request did not settle')), 15000))]);
+      await bounded(requestDelivered, 'Delayed intelligence request did not settle');
       await expect(racePage.locator('#intel-title')).toHaveText('Natural Gas / LNG');
       await expect(racePage.locator('#intel-body')).toBeVisible();
       await racePage.unroute('**/data/intelligence/crude_oil.json');

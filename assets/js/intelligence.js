@@ -393,6 +393,31 @@ function countryRows(month) {
   })).sort((a, b) => (b.importValue ?? -1) - (a.importValue ?? -1) || (b.exportValue ?? -1) - (a.exportValue ?? -1));
 }
 
+function intelligenceQuantityContext(month, trade, commodityId, dashboard = window.trackerDashboard) {
+  const metric = month.unit_values?.aggregate?.[trade];
+  const availability = typeof quantityAvailability === 'function' ? quantityAvailability(metric) : null;
+  if (availability) return availability;
+  if (metric?.status === 'ok') return '';
+
+  // Compact v2 intelligence can omit unavailable-reason metadata. Recover only a
+  // reason from the matching dashboard snapshot, never a positive quantity or unit
+  // value. Both USD totals and the commodity/month must agree so source revisions
+  // or a newer dashboard cannot lend current quantity context to historical data.
+  if ((!metric || metric.status === 'not_available') && dashboard?.as_of === month.period && commodityId) {
+    const latest = dashboard.commodities?.find(row => row.id === commodityId);
+    const totalsMatch = latest && ['imports', 'exports'].every(key => {
+      const observed = finiteTradeValue(month[key]);
+      return observed !== null && observed === finiteTradeValue(latest[key]);
+    });
+    if (totalsMatch && (!latest.period || latest.period === month.period)) {
+      const sourceMetric = latest.unit_values?.aggregate?.[trade];
+      const reason = typeof quantityAvailability === 'function' ? quantityAvailability(sourceMetric) : null;
+      if (reason && sourceMetric?.status !== 'ok') return reason;
+    }
+  }
+  return 'Validated quantity unavailable for this month.';
+}
+
 function renderMonthDetail() {
   const data = intelligenceState.data;
   if (!data) return;
@@ -429,17 +454,15 @@ function renderMonthDetail() {
   `).join('') || '<div class="intel-empty">No supplier data for this month.</div>';
 
   const quantity = month.unit_values?.aggregate || {};
-  const quantityContext = metric => {
-    const knownReason = typeof quantityAvailability === 'function' ? quantityAvailability(metric) : null;
-    if (knownReason) return knownReason;
-    if (!metric || metric.status !== 'ok') return 'Validated quantity unavailable for this month.';
-    return '';
+  const quantityTrade = (label, trade) => {
+    const metric = quantity[trade];
+    const context = intelligenceQuantityContext(month, trade, data.commodity?.id || intelligenceState.commodityId);
+    return `
+      <div><span>${label} quantity</span><strong>${esc(physicalQuantity(metric))}</strong>${context ? `<small class="table-subtext">${esc(context)}</small>` : ''}</div>
+      <div><span>Implied ${label.toLowerCase()} unit value</span><strong>${esc(impliedUnitValue(metric))}</strong><small class="table-subtext">${metric?.status === 'ok' ? 'Trade value divided by physical quantity.' : 'Requires compatible, validated quantities.'}</small></div>
+    `;
   };
-  const quantityTrade = (label, metric) => `
-    <div><span>${label} quantity</span><strong>${esc(physicalQuantity(metric))}</strong>${quantityContext(metric) ? `<small class="table-subtext">${esc(quantityContext(metric))}</small>` : ''}</div>
-    <div><span>Implied ${label.toLowerCase()} unit value</span><strong>${esc(impliedUnitValue(metric))}</strong><small class="table-subtext">${metric?.status === 'ok' ? 'Trade value divided by physical quantity.' : 'Requires compatible, validated quantities.'}</small></div>
-  `;
-  document.querySelector('#intel-unit-values').innerHTML = quantityTrade('Import', quantity.import) + quantityTrade('Export', quantity.export);
+  document.querySelector('#intel-unit-values').innerHTML = quantityTrade('Import', 'import') + quantityTrade('Export', 'export');
 }
 
 function renderCountryHistory() {

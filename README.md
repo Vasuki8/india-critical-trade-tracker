@@ -4,7 +4,7 @@ A live tracker for India's strategically important commodity imports and exports
 
 ## Current build
 
-The tracker covers **23 critical commodity groups** and carries official monthly USD data through **June 2026**. The baseline USD archive spans the TradeStat monthly lower bound of **January 2018 through June 2026**: **102 calendar months** and **2,345 commodity-month history rows**.
+The tracker covers **23 critical commodity groups** and carries official monthly USD data through **July 2026**. The baseline USD archive spans the TradeStat monthly lower bound of **January 2018 through July 2026**: **103 calendar months** and **2,368 commodity-month history rows**.
 
 The site has two complementary analytical layers:
 
@@ -280,6 +280,16 @@ uv run python -m http.server 8000
 ```
 
 Then open `http://localhost:8000`.
+
+For browser interaction checks (with that server running):
+
+```powershell
+npm install --no-save --no-package-lock playwright@1.62.1
+npx playwright install chromium
+node tests/ui_smoke.cjs
+```
+
+The separate `Check tracker UI` workflow runs these checks on changes to the frontend or displayed data and saves desktop/mobile screenshots as a workflow artifact. It covers navigation, filters, chart keyboard/touch behavior, range totals, loading races, coverage gaps, and mobile overflow.
 
 ## Ingest official data
 
