@@ -124,7 +124,7 @@ async function waitForServer() {
     await check('fast data still loads when the shared intelligence script arrives late', async () => {
       const delayedPage = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
       monitor(delayedPage);
-      await delayedPage.route('**/assets/js/intelligence.js', async route => {
+      await delayedPage.route('**/assets/js/intelligence.js*', async route => {
         await new Promise(resolve => setTimeout(resolve, 500));
         await route.continue();
       });
