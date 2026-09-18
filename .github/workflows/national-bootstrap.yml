@@ -8,9 +8,23 @@ on:
       - src/tracker/national.py
       - scripts/ingest_national.py
   workflow_dispatch:
+    inputs:
+      start_period:
+        description: First month (YYYY-MM, January 2018 or later)
+        default: '2018-01'
+        required: true
+        type: string
+      end_period:
+        description: Last month (YYYY-MM; blank uses the monitored latest month)
+        required: false
+        type: string
+      force:
+        description: Refresh existing months and archive semantic revisions
+        default: false
+        type: boolean
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: tradestat-data-writer
@@ -22,42 +36,52 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
       - run: uv sync --dev
-      - name: Inspect official national report samples
+      - name: Check national ingestion syntax
+        run: uv run python -m compileall -q src/tracker/national.py scripts/ingest_national.py
+      - name: Fetch complete national merchandise months
+        env:
+          NATIONAL_START: ${{ inputs.start_period || '2018-01' }}
+          NATIONAL_END: ${{ inputs.end_period }}
+          NATIONAL_FORCE: ${{ inputs.force || 'false' }}
         run: |
           uv run python - <<'PY'
-          from pathlib import Path
-          from bs4 import BeautifulSoup
-          from src.tracker.tradestat import TradeStatClient, parse_csrf_token
-          import json
-          out = Path('national-probe')
-          out.mkdir(exist_ok=True)
-          client = TradeStatClient(timeout=45)
-          for period in ['2026-07', '2018-01']:
-              year, month = map(int, period.split('-'))
-              for report in ['commoditywise', 'country_wise']:
-                  for direction in ['import', 'export']:
-                      path = f'/meidb/{report}_{direction}'
-                      landing = client._request('GET', client.base_url + path)
-                      prefix = ('imdd' if direction == 'import' else 'dd') if report == 'commoditywise' else ('cwim' if direction == 'import' else 'cwe')
-                      payload = {'_token': parse_csrf_token(landing.text), prefix+'Month': str(month), prefix+'Year': str(year), prefix+'ReportVal': '1', prefix+'ReportYear': '2'}
-                      if report == 'commoditywise':
-                          payload.update({'comlev': 'all', 'comval': '', prefix+'CommodityLevel': '2'})
-                      else:
-                          payload[prefix+'Country'] = 'all'
-                      response = client._request('POST', client.base_url + path, data=payload)
-                      soup = BeautifulSoup(response.text, 'html.parser')
-                      for node in soup.select('input[name="_token"]'):
-                          node['value'] = '[redacted]'
-                      (out / f'{period}_{report}_{direction}.html').write_text(str(soup), encoding='utf-8')
-                      table = soup.find('table', id='example1')
-                      rows = [[c.get_text(' ',strip=True) for c in r.find_all(['th','td'])] for r in table.find_all('tr')] if table else []
-                      print(period, path, json.dumps({'row_count':len(rows), 'first':rows[:3], 'last':rows[-3:]}), flush=True)
+          import os, subprocess, sys
+          from scripts.ingest_tradestat import latest_period_from_status
+          from src.tracker.national import period_parts
+          start = os.environ['NATIONAL_START']
+          end = os.environ.get('NATIONAL_END') or latest_period_from_status()
+          period_parts(start)
+          period_parts(end)
+          args = [sys.executable, 'scripts/ingest_national.py', '--start-period', start, '--end-period', end]
+          if os.environ.get('NATIONAL_FORCE') == 'true':
+              args.append('--force')
+          subprocess.run(args, check=True)
           PY
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        if: always()
+      - name: Validate complete reports and generated snapshots
+        run: uv run python scripts/validate_data.py
+      - name: Commit validated national data
+        env:
+          NATIONAL_TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/national/
+          if git diff --cached --quiet; then
+            echo 'No national data changes'
+            exit 0
+          fi
+          git commit -m 'data: build national merchandise trade archive'
+          git pull --rebase origin "$NATIONAL_TARGET_BRANCH"
+          git push origin "HEAD:$NATIONAL_TARGET_BRANCH"
+      - name: Preserve fetched data for recovery
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: national-probe
-          path: national-probe/
-          retention-days: 3
+          name: national-bootstrap-recovery
+          path: data/national/
+          if-no-files-found: ignore
+          retention-days: 7
