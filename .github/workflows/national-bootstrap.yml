@@ -24,29 +24,36 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
       - run: uv sync --dev
-      - name: Inspect official national report forms
+      - name: Inspect official national report samples
         run: |
           uv run python - <<'PY'
           from pathlib import Path
           from bs4 import BeautifulSoup
-          from src.tracker.tradestat import TradeStatClient
+          from src.tracker.tradestat import TradeStatClient, parse_csrf_token
           import json
           out = Path('national-probe')
           out.mkdir(exist_ok=True)
           client = TradeStatClient(timeout=45)
-          for report in ['commoditywise', 'country_wise']:
-              for direction in ['import', 'export']:
-                  path = f'/meidb/{report}_{direction}'
-                  response = client._request('GET', client.base_url + path)
-                  soup = BeautifulSoup(response.text, 'html.parser')
-                  for node in soup.select('input[name="_token"]'):
-                      node['value'] = '[redacted]'
-                  (out / f'{report}_{direction}.html').write_text(str(soup), encoding='utf-8')
-                  print(path, json.dumps([{
-                      'tag': node.name, 'name': node.get('name'), 'id': node.get('id'),
-                      'type': node.get('type'), 'value': node.get('value'),
-                      'options': [(o.get('value'), o.get_text(' ', strip=True)) for o in node.find_all('option')]
-                  } for node in soup.select('form input, form select')]))
+          for period in ['2026-07', '2018-01']:
+              year, month = map(int, period.split('-'))
+              for report in ['commoditywise', 'country_wise']:
+                  for direction in ['import', 'export']:
+                      path = f'/meidb/{report}_{direction}'
+                      landing = client._request('GET', client.base_url + path)
+                      prefix = ('imdd' if direction == 'import' else 'dd') if report == 'commoditywise' else ('cwim' if direction == 'import' else 'cwe')
+                      payload = {'_token': parse_csrf_token(landing.text), prefix+'Month': str(month), prefix+'Year': str(year), prefix+'ReportVal': '1', prefix+'ReportYear': '2'}
+                      if report == 'commoditywise':
+                          payload.update({'comlev': 'all', 'comval': '', prefix+'CommodityLevel': '2'})
+                      else:
+                          payload[prefix+'Country'] = 'all'
+                      response = client._request('POST', client.base_url + path, data=payload)
+                      soup = BeautifulSoup(response.text, 'html.parser')
+                      for node in soup.select('input[name="_token"]'):
+                          node['value'] = '[redacted]'
+                      (out / f'{period}_{report}_{direction}.html').write_text(str(soup), encoding='utf-8')
+                      table = soup.find('table', id='example1')
+                      rows = [[c.get_text(' ',strip=True) for c in r.find_all(['th','td'])] for r in table.find_all('tr')] if table else []
+                      print(period, path, json.dumps({'row_count':len(rows), 'first':rows[:3], 'last':rows[-3:]}), flush=True)
           PY
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
