@@ -1,0 +1,56 @@
+name: Bootstrap national trade data
+
+on:
+  push:
+    branches: [feat/general-trade-dashboard]
+    paths:
+      - .github/workflows/national-bootstrap.yml
+      - src/tracker/national.py
+      - scripts/ingest_national.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tradestat-data-writer
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - run: uv sync --dev
+      - name: Inspect official national report forms
+        run: |
+          uv run python - <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          from src.tracker.tradestat import TradeStatClient
+          import json
+          out = Path('national-probe')
+          out.mkdir(exist_ok=True)
+          client = TradeStatClient(timeout=45)
+          for report in ['commoditywise', 'country_wise']:
+              for direction in ['import', 'export']:
+                  path = f'/meidb/{report}_{direction}'
+                  response = client._request('GET', client.base_url + path)
+                  soup = BeautifulSoup(response.text, 'html.parser')
+                  for node in soup.select('input[name="_token"]'):
+                      node['value'] = '[redacted]'
+                  (out / f'{report}_{direction}.html').write_text(str(soup), encoding='utf-8')
+                  print(path, json.dumps([{
+                      'tag': node.name, 'name': node.get('name'), 'id': node.get('id'),
+                      'type': node.get('type'), 'value': node.get('value'),
+                      'options': [(o.get('value'), o.get_text(' ', strip=True)) for o in node.find_all('option')]
+                  } for node in soup.select('form input, form select')]))
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: national-probe
+          path: national-probe/
+          retention-days: 3
