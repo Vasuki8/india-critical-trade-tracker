@@ -3,152 +3,101 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="India Critical Commodity Import-Export Tracker" />
-  <title>India Critical Trade Tracker</title>
+  <meta name="description" content="Explore India's critical commodity imports, exports and supplier concentration with official TradeStat data." />
+  <meta name="theme-color" content="#f5f7f8" />
+  <title>India Trade · Critical commodity intelligence</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="assets/css/styles.css" />
   <link rel="stylesheet" href="assets/css/intelligence.css" />
   <link rel="stylesheet" href="assets/css/performance.css" />
 </head>
 <body>
-  <main class="shell">
-    <header class="topbar">
-      <div>
-        <div class="kicker">India Trade Intelligence</div>
-        <h1>Critical Commodity Import–Export Tracker</h1>
-        <p class="subtitle">Official-source monitoring of India's strategic import dependence, exports, trade balance and supply-chain concentration.</p>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="icon-box" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 5v9l9 5 9-5V8M12 13v9M7.5 5.5l9 5"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M12 3 3.5 6v6c0 5 8.5 9 8.5 9s8.5-4 8.5-9V6L12 3Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="icon-arrow-down" viewBox="0 0 24 24"><path d="M7 4v13m-4-4 4 4 4-4M17 20V7m-4 4 4-4 4 4"/></symbol>
+    <symbol id="icon-import" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 15v5h16v-5"/></symbol>
+    <symbol id="icon-export" viewBox="0 0 24 24"><path d="M12 15V3m-5 5 5-5 5 5M4 15v5h16v-5"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="icon-back" viewBox="0 0 24 24"><path d="M20 12H4m6-6-6 6 6 6"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h3m3 0h2"/></symbol>
+    <symbol id="icon-external" viewBox="0 0 24 24"><path d="M14 3h7v7m0-7L10 14m-1-9H3v16h16v-6"/></symbol>
+    <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m8 5 7 7-7 7"/></symbol>
+  </svg>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <aside class="sidebar" aria-label="Workspace">
+    <a class="brand" href="#overview" aria-label="India Trade overview"><span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#icon-arrow-down"/></svg></span><span><strong>India Trade<span class="brand-dot">.</span></strong><small>Critical commodity intelligence</small></span></a>
+    <div class="nav-label">Workspace</div>
+    <nav class="primary-nav" aria-label="Main navigation">
+      <a href="#overview" data-view="overview" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#icon-grid"/></svg><span>Overview</span></a>
+      <a href="#commodities" data-view="commodities"><svg class="icon" aria-hidden="true"><use href="#icon-box"/></svg><span>Commodities</span><span id="nav-count" class="nav-count">—</span></a>
+      <a href="#sources" data-view="sources"><svg class="icon" aria-hidden="true"><use href="#icon-shield"/></svg><span>Data & methodology</span></a>
+    </nav>
+    <div class="sidebar-bottom"><div class="sidebar-source"><svg class="icon" aria-hidden="true"><use href="#icon-shield"/></svg><strong>Built on official data</strong><p>Department of Commerce<br>TradeStat · DGCI&S</p></div><a class="external-source" href="https://tradestat.commerce.gov.in/meidb/commoditywise_import" target="_blank" rel="noopener noreferrer">Visit TradeStat <svg class="icon" aria-hidden="true"><use href="#icon-external"/></svg></a></div>
+  </aside>
+  <div class="app-shell">
+    <header class="utility-bar"><div class="breadcrumb"><span>Workspace</span><svg class="icon" aria-hidden="true"><use href="#icon-chevron"/></svg><strong id="view-label">Overview</strong></div><div class="status-pill"><svg class="icon" aria-hidden="true"><use href="#icon-calendar"/></svg><span>Data through <strong id="as-of">Loading…</strong></span></div></header>
+    <main id="main-content" class="shell" tabindex="-1">
+      <div id="fatal" class="warning error-banner" role="alert" hidden></div>
+      <noscript><div class="warning">Enable JavaScript to explore the tracker. You can also <a href="data/dashboard.json">download the official-source dashboard data</a>.</div></noscript>
+      <div id="overview-view" class="view" data-page="overview">
+        <header class="page-heading"><div><div class="eyebrow">India / Critical commodities</div><h1>Trade overview</h1><p>A clear view of India's strategic imports, exports, and supply dependence.</p></div><a class="primary-button" href="#commodities">Explore commodities <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a></header>
+        <div class="section-context"><span class="context-dot"></span><span>Latest monthly snapshot · <strong id="snapshot-period">Loading…</strong></span><span class="context-unit">Values in USD</span></div>
+        <section class="grid summary-grid" aria-label="Latest monthly trade summary">
+          <article class="card summary-card import-card"><div class="metric-heading"><div class="metric-label">Portfolio imports</div><span class="metric-icon"><svg class="icon" aria-hidden="true"><use href="#icon-import"/></svg></span></div><div id="imports" class="metric-value">—</div><div id="imports-foot" class="metric-foot">Loading monthly trade…</div></article>
+          <article class="card summary-card export-card"><div class="metric-heading"><div class="metric-label">Portfolio exports</div><span class="metric-icon"><svg class="icon" aria-hidden="true"><use href="#icon-export"/></svg></span></div><div id="exports" class="metric-value">—</div><div id="exports-foot" class="metric-foot">Loading monthly trade…</div></article>
+          <article class="card summary-card balance-card"><div class="metric-heading"><div class="metric-label">Trade balance</div><span class="metric-icon"><svg class="icon" aria-hidden="true"><use href="#icon-arrow-down"/></svg></span></div><div id="balance" class="metric-value">—</div><div id="balance-foot" class="metric-foot">Exports minus imports</div></article>
+          <article class="card summary-card coverage-card"><div class="metric-heading"><div class="metric-label">Commodity groups</div><span class="metric-icon"><svg class="icon" aria-hidden="true"><use href="#icon-box"/></svg></span></div><div id="commodity-count" class="metric-value">—</div><div id="coverage-foot" class="metric-foot">Tracked strategic watchlist</div></article>
+        </section>
+        <p class="scope-note"><svg class="icon" aria-hidden="true"><use href="#icon-info"/></svg>Selected critical commodities, not total Indian trade. Portfolio totals adjust for overlapping HS codes.</p>
+        <section class="card portfolio-history-card" aria-labelledby="portfolio-title">
+          <div class="intel-section-heading first-heading"><div><div class="eyebrow">The longer view</div><h2 id="portfolio-title">Portfolio trade history</h2><p>Imports and exports across the watched commodity universe.</p></div><label class="select-field"><span>Time range</span><select id="portfolio-range" aria-label="Portfolio historical chart range"><option value="12">Last 12 months</option><option value="36">Last 3 years</option><option value="60">Last 5 years</option><option value="all" selected>All history</option></select></label></div>
+          <div id="portfolio-history-kpis" class="intel-kpi-grid"></div>
+          <div id="portfolio-history-chart" class="chart-panel portfolio-chart"><div class="intel-empty">Loading historical trade data…</div></div>
+          <details class="annual-disclosure"><summary><span><strong>Annual breakdown</strong><small>Totals and coverage for the selected range</small></span><svg class="icon" aria-hidden="true"><use href="#icon-chevron"/></svg></summary><div class="table-wrap portfolio-annual-wrap" tabindex="0" role="region" aria-label="Portfolio annual trade table"><table class="intel-table"><caption class="sr-only">Annual portfolio trade in USD, for the selected historical range</caption><thead><tr><th scope="col">Year</th><th scope="col">Months</th><th scope="col">Imports</th><th scope="col">Exports</th><th scope="col">Balance</th><th scope="col">Coverage</th></tr></thead><tbody id="portfolio-annual-table-body"></tbody></table></div></details>
+        </section>
+        <section class="overview-bottom" aria-label="Explore and understand the data"><article class="explore-callout"><div class="callout-icon"><svg class="icon" aria-hidden="true"><use href="#icon-box"/></svg></div><div><h2>Go beyond the headline</h2><p>Explore monthly trade, global partners, and dependency for each commodity.</p><a href="#commodities">Open commodity explorer <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a></div></article><article class="card data-note"><span class="eyebrow">Know your data</span><h2>Context matters.</h2><p>Coverage gaps, HS classification changes, and physical units are shown alongside the data.</p><a href="#sources">Read the methodology <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a></article></section>
       </div>
-      <div class="status-pill">Data as of: <strong id="as-of">Loading…</strong></div>
-    </header>
-
-    <div id="fatal" class="warning" hidden></div>
-
-    <section class="grid summary-grid">
-      <article class="card"><div class="metric-label">Critical commodity groups</div><div id="commodity-count" class="metric-value">—</div><div class="metric-foot">Tracked strategic watchlist</div></article>
-      <article class="card"><div class="metric-label">Critical portfolio imports</div><div id="imports" class="metric-value">—</div><div id="imports-foot" class="metric-foot">Selected watched HS universe · not total India trade</div></article>
-      <article class="card"><div class="metric-label">Critical portfolio exports</div><div id="exports" class="metric-value">—</div><div id="exports-foot" class="metric-foot">Selected watched HS universe · overlap-adjusted</div></article>
-      <article class="card"><div class="metric-label">Critical portfolio balance</div><div id="balance" class="metric-value">—</div><div id="balance-foot" class="metric-foot">Exports minus imports for the watched HS universe</div></article>
-    </section>
-
-    <section class="card portfolio-history-card">
-      <div class="intel-section-heading" style="margin-top:0">
-        <div><h2>Consolidated Portfolio History</h2><p>Monthly and annual view of the complete watched commodity universe, with incomplete-classification months called out explicitly.</p></div>
-        <select id="portfolio-range" aria-label="Portfolio historical chart range">
-          <option value="12">Last 12 months</option>
-          <option value="36">Last 3 years</option>
-          <option value="60">Last 5 years</option>
-          <option value="all" selected>All history</option>
-        </select>
-      </div>
-      <div id="portfolio-history-kpis" class="intel-kpi-grid"></div>
-      <div id="portfolio-history-chart" class="chart-panel portfolio-chart"></div>
-      <div class="table-wrap portfolio-annual-wrap">
-        <table class="intel-table">
-          <thead><tr><th>Year</th><th>Months</th><th>Imports</th><th>Exports</th><th>Balance</th><th>Coverage</th></tr></thead>
-          <tbody id="portfolio-annual-table-body"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="section-title" style="margin-top:0">
-        <div><h2>Commodity Master</h2><p>Filter by name, HS code or strategic category, then open a commodity for country-level historical intelligence.</p></div>
-        <div><span id="visible-count">—</span> shown</div>
-      </div>
-      <div class="toolbar">
-        <input id="search" class="search" placeholder="Search crude oil, 2709, lithium…" />
-        <select id="category"><option>Loading…</option></select>
-      </div>
-      <div id="commodity-grid" class="grid commodity-grid"></div>
-    </section>
-
-    <section id="intelligence-section" class="card intelligence-workspace" hidden>
-      <div class="intel-header">
-        <div>
-          <div class="kicker">Commodity intelligence</div>
-          <h2 id="intel-title">Commodity</h2>
-          <p id="intel-subtitle">Historical intelligence</p>
-        </div>
-        <button id="intel-close" class="ghost-button" type="button">Close</button>
-      </div>
-
-      <div id="intel-body" hidden>
-        <div id="intel-gaps" class="warning intel-gap" hidden></div>
-
-        <div id="intel-overall-kpis" class="intel-kpi-grid"></div>
-
-        <div class="intel-section-heading">
-          <div><h3>Overall trade trajectory</h3><p>Month-by-month imports and exports across the available historical series.</p></div>
-          <select id="intel-range" aria-label="Historical chart range">
-            <option value="12">Last 12 months</option>
-            <option value="36">Last 3 years</option>
-            <option value="60">Last 5 years</option>
-            <option value="all" selected>All history</option>
-          </select>
-        </div>
-        <div id="intel-trade-chart" class="chart-panel"></div>
-
-        <div class="intel-section-heading"><div><h3>Consolidated picture</h3><p>Long-run dependency, concentration and peak-trade signals.</p></div></div>
-        <div id="intel-insights" class="insight-grid"></div>
-
-        <div class="intel-section-heading">
-          <div><h3>Country-wise monthly trade</h3><p>Select any month to see imports and exports for every reported partner country.</p></div>
-          <select id="intel-month" aria-label="Month"></select>
-        </div>
-        <div id="intel-month-summary" class="month-summary"></div>
-        <div class="intel-two-column">
-          <div class="chart-panel">
-            <h4>Top import suppliers</h4>
-            <div id="intel-supplier-bars" class="country-bars"></div>
+      <div id="commodities-view" class="view" data-page="commodities" hidden>
+        <header class="page-heading"><div><div class="eyebrow">Explore the watchlist</div><h1>Commodity explorer</h1><p>From the big picture to the countries and commodities behind it.</p></div><span class="quiet-badge">Monthly · USD</span></header>
+        <section id="intelligence-section" class="card intelligence-workspace" aria-labelledby="intel-title" hidden>
+          <div class="intel-header"><div><div class="eyebrow">Commodity intelligence</div><h2 id="intel-title" tabindex="-1">Commodity</h2><p id="intel-subtitle">Historical intelligence</p></div><button id="intel-close" class="ghost-button" type="button"><svg class="icon" aria-hidden="true"><use href="#icon-back"/></svg>Back to commodities</button></div>
+          <div id="intel-status" role="status" aria-live="polite" hidden></div>
+          <div id="intel-body" hidden>
+            <div id="intel-gaps" class="warning intel-gap" hidden></div>
+            <div id="intel-overall-kpis" class="intel-kpi-grid"></div>
+            <div class="intel-section-heading"><div><h3>Trade trajectory</h3><p>Monthly imports and exports across the available historical series.</p></div><label class="select-field"><span>Time range</span><select id="intel-range" aria-label="Commodity historical chart range"><option value="12">Last 12 months</option><option value="36">Last 3 years</option><option value="60">Last 5 years</option><option value="all" selected>All history</option></select></label></div>
+            <div id="intel-trade-chart" class="chart-panel"></div>
+            <div class="intel-section-heading"><div><h3>At a glance</h3><p>Whole-history peaks and the latest supplier concentration.</p></div></div><div id="intel-insights" class="insight-grid"></div>
+            <div class="intel-section-heading"><div><h3>Country-wise monthly trade</h3><p>Imports and exports for every reported partner country.</p></div><label class="select-field"><span>Reporting month</span><select id="intel-month" aria-label="Reporting month"></select></label></div>
+            <div id="intel-month-summary" class="month-summary"></div>
+            <div class="intel-two-column"><div class="chart-panel"><h4>Top import suppliers</h4><div id="intel-supplier-bars" class="country-bars"></div></div><div class="chart-panel"><h4>Quantity & implied unit value</h4><div id="intel-unit-values" class="unit-value-grid"></div></div></div>
+            <div class="table-wrap partner-table-wrap" tabindex="0" role="region" aria-label="Monthly trade by country"><table class="intel-table"><caption class="sr-only">Imports and exports by partner country for the selected month</caption><thead><tr><th scope="col">Country</th><th scope="col">Imports</th><th scope="col">Import share</th><th scope="col">Exports</th><th scope="col">Export share</th></tr></thead><tbody id="intel-country-table-body"></tbody></table></div>
+            <div class="intel-section-heading"><div><h3>Country historical trend</h3><p>Follow a supplier or destination across every observed month.</p></div><label class="select-field"><span>Trade partner</span><select id="intel-country" aria-label="Country"></select></label></div><div id="intel-country-chart" class="chart-panel"></div>
+            <div class="intel-section-heading"><div><h3>Annual consolidated view</h3><p>Observed annual totals, trade balance, and supplier concentration. A year with fewer than 12 months is incomplete.</p></div></div>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Annual commodity trade"><table class="intel-table"><caption class="sr-only">Whole-history annual commodity trade and supplier concentration</caption><thead><tr><th scope="col">Year</th><th scope="col">Months</th><th scope="col">Imports</th><th scope="col">Exports</th><th scope="col">Balance</th><th scope="col">Top supplier</th><th scope="col">Share</th><th scope="col">HHI</th></tr></thead><tbody id="intel-annual-table-body"></tbody></table></div>
           </div>
-          <div class="chart-panel">
-            <h4>Quantity & implied unit value</h4>
-            <div id="intel-unit-values" class="unit-value-grid"></div>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table class="intel-table">
-            <thead><tr><th>Country</th><th>Imports</th><th>Import share</th><th>Exports</th><th>Export share</th></tr></thead>
-            <tbody id="intel-country-table-body"></tbody>
-          </table>
-        </div>
-
-        <div class="intel-section-heading">
-          <div><h3>Country historical trend</h3><p>Track one supplier/destination across every observed month.</p></div>
-          <select id="intel-country" aria-label="Country"></select>
-        </div>
-        <div id="intel-country-chart" class="chart-panel"></div>
-
-        <div class="intel-section-heading"><div><h3>Annual consolidated view</h3><p>Full-year totals, trade balance and supplier concentration for the overall commodity picture.</p></div></div>
-        <div class="table-wrap">
-          <table class="intel-table">
-            <thead><tr><th>Year</th><th>Months</th><th>Imports</th><th>Exports</th><th>Balance</th><th>Top supplier</th><th>Share</th><th>HHI</th></tr></thead>
-            <tbody id="intel-annual-table-body"></tbody>
-          </table>
+        </section>
+        <div id="commodity-browser">
+          <section class="card filter-panel" aria-label="Commodity filters"><div class="toolbar"><label class="search-field"><span class="control-label">Search commodities</span><span class="input-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg><input id="search" class="search" type="search" placeholder="Name, HS code, or category…" autocomplete="off" /></span></label><label class="select-field"><span>Category</span><select id="category"><option value="">All categories</option></select></label><label class="select-field"><span>Dependency</span><select id="risk-filter"><option value="">All levels</option><option value="high">High</option><option value="moderate">Moderate</option><option value="low">Low</option></select></label><label class="select-field"><span>Sort by</span><select id="sort"><option value="imports">Highest imports</option><option value="exports">Highest exports</option><option value="dependency">Highest dependency</option><option value="name">Name A–Z</option></select></label></div></section>
+          <div class="results-heading"><span id="visible-count" role="status" aria-live="polite">Loading commodities…</span><button id="reset-filters" class="text-button" type="button" hidden>Reset filters</button></div>
+          <div id="commodity-grid" class="grid commodity-grid" aria-busy="true"><div class="card skeleton-card" aria-hidden="true"></div><div class="card skeleton-card" aria-hidden="true"></div><div class="card skeleton-card" aria-hidden="true"></div></div>
         </div>
       </div>
-    </section>
-
-    <section class="grid source-grid">
-      <article class="card">
-        <div class="section-title" style="margin-top:0"><div><h2>Official Source Status</h2><p>Department of Commerce TradeStat / DGCI&S.</p></div></div>
-        <div class="source-list">
-          <div>Data available</div><div id="source-data-available">—</div>
-          <div>Last source update</div><div id="source-updated">—</div>
-          <div>Final through</div><div id="source-final">—</div>
-          <div>Revised-final through</div><div id="source-revised">—</div>
-          <div>Source monitor</div><div id="source-check">—</div>
-        </div>
-      </article>
-      <article class="card">
-        <div class="section-title" style="margin-top:0"><div><h2>Classification Guardrail</h2><p>Prevents false historical comparisons.</p></div></div>
-        <div id="source-warning" class="warning">Loading…</div>
-      </article>
-    </section>
-
-    <footer>Live official TradeStat snapshot · Automated source monitoring · Observation-level provenance preserved in repository data</footer>
-  </main>
-  <script src="assets/js/app.js"></script>
-  <script src="assets/js/intelligence.js"></script>
-  <script src="assets/js/portfolio.js"></script>
+      <div id="sources-view" class="view" data-page="sources" hidden>
+        <header class="page-heading"><div><div class="eyebrow">Transparent by design</div><h1>Data & methodology</h1><p>Understand where the numbers come from and what they can tell you.</p></div><a class="ghost-button" href="https://tradestat.commerce.gov.in/meidb/commoditywise_import" target="_blank" rel="noopener noreferrer">Official source <svg class="icon" aria-hidden="true"><use href="#icon-external"/></svg></a></header>
+        <section class="grid source-grid"><article class="card"><div class="section-title first-heading"><div><h2>Official source status</h2><p>Department of Commerce TradeStat / DGCI&S.</p></div><span id="source-check" class="coverage-badge">Loading…</span></div><dl class="source-list"><div><dt>Data available</dt><dd id="source-data-available">—</dd></div><div><dt>Last source update</dt><dd id="source-updated">—</dd></div><div><dt>Final through</dt><dd id="source-final">—</dd></div><div><dt>Revised-final through</dt><dd id="source-revised">—</dd></div><div><dt>Last monitor check</dt><dd id="source-checked-at">—</dd></div></dl></article><article class="card"><div class="section-title first-heading"><div><h2>Classification guardrail</h2><p>Understand changes before comparing periods.</p></div></div><div id="source-warning" class="warning">Loading source notices…</div><p class="source-explanation">Changes to HS codes or units can affect comparisons. Classification-transition gaps stay visible in the historical series.</p></article></section>
+        <section class="methodology-grid" aria-label="How to read the tracker"><article class="card methodology-card"><span class="method-number">01</span><h2>The watched universe</h2><p>This tracker follows strategically important commodity groups. It does not represent all of India's trade. Overlapping HS headings are counted once in portfolio totals, so adding individual commodity cards can produce a different total.</p></article><article class="card methodology-card"><span class="method-number">02</span><h2>Values & time periods</h2><p>Trade values are shown in US dollars: M means million and B means billion. Balance is exports minus imports. YoY compares the same month a year earlier; YTD starts in January. Partial years are labeled in the annual tables.</p></article><article class="card methodology-card"><span class="method-number">03</span><h2>Dependency, explained</h2><p>The dependency score combines net-import reliance (60%), top supplier share (25%), and supplier concentration, measured by HHI (15%). It is a transparent ranking signal for this watchlist, not an official risk assessment.</p></article><article class="card methodology-card"><span class="method-number">04</span><h2>Quantities with context</h2><p>Physical quantities appear only for validated HS8 mappings. Compatible mass units can be normalized; incompatible units are kept separate. Implied unit values are calculated from trade value and quantity and are not market price quotes.</p></article></section>
+        <div class="provenance-note"><svg class="icon" aria-hidden="true"><use href="#icon-shield"/></svg><div><strong>Traceable to the observation</strong><p>Source references, reporting periods, HS mappings, retrieval timestamps, and revisions are preserved with the data.</p></div><a href="https://github.com/Vasuki8/india-critical-trade-tracker/tree/main/data" target="_blank" rel="noopener noreferrer">View source data <svg class="icon" aria-hidden="true"><use href="#icon-external"/></svg></a></div>
+      </div>
+      <footer><span>India Trade<span class="brand-dot">.</span> <span class="footer-separator">/</span> Critical commodity intelligence</span><span>Official sources. Clear context.</span></footer>
+    </main>
+  </div>
+  <script defer src="assets/js/app.js"></script>
+  <script defer src="assets/js/intelligence.js"></script>
+  <script defer src="assets/js/portfolio.js"></script>
 </body>
 </html>

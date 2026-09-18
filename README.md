@@ -214,19 +214,33 @@ The monthly lower bound is January 2018. Safety limits keep broad historical run
 
 GitHub Actions dependencies are pinned to immutable commit SHAs using Node-24-compatible action releases.
 
+## Interface and navigation
+
+The responsive interface uses a light color scheme with teal imports and violet exports. Three URL-addressable views keep the workspace compact:
+
+- **Overview** (`#overview`): latest reporting-month metrics, overlap-adjusted portfolio history, range-specific statistics, and an expandable annual table.
+- **Commodities** (`#commodities`): search by name, HS code, or category; filter by category and dependency; sort by imports, exports, dependency, or name. Each card keeps its HS mapping, YTD figures, and validated quantity context in an expandable disclosure. The detail workspace retains monthly and country history, concentration, quantities, and annual tables.
+- **Data & methodology** (`#sources`): source availability, last source update, final/revised-final periods, monitor check timestamp in UTC, classification notice, and explanations of portfolio coverage, units, and dependency scoring.
+
+The headline reporting month is distinct from the source update and monitor check timestamps. A successful source check is labeled as the last check, rather than implying continuous live availability. Source-status retrieval failure does not block available trade data.
+
+Historical charts show a USD value axis and a shared period readout for imports and exports. Pointer/touch selection and keyboard arrow keys, Home, and End inspect observations. Imports use a solid line and exports a dashed line so color is not the only distinction. Missing calendar months break the plotted line; partial coverage is explained alongside the chart and table. Selecting a portfolio range updates the chart, cumulative statistics, peak, and annual rows together.
+
+Navigation works with direct links and browser history. Controls have labels and visible keyboard focus; intelligence loading can be closed, stale responses cannot replace the active commodity, and closing returns focus to the originating card. Reduced-motion preferences are respected. Wide tables scroll within their labeled regions on small screens.
+
 ## Frontend performance
 
-The static site is intentionally optimized for a growing archive:
+The static site remains optimized for a growing archive:
 
 - commodity intelligence is lazy-loaded;
 - dashboard and intelligence generated JSON are compact;
-- repeated browser scans are pre-indexed;
-- card `backdrop-filter` blur was removed to avoid expensive scroll-time compositing;
-- shadows use smaller paint regions;
-- commodity cards, charts and tables use paint containment; and
-- `content-visibility: auto` allows Chromium to skip rendering offscreen commodity cards and major dashboard sections while preserving scroll geometry with intrinsic-size fallbacks.
+- repeated country/month scans are pre-indexed;
+- inactive navigation views are hidden;
+- opaque cards avoid costly backdrop blur and use compact shadows;
+- commodity cards use `content-visibility: auto` with intrinsic-size fallbacks; and
+- chart/table paints are isolated while section geometry remains stable when navigating.
 
-These optimizations are CSS/data-contract changes only; they do not remove tracker functionality.
+The interface uses native HTML, CSS, and JavaScript without a runtime framework, external font, or chart dependency. Browser checks and viewport screenshots run separately from the existing data-validation workflow.
 
 ## Verified TradeStat MEIDB contracts
 
