@@ -1,0 +1,51 @@
+name: Audit historical national source reports
+on:
+  push:
+    branches: [feat/general-trade-dashboard]
+    paths: [.github/workflows/national-source-audit.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Stop the redundant bootstrap retry
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method POST repos/Vasuki8/india-critical-trade-tracker/actions/runs/35407806143/cancel
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - run: uv sync --dev
+      - name: Inspect the cumulative source discrepancy
+        run: |
+          uv run python - <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          from src.tracker.tradestat import TradeStatClient, parse_csrf_token
+          from src.tracker.national import build_payload, ENDPOINTS
+          import json
+          out = Path('national-audit')
+          out.mkdir(exist_ok=True)
+          client = TradeStatClient(timeout=45)
+          for period in ['2024-04', '2025-04']:
+              for kind, direction in ENDPOINTS:
+                  url = client.base_url + ENDPOINTS[(kind, direction)]
+                  landing = client._request('GET', url)
+                  payload = build_payload(kind=kind, trade_type=direction, period=period, token=parse_csrf_token(landing.text))
+                  response = client._request('POST', url, data=payload)
+                  soup = BeautifulSoup(response.text, 'html.parser')
+                  for node in soup.select('input[name="_token"]'):
+                      node['value'] = '[redacted]'
+                  (out / f'{period}_{kind}_{direction}.html').write_text(str(soup), encoding='utf-8')
+                  table = soup.find('table', id='example1')
+                  rows = [[c.get_text(' ',strip=True) for c in r.find_all(['th','td'])] for r in table.find_all('tr')] if table else []
+                  print(period, kind, direction, json.dumps({'row_count':len(rows), 'first':rows[:2], 'last':rows[-1:]}), flush=True)
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: national-source-audit
+          path: national-audit/
+          retention-days: 3
