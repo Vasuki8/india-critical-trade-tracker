@@ -1,28 +1,14 @@
-# India Critical Commodity Trade Tracker
+# India Trade Dashboard
 
-A live tracker for India's strategically important commodity imports and exports, built around official Department of Commerce TradeStat / DGCI&S MEIDB data and published as a static GitHub Pages site.
+A general dashboard for India's merchandise imports and exports, built on official Department of Commerce TradeStat / DGCI&S MEIDB data and published as a light, responsive static GitHub Pages site.
 
 ## Current build
 
-The tracker covers **23 critical commodity groups** and carries official monthly USD data through **July 2026**. The baseline USD archive spans the TradeStat monthly lower bound of **January 2018 through July 2026**: **103 calendar months** and **2,368 commodity-month history rows**.
+The main dashboard covers national **merchandise (goods) trade**, all reported **HS2 commodity chapters**, and all reported **trading partners**. Services are outside this dataset. National figures use the explicit India total in the official all-commodity and all-country reports; both independently reported totals must reconcile before a month can be published.
 
-The site has two complementary analytical layers:
+The national archive covers **103 consecutive months, January 2018 through July 2026**, with no missing months. The latest reporting month is **July 2026**. Its national reports contain **98 commodity chapters** and **251 partner entries**, including territories and unspecified partners. Historical month selection updates national metrics, commodity breakdowns, partner breakdowns, and downloads together. National YTD values run from January through the selected month.
 
-- a compact **consolidated portfolio dashboard** for the full watched commodity universe; and
-- a lazy-loaded **commodity intelligence drill-down** for each commodity, generated deterministically from stored observations.
-
-The portfolio view includes monthly and annual imports/exports, trade balance, cumulative totals, peak import month, coverage status, supplier concentration and validated physical-quantity context where available.
-
-The commodity intelligence view adds:
-
-- month-by-month imports, exports and balance;
-- every reported partner country for a selected month;
-- historical trends for any selected supplier/export destination;
-- annual totals and supplier concentration;
-- top supplier share and HHI;
-- dependency indicators;
-- quantity and implied unit-value context where physically valid; and
-- explicit classification-transition warnings instead of treating missing classification coverage as zero trade.
+The **Critical commodities** view retains the original **23 strategically important groups**, with a separate overlap-adjusted portfolio and **2,368 commodity-month history rows** from January 2018 through July 2026. It includes dependency indicators, historical country analysis, supplier concentration, and validated physical quantities. The watched portfolio is a subset of national merchandise trade and has its own coverage dates and classification gaps.
 
 ## Quantity coverage
 
@@ -87,7 +73,32 @@ uv run python scripts/probe_quantity_units.py --hs-code 26050000 --period 2018-0
 
 ## Data architecture
 
-### Canonical observations
+### National merchandise data
+
+The national archive is independent of the curated watchlist:
+
+```text
+data/national/observations/YYYY-MM.json   # Four parsed official reports and provenance
+data/national/months/YYYY-MM.json         # One compact monthly browser snapshot
+data/national/dashboard.json             # National totals and historical month index
+data/national/revisions/                  # Superseded semantic observations
+```
+
+Each month requires commodity-wise and country-wise reports for both imports and exports. The parser verifies the requested month, calendar-year basis, USD-million unit, explicit national total, distinct row identities, and displayed-value reconciliation. Source rows are checked using a tolerance derived from rounding to two decimal places; historical partner cumulative differences are explicitly flagged as described below. Empty or failed reports cannot become zero national trade. Original official labels are retained, including partner entries that are not sovereign countries.
+
+Some historical partner cumulative rows in the official source do not sum to the published national YTD total. The archive preserves those amounts and records explicit reconciliation warnings; the interface identifies affected reporting months and shows the reported total, row sum, and signed difference. Current/prior monthly row sums, chapter cumulative sums, and agreement between independently reported national totals remain strict requirements. No discrepancy is distributed across countries or used to change an official national figure.
+
+Snapshots and the index are built deterministically from those observations. Fetch timestamps do not create false revisions. Existing valid months are skipped during resumable backfills; `--force` refreshes a release while preserving any superseded semantic observation.
+
+```powershell
+uv run python scripts/ingest_national.py --start-period 2018-01 --end-period 2026-07
+uv run python scripts/ingest_national.py --latest --force
+uv run python scripts/ingest_national.py --build-only
+```
+
+The national bootstrap workflow supports bounded, resumable archive recovery. A failed run retains completed months in a `national-bootstrap-recovery` artifact; its run ID can be supplied as `recovery_run_id` to reuse verified observations on the next attempt. The daily source watcher fills missing national months, refreshes the latest source release, and applies the same revised-final refresh range used for the watchlist. All workflows that write trade data share the `tradestat-data-writer` concurrency group.
+
+### Critical commodity observations
 
 Current observations live at:
 
@@ -108,7 +119,7 @@ Canonical observation files retain full source provenance, including:
 
 ### Dashboard payload
 
-`data/dashboard.json` is the eagerly loaded portfolio payload. It is written as compact JSON to reduce transfer and parsing overhead while retaining the same browser contract.
+`data/dashboard.json` is the critical-watchlist portfolio payload. It is written as compact JSON to reduce transfer and parsing overhead while retaining the same browser contract.
 
 ### Commodity intelligence
 
@@ -210,17 +221,22 @@ The monthly lower bound is January 2018. Safety limits keep broad historical run
 - generated dashboard/history consistency;
 - commodity intelligence rebuild/synchronization;
 - Python tests; and
-- JavaScript syntax for the homepage, portfolio and intelligence code.
+- national report/snapshot reconciliation and deterministic rebuilds; and
+- JavaScript syntax for the national, watchlist, portfolio, and intelligence code.
 
 GitHub Actions dependencies are pinned to immutable commit SHAs using Node-24-compatible action releases.
 
 ## Interface and navigation
 
-The responsive interface uses a light color scheme with teal imports and violet exports. Three URL-addressable views keep the workspace compact:
+The responsive interface uses a light color scheme with teal imports and violet exports. Five URL-addressable views share the workspace:
 
-- **Overview** (`#overview`): latest reporting-month metrics, overlap-adjusted portfolio history, range-specific statistics, and an expandable annual table.
-- **Commodities** (`#commodities`): search by name, HS code, or category; filter by category and dependency; sort by imports, exports, dependency, or name. Each card keeps its HS mapping, YTD figures, and validated quantity context in an expandable disclosure. The detail workspace retains monthly and country history, concentration, quantities, and annual tables.
-- **Data & methodology** (`#sources`): source availability, last source update, final/revised-final periods, monitor check timestamp in UTC, classification notice, and explanations of portfolio coverage, units, and dependency scoring.
+- **Overview** (`#overview`): national imports, exports, balance, total trade, historical trends, annual totals, leading commodity chapters, and leading suppliers and export destinations.
+- **Commodities** (`#commodities`): all reported HS2 chapters, searchable by code or official name and sortable by trade direction or balance. CSV exports contain the displayed selection and reporting period.
+- **Trading partners** (`#partners`): all reported countries, territories, and unspecified partner entries, with import/export values, national shares, growth, balance, search, sorting, and CSV export.
+- **Critical commodities** (`#critical`): the strategic watchlist, category and dependency filters, commodity intelligence, physical quantities, and a separately labeled portfolio summary/history.
+- **Data & methodology** (`#sources`): national and watchlist scope, source availability, final/revised-final periods, release/check timestamps, classification notice, units, and dependency scoring.
+
+A shared reporting-month selector drives the three national views. Snapshot loading is cancellable and shows an explicit error with retry; an old month's figures cannot appear under a newly selected month. Missing values remain unavailable rather than turning into zeros.
 
 The headline reporting month is distinct from the source update and monitor check timestamps. A successful source check is labeled as the last check, rather than implying continuous live availability. Source-status retrieval failure does not block available trade data.
 
@@ -232,7 +248,7 @@ Navigation works with direct links and browser history. Controls have labels and
 
 The static site remains optimized for a growing archive:
 
-- commodity intelligence is lazy-loaded;
+- national monthly breakdowns and commodity intelligence are lazy-loaded;
 - dashboard and intelligence generated JSON are compact;
 - repeated country/month scans are pre-indexed;
 - inactive navigation views are hidden;
@@ -256,6 +272,8 @@ The client validates this contract before submitting ingestion requests. If the 
 
 ## Data integrity rules
 
+- National totals must come from explicit official India totals in complete, reconciled all-chapter and all-country reports.
+- The national merchandise dashboard and curated critical portfolio have separate data and coverage.
 - Quantity ingestion requires an active validated HS8 mapping.
 - Broad/review-sensitive mappings are not silently promoted to quantity mappings.
 - Required import/export request failures block normal observation persistence unless partial persistence is explicitly authorized.
@@ -271,6 +289,7 @@ The client validates this contract before submitting ingestion requests. If the 
 
 ```powershell
 uv sync --dev
+uv run python scripts/ingest_national.py --build-only
 uv run python scripts/build_dashboard.py
 uv run python scripts/build_revision_summary.py
 uv run python scripts/build_intelligence.py
@@ -342,12 +361,14 @@ uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 
 │   └── js/
 │       ├── app.js
 │       ├── intelligence.js
+│       ├── national.js
 │       └── portfolio.js
 ├── data/
 │   ├── commodities.json
 │   ├── dashboard.json
 │   ├── revision_summary.json
 │   ├── source_status.json
+│   ├── national/{dashboard.json,months/,observations/,revisions/}
 │   ├── intelligence/<commodity>.json
 │   ├── observations/YYYY-MM/*.json
 │   └── revisions/YYYY-MM/<commodity>.<value_type>/*.json
@@ -358,6 +379,7 @@ uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 
 │   ├── build_revision_summary.py
 │   ├── check_source.py
 │   ├── ingest_tradestat.py
+│   ├── ingest_national.py
 │   ├── probe_quantity_units.py
 │   └── validate_data.py
 ├── src/tracker/
@@ -366,6 +388,7 @@ uv run python scripts/backfill_tradestat.py --start-period 2018-01 --end-period 
 │   ├── derived.py
 │   ├── intelligence.py
 │   ├── mapping_quality.py
+│   ├── national.py
 │   ├── releases.py
 │   ├── tradestat.py
 │   └── validation.py

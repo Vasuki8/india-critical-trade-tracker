@@ -530,7 +530,7 @@ async function openCommodityIntelligence(commodityId, commodityName) {
   intelligenceState.controller = controller;
   intelligenceState.commodityId = commodityId;
   intelligenceState.data = null;
-  window.navigateTracker?.('commodities');
+  window.navigateTracker?.('critical');
   const browser = document.querySelector('#commodity-browser');
   if (browser) browser.hidden = true;
   section.hidden = false;

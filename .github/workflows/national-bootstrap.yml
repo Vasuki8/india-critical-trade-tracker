@@ -1,0 +1,118 @@
+name: Bootstrap national trade data
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_period:
+        description: First month (YYYY-MM, January 2018 or later)
+        default: '2018-01'
+        required: true
+        type: string
+      end_period:
+        description: Last month (YYYY-MM; blank uses the monitored latest month)
+        required: false
+        type: string
+      recovery_run_id:
+        description: Optional failed bootstrap run ID with a national-bootstrap-recovery artifact
+        required: false
+        type: string
+      force:
+        description: Refresh existing months and archive semantic revisions
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: tradestat-data-writer
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          # A queued data writer starts from the latest branch data.
+          ref: ${{ github.ref_name }}
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - run: uv sync --dev
+      - name: Check national parser and data contracts
+        run: uv run pytest tests/test_national.py -q
+      - name: Restore validated observations from a failed bootstrap
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NATIONAL_RECOVERY_RUN: ${{ inputs.recovery_run_id }}
+        run: |
+          if [[ -z "$NATIONAL_RECOVERY_RUN" ]]; then
+            exit 0
+          fi
+          [[ "$NATIONAL_RECOVERY_RUN" =~ ^[0-9]+$ ]]
+          gh run download "$NATIONAL_RECOVERY_RUN" --repo "$GITHUB_REPOSITORY" \
+            --name national-bootstrap-recovery --dir "$RUNNER_TEMP/national-recovery"
+          uv run python - <<'PY'
+          import json, os, shutil
+          from pathlib import Path
+          from src.tracker.national import validate_observation
+          source = Path(os.environ['RUNNER_TEMP']) / 'national-recovery' / 'observations'
+          target = Path('data/national/observations')
+          target.mkdir(parents=True, exist_ok=True)
+          copied = 0
+          for path in sorted(source.glob('*.json')):
+              observation = json.loads(path.read_text(encoding='utf-8'))
+              validate_observation(observation)
+              if path.stem != observation['period']:
+                  raise ValueError('Recovery observation filename/period mismatch')
+              destination = target / path.name
+              if not destination.exists():
+                  shutil.copyfile(path, destination)
+                  copied += 1
+          print(f'Restored {copied} complete national months; existing observations preserved')
+          PY
+      - name: Fetch complete national merchandise months
+        env:
+          NATIONAL_START: ${{ inputs.start_period || '2018-01' }}
+          NATIONAL_END: ${{ inputs.end_period }}
+          NATIONAL_FORCE: ${{ inputs.force || 'false' }}
+        run: |
+          uv run python - <<'PY'
+          import os, subprocess, sys
+          from scripts.ingest_tradestat import latest_period_from_status
+          from src.tracker.national import period_parts
+          start = os.environ['NATIONAL_START']
+          end = os.environ.get('NATIONAL_END') or latest_period_from_status()
+          period_parts(start)
+          period_parts(end)
+          args = [sys.executable, 'scripts/ingest_national.py', '--start-period', start, '--end-period', end]
+          if os.environ.get('NATIONAL_FORCE') == 'true':
+              args.append('--force')
+          subprocess.run(args, check=True)
+          PY
+      - name: Validate complete reports and generated snapshots
+        run: uv run python scripts/validate_data.py
+      - name: Commit validated national data
+        env:
+          NATIONAL_TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/national/
+          if git diff --cached --quiet; then
+            echo 'No national data changes'
+            exit 0
+          fi
+          git commit -m 'data: build national merchandise trade archive'
+          git pull --rebase origin "$NATIONAL_TARGET_BRANCH"
+          git push origin "HEAD:$NATIONAL_TARGET_BRANCH"
+      - name: Preserve fetched data for recovery
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: national-bootstrap-recovery
+          path: data/national/
+          if-no-files-found: ignore
+          retention-days: 7

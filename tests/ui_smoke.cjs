@@ -12,6 +12,10 @@ const read = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
 const master = read('data/commodities.json');
 const dashboard = read('data/dashboard.json');
 const source = read('data/source_status.json');
+const national = read('data/national/dashboard.json');
+const nationalSnapshot = period => read(`data/national/months/${period}.json`);
+const nationalRowKey = row => String(row.code ?? row.name);
+const nationalPeriods = national.monthly.map(row => row.period).sort();
 const baseURL = process.env.UI_BASE_URL || 'http://127.0.0.1:8000/';
 const artifacts = path.resolve(process.env.UI_ARTIFACTS || path.join(root, 'ui-artifacts'));
 const failures = [];
@@ -27,8 +31,10 @@ function monitor(target) {
 }
 
 async function ready(target) {
-  await expect(target.locator('#as-of')).not.toHaveText(/Loading|Unavailable/);
+  await expect(target.locator('#critical-as-of')).not.toHaveText(/Loading|Unavailable/);
   await expect(target.locator('.commodity-card')).toHaveCount(master.commodities.length);
+  await expect(target.locator('#national-month')).toHaveValue(national.as_of);
+  await expect(target.locator('#national-status')).toHaveAttribute('data-state', 'ready');
 }
 
 async function view(name, target = page) {
@@ -56,11 +62,66 @@ async function bounded(promise, message) {
 }
 
 async function openCommodity(id, target = page) {
-  await view('commodities', target);
+  await view('critical', target);
   const button = target.locator(`.intelligence-button[data-commodity-id="${id}"]`);
   await button.click();
   await expect(target.locator('#intel-body')).toBeVisible();
   await expect(target.locator('#intel-title')).toHaveText(master.commodities.find(item => item.id === id).name);
+}
+
+function periodLabel(period) {
+  return new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+    .format(new Date(`${period}-01T00:00:00Z`));
+}
+
+async function assertNationalMonth(period, target = page) {
+  const snapshot = nationalSnapshot(period);
+  await expect(target.locator('#national-month')).toHaveValue(period);
+  await expect(target.locator('#national-status')).toHaveAttribute('data-state', 'ready');
+  await expect(target.locator('#national-snapshot-period')).toContainText(periodLabel(period));
+  const expected = await target.evaluate(summary => ({
+    imports: usdMillions(summary.imports), exports: usdMillions(summary.exports),
+    balance: usdMillions(summary.exports - summary.imports),
+    total: usdMillions(summary.exports + summary.imports),
+  }), snapshot.summary);
+  await expect(target.locator('#national-imports')).toHaveText(expected.imports);
+  await expect(target.locator('#national-exports')).toHaveText(expected.exports);
+  await expect(target.locator('#national-balance')).toHaveText(expected.balance);
+  await expect(target.locator('#national-total-trade')).toHaveText(expected.total);
+  for (const [kind, field] of [['chapter', 'chapters'], ['partner', 'partners']]) {
+    const rows = target.locator(`#national-${kind}-table-body tr[data-code]`);
+    await expect(rows).toHaveCount(snapshot[field].length);
+    const renderedKeys = await rows.evaluateAll(items => items.map(item => item.dataset.code));
+    assert.deepEqual([...renderedKeys].sort(), snapshot[field].map(nationalRowKey).sort(), `${period} ${field} must match that month's complete source table`);
+    const leading = [...snapshot[field]].sort((a, b) => (b.imports ?? -1) - (a.imports ?? -1))[0];
+    const formatted = await target.evaluate(item => [usdMillions(item.imports), usdMillions(item.exports)], leading);
+    const leadingIndex = renderedKeys.indexOf(nationalRowKey(leading));
+    assert(leadingIndex >= 0, 'The leading source row must be present');
+    const leadingRow = rows.nth(leadingIndex);
+    await expect(leadingRow).toContainText(leading.name);
+    if (kind === 'partner' && leading.code == null) await expect(leadingRow).not.toContainText('Source code');
+    for (const value of formatted) await expect(leadingRow).toContainText(value);
+  }
+  return snapshot;
+}
+
+// CSV names can contain commas or escaped quotes; parse cells before checking values.
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cell = '', quoted = false;
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    if (char === '"') {
+      if (quoted && text[index + 1] === '"') { cell += '"'; index += 1; }
+      else quoted = !quoted;
+    } else if (char === ',' && !quoted) { row.push(cell); cell = ''; }
+    else if ((char === '\n' || char === '\r') && !quoted) {
+      if (char === '\r' && text[index + 1] === '\n') index += 1;
+      row.push(cell); rows.push(row); row = []; cell = '';
+    } else cell += char;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows;
 }
 
 async function chartKeyboard(targetId, target = page) {
@@ -110,6 +171,167 @@ async function waitForServer() {
       await expect(page.locator('#overview-view')).toBeVisible();
       await expect(page.locator('.primary-nav [data-view="overview"]')).toHaveAttribute('aria-current', 'page');
     });
+    await check('national merchandise totals and the critical watchlist retain their own data scope', async () => {
+      assert.equal(national.scope, 'merchandise');
+      const snapshot = await assertNationalMonth(national.as_of);
+      assert.notEqual(snapshot.summary.imports, dashboard.summary.imports, 'National imports must come from national observations');
+      assert.notEqual(snapshot.summary.exports, dashboard.summary.exports, 'National exports must come from national observations');
+      await expect(page.locator('#overview-view')).toContainText(/merchandise|goods/i);
+      assert(snapshot.chapters.length > master.commodities.length, 'The general explorer must cover the full merchandise classification');
+      await view('partners');
+      await screenshot('desktop-partners');
+      await view('critical');
+      await screenshot('desktop-critical');
+      const watched = await page.evaluate(summary => [usdMillions(summary.imports), usdMillions(summary.exports)], dashboard.summary);
+      await expect(page.locator('#imports')).toHaveText(watched[0]);
+      await expect(page.locator('#exports')).toHaveText(watched[1]);
+      await expect(page.locator('#critical-view')).toContainText(/watchlist|watched|critical/i);
+    });
+    await check('reporting month updates national metrics and both complete breakdowns', async () => {
+      assert(nationalPeriods.length > 2, 'General trade needs historical reporting months');
+      const historicalPeriod = nationalPeriods[Math.max(0, nationalPeriods.length - 13)];
+      assert.notEqual(historicalPeriod, national.as_of);
+      await view('overview');
+      await page.locator('#national-month').selectOption(historicalPeriod);
+      await assertNationalMonth(historicalPeriod);
+      await view('commodities');
+      await expect(page.locator('#national-chapter-table-body tr[data-code]').first()).toBeVisible();
+      await view('partners');
+      await expect(page.locator('#national-partner-table-body tr[data-code]').first()).toBeVisible();
+      await page.locator('#national-month').selectOption(national.as_of);
+      await assertNationalMonth(national.as_of);
+    });
+    await check('historical partner YTD source warnings preserve monthly values and expose exact differences', async () => {
+      const sourceWarnings = national.reconciliation_warnings.filter(warning => warning.kind === 'partners');
+      assert(sourceWarnings.length > 0, 'The recorded historical source discrepancies must remain available for inspection');
+      const warningKey = warning => `${warning.period}|${warning.trade_type}|${warning.field}`;
+      const uniqueWarnings = new Map(sourceWarnings.map(warning => [warningKey(warning), warning]));
+      const affectedPeriods = new Set(sourceWarnings.map(warning => warning.period));
+      const warnedPeriod = [...affectedPeriods].sort()[0];
+      const snapshotWarnings = nationalSnapshot(warnedPeriod).provenance.reconciliation_warnings.filter(warning => warning.kind === 'partners');
+      assert(snapshotWarnings.length > 0, 'The selected reporting month must retain its source discrepancy metadata');
+      await view('overview');
+      await page.locator('#national-month').selectOption(warnedPeriod);
+      await assertNationalMonth(warnedPeriod);
+      const note = page.locator('#national-reconciliation-note');
+      for (const name of ['overview', 'commodities', 'partners']) {
+        await view(name);
+        await expect(note).toBeVisible();
+        await expect(note).toContainText(periodLabel(warnedPeriod));
+        await expect(note).toContainText('YTD');
+      }
+      await view('critical');
+      await expect(note).toBeHidden();
+      await view('sources');
+      await expect(note).toBeHidden();
+      await expect(page.locator('#national-reconciliation-summary')).toHaveText(new RegExp(`^${affectedPeriods.size} reporting month`));
+      const details = page.locator('#national-reconciliation-details');
+      await expect(details).toBeVisible();
+      await details.locator('summary').click();
+      const rows = page.locator('#national-reconciliation-table-body tr');
+      await expect(rows).toHaveCount(uniqueWarnings.size);
+      const rendered = await rows.evaluateAll(items => items.map(row => {
+        const cells = [...row.cells];
+        return {
+          key: `${row.dataset.period}|${row.dataset.trade}|${row.dataset.field}`,
+          cells: cells.slice(0, 5).map(cell => cell.textContent.trim()),
+          difference: [...cells[5].childNodes].filter(node => node.nodeType === Node.TEXT_NODE).map(node => node.textContent).join('').trim(),
+          tolerance: cells[5].querySelector('small')?.textContent.trim(),
+        };
+      }));
+      const renderedByKey = new Map(rendered.map(row => [row.key, row]));
+      assert.deepEqual([...renderedByKey.keys()].sort(), [...uniqueWarnings.keys()].sort(), 'Every source discrepancy must appear exactly once');
+      const format = new Intl.NumberFormat('en-US', { maximumFractionDigits: 6 });
+      for (const [key, warning] of uniqueWarnings) {
+        const row = renderedByKey.get(key);
+        const flow = ['import', 'imports'].includes(warning.trade_type) ? 'Imports' : 'Exports';
+        const field = warning.field === 'cumulative_previous_year_value' ? 'Prior-year YTD' : 'Current-year YTD';
+        assert.deepEqual(row.cells, [periodLabel(warning.period), flow, field, format.format(warning.reported_total), format.format(warning.sum_of_rows)]);
+        assert.equal(row.difference, format.format(warning.difference), 'The signed source difference must retain its published precision');
+        assert.equal(row.tolerance, `Rounding tolerance: ±${format.format(warning.rounding_tolerance)}`);
+      }
+      await page.locator('#national-reconciliation-title').scrollIntoViewIfNeeded();
+      await screenshot('desktop-source-reconciliation');
+      await view('overview');
+      const cleanPeriod = [...nationalPeriods].reverse().find(period => !(nationalSnapshot(period).provenance?.reconciliation_warnings || []).some(warning => warning.kind === 'partners'));
+      assert(cleanPeriod, 'A clean reporting month must be available to check that warnings clear');
+      await page.locator('#national-month').selectOption(cleanPeriod);
+      await assertNationalMonth(cleanPeriod);
+      await expect(note).toBeHidden();
+      if (cleanPeriod !== national.as_of) {
+        await page.locator('#national-month').selectOption(national.as_of);
+        await assertNationalMonth(national.as_of);
+        await expect(note).toBeVisible();
+      }
+    });
+    await check('general commodity and partner search, flow, sorting, empty state and CSV use source rows', async () => {
+      const snapshot = nationalSnapshot(national.as_of);
+      for (const [kind, field, nameHeader, codeHeader] of [
+        ['chapter', 'chapters', 'Commodity chapter', 'HS chapter'],
+        ['partner', 'partners', 'Trade partner', 'Partner code'],
+      ]) {
+        await view(kind === 'chapter' ? 'commodities' : 'partners');
+        const rows = page.locator(`#national-${kind}-table-body tr[data-code]`);
+        const search = page.locator(`#national-${kind}-search`);
+        const sort = page.locator(`#national-${kind}-sort`);
+        const flow = page.locator(`#national-${kind}-flow`);
+        const reset = page.locator(`#national-${kind}-reset`);
+        const table = page.locator(`#national-${kind}-table-body`).locator('..');
+        await expect(rows).toHaveCount(snapshot[field].length);
+        await sort.selectOption('exports');
+        let firstCode = await rows.first().getAttribute('data-code');
+        assert.equal(snapshot[field].find(item => nationalRowKey(item) === firstCode).exports,
+          Math.max(...snapshot[field].map(item => item.exports ?? -Infinity)), `${field} must sort by actual exports`);
+        await flow.selectOption('imports');
+        await expect(sort).toHaveValue('imports');
+        await expect(table.locator('thead')).toContainText(/imports/i);
+        await expect(table.locator('thead')).not.toContainText(/exports/i);
+        await expect(rows).toHaveCount(snapshot[field].length);
+        await flow.selectOption('exports');
+        await expect(sort).toHaveValue('exports');
+        await expect(table.locator('thead')).toContainText(/exports/i);
+        await expect(table.locator('thead')).not.toContainText(/imports/i);
+        await search.fill('no-such-trade-record-xyz');
+        await expect(rows).toHaveCount(0);
+        await expect(page.locator(`#national-${kind}-results`)).toContainText(/0|no/i);
+        await reset.click();
+        await expect(search).toHaveValue('');
+        await expect(flow).toHaveValue('both');
+        await expect(sort).toHaveValue('imports');
+        await expect(rows).toHaveCount(snapshot[field].length);
+        firstCode = await rows.first().getAttribute('data-code');
+        assert.equal(snapshot[field].find(item => nationalRowKey(item) === firstCode).imports,
+          Math.max(...snapshot[field].map(item => item.imports ?? -Infinity)), `${field} reset must restore highest imports`);
+        const hasBothFlows = item => item.name && item.imports > 0 && item.exports > 0;
+        const sample = (kind === 'partner' && snapshot[field].find(item => item.code == null && hasBothFlows(item)))
+          || snapshot[field].find(hasBothFlows);
+        assert(sample, `${field} needs a source row with trade in both directions`);
+        await search.fill(sample.name);
+        const filtered = snapshot[field].filter(item => `${item.code ?? ''} ${item.name}`.toLowerCase().includes(sample.name.toLowerCase()));
+        await expect(rows).toHaveCount(filtered.length);
+        const downloaded = page.waitForEvent('download');
+        await page.locator(`#national-${kind}-download`).click();
+        const download = await downloaded;
+        assert.equal(download.suggestedFilename(), `india-merchandise-${field}-${national.as_of}.csv`);
+        const csv = parseCSV(fs.readFileSync(await download.path(), 'utf8').replace(/^\uFEFF/, ''));
+        assert.equal(csv.length, filtered.length + 1, 'CSV must include exactly the filtered source rows and one header');
+        const headers = csv[0];
+        assert(headers.includes('Imports (USD million)') && headers.includes('Exports (USD million)'), 'CSV must retain exact units');
+        for (const cells of csv.slice(1)) {
+          const record = Object.fromEntries(headers.map((header, index) => [header, cells[index]]));
+          const item = filtered.find(candidate => candidate.name === record[nameHeader] && String(candidate.code ?? '') === record[codeHeader]);
+          assert(item, 'Every CSV row must come from the active filter');
+          assert.equal(record['Reporting month'], national.as_of);
+          assert.equal(record[nameHeader], item.name);
+          assert.equal(record[codeHeader], String(item.code ?? ''), 'Unreported source codes must stay blank');
+          for (const [header, fieldName] of [['Imports (USD million)', 'imports'], ['Exports (USD million)', 'exports']]) {
+            if (item[fieldName] === null) assert.equal(record[header], '', 'Missing trade must remain an empty CSV cell');
+            else assert.equal(Number(record[header]), item[fieldName], 'CSV must preserve the underlying amount, without display rounding');
+          }
+        }
+        await reset.click();
+      }
+    });
     await check('source deep link shows separate release and monitor dates', async () => {
       await page.goto(`${baseURL}#sources`);
       await ready(page);
@@ -135,11 +357,11 @@ async function waitForServer() {
       await delayedPage.goto(baseURL);
       await ready(delayedPage);
       await expect(delayedPage.locator('#fatal')).toBeHidden();
-      await expect(delayedPage.locator('#portfolio-history-chart .chart-frame')).toBeVisible();
+      await expect(delayedPage.locator('#national-history-chart .chart-frame')).toBeVisible();
       await delayedPage.close();
     });
-    await check('search, combined filters, empty state, reset and sorting', async () => {
-      await view('commodities');
+    await check('critical commodity search, combined filters, empty state, reset and sorting', async () => {
+      await view('critical');
       await page.locator('#search').fill('2709');
       await expect(page.locator('.commodity-card')).toHaveCount(1);
       await expect(page.locator('.commodity-name')).toHaveText('Crude Oil');
@@ -164,11 +386,11 @@ async function waitForServer() {
     await check('page layouts stay within the viewport at mobile, tablet and desktop widths', async () => {
       for (const width of [320, 390, 768, 1440]) {
         await page.setViewportSize({ width, height: width < 600 ? 844 : 1000 });
-        for (const name of ['overview', 'commodities', 'sources']) {
+        for (const name of ['overview', 'commodities', 'partners', 'critical', 'sources']) {
           await view(name);
           const extent = await page.evaluate(() => ({ actual: document.documentElement.scrollWidth, viewport: window.innerWidth }));
           assert(extent.actual <= extent.viewport + 1, `${name} overflows at ${width}px: ${JSON.stringify(extent)}`);
-          if (width === 390) await screenshot(`mobile-${name}`, page, name !== 'commodities');
+          if (width === 390) await screenshot(`mobile-${name}`, page, ['overview', 'sources'].includes(name));
         }
       }
     });
@@ -176,8 +398,29 @@ async function waitForServer() {
       const values = await page.evaluate(() => [usdMillions(.04), usdMillions(-.04), usdMillions(0), usdMillions(null)]);
       assert.deepEqual(values, ['$40K', '-$40K', '$0M', '—']);
     });
-    await check('portfolio chart keyboard and selected-range totals work together', async () => {
+    await check('national history follows the selected reporting month and keyboard range', async () => {
       await view('overview');
+      const historicalPeriod = nationalPeriods.at(-2);
+      await page.locator('#national-month').selectOption(historicalPeriod);
+      await assertNationalMonth(historicalPeriod);
+      await page.locator('#national-range').selectOption('12');
+      await chartKeyboard('national-history-chart');
+      const chart = page.locator('#national-history-chart');
+      const lastMonth = Number(historicalPeriod.slice(0, 4)) * 12 + Number(historicalPeriod.slice(5));
+      const firstMonth = Number(nationalPeriods[0].slice(0, 4)) * 12 + Number(nationalPeriods[0].slice(5));
+      await expect(chart.locator('.chart-frame')).toHaveAttribute('aria-valuemax', String(Math.min(12, lastMonth - firstMonth + 1)));
+      await expect(chart.locator('.chart-readout-period')).toHaveText(periodLabel(historicalPeriod));
+      const selected = nationalSnapshot(historicalPeriod);
+      // Chart inspection keeps two decimal places; headline KPI cards use one.
+      const expected = await page.evaluate(summary => [chartValueLabel(summary.imports), chartValueLabel(summary.exports)], selected.summary);
+      assert.deepEqual(await chart.locator('.chart-readout-value').allTextContents(), expected);
+      await page.locator('#national-month').selectOption(national.as_of);
+      await assertNationalMonth(national.as_of);
+      await page.locator('#national-range').selectOption('36');
+    });
+    await check('portfolio chart keyboard and selected-range totals work together', async () => {
+      await view('critical');
+      await page.locator('#critical-portfolio > summary').click();
       await chartKeyboard('portfolio-history-chart');
       await page.locator('#portfolio-range').selectOption('12');
       await expect(page.locator('#portfolio-history-kpis')).toContainText('12 months');
@@ -233,7 +476,7 @@ async function waitForServer() {
       // A fresh page ensures the bounded in-memory commodity cache cannot bypass this request.
       const racePage = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
       monitor(racePage);
-      await racePage.goto(`${baseURL}#commodities`);
+      await racePage.goto(`${baseURL}#critical`);
       await ready(racePage);
       const delayed = read('data/intelligence/crude_oil.json');
       let release;
@@ -262,10 +505,84 @@ async function waitForServer() {
       await racePage.unroute('**/data/intelligence/crude_oil.json');
       await racePage.close();
     });
+    await check('switching reporting months cannot restore a delayed national snapshot', async () => {
+      const racePage = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+      monitor(racePage);
+      await racePage.goto(baseURL);
+      await ready(racePage);
+      const delayedPeriod = nationalPeriods.at(-2);
+      const finalPeriod = nationalPeriods.at(-3);
+      const routePattern = `**/data/national/months/${delayedPeriod}.json`;
+      let release, arrived, delivered;
+      const requestArrived = new Promise(resolve => { arrived = resolve; });
+      const requestReleased = new Promise(resolve => { release = resolve; });
+      const requestDelivered = new Promise(resolve => { delivered = resolve; });
+      await racePage.route(routePattern, async route => {
+        arrived();
+        await requestReleased;
+        try { await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(nationalSnapshot(delayedPeriod)) }); }
+        catch { /* Cancelling the previous month's request is a correct result. */ }
+        delivered();
+      });
+      await racePage.locator('#national-month').selectOption(delayedPeriod);
+      await bounded(requestArrived, 'Delayed national request did not start');
+      await expect(racePage.locator('#national-status')).toHaveAttribute('data-state', 'loading');
+      await expect(racePage.locator('#national-status')).toBeVisible();
+      await expect(racePage.locator('#national-imports')).toBeHidden();
+      await racePage.locator('#national-month').selectOption(finalPeriod);
+      await assertNationalMonth(finalPeriod, racePage);
+      release();
+      await bounded(requestDelivered, 'Delayed national request did not settle');
+      await assertNationalMonth(finalPeriod, racePage);
+      await racePage.unroute(routePattern);
+      await racePage.close();
+    });
+    await check('a failed month shows an explicit retry and recovers the same reporting month', async () => {
+      const retryPage = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+      const failedPeriod = nationalPeriods.at(-2);
+      const failedURL = new URL(`data/national/months/${failedPeriod}.json`, baseURL).href;
+      const routePattern = `**/data/national/months/${failedPeriod}.json`;
+      let injectingFailure = false, injectedRequests = 0, expectedHttpLogs = 0, expectedAppLogs = 0;
+      retryPage.setDefaultTimeout(15000);
+      retryPage.on('pageerror', error => failures.push(error.message));
+      retryPage.on('console', message => {
+        if (message.type() !== 'error') return;
+        // Exempt only this injected response and its exact application diagnostic.
+        // A 503 for any other URL, or another application error, still fails the suite.
+        const text = message.text();
+        const location = message.location().url;
+        if (injectingFailure && expectedHttpLogs === 0 && location === failedURL && /^Failed to load resource:.*\b503\b/.test(text)) {
+          expectedHttpLogs += 1;
+        } else if (injectingFailure && expectedAppLogs === 0 && /\/assets\/js\/national\.js(?:\?|$)/.test(location)
+          && text.startsWith(`National merchandise detail could not load: Error: Reporting month ${failedPeriod}: HTTP 503`)) {
+          expectedAppLogs += 1;
+        } else failures.push(text);
+      });
+      await retryPage.goto(baseURL);
+      await ready(retryPage);
+      injectingFailure = true;
+      await retryPage.route(routePattern, route => {
+        injectedRequests += 1;
+        return route.fulfill({ status: 503, contentType: 'text/plain', body: 'Temporary test failure' });
+      }, { times: 1 });
+      await retryPage.locator('#national-month').selectOption(failedPeriod);
+      await expect(retryPage.locator('#national-status')).toHaveAttribute('data-state', 'error');
+      await expect(retryPage.locator('#national-status')).toBeVisible();
+      await expect(retryPage.locator('#national-imports')).toBeHidden();
+      await expect(retryPage.locator('#national-retry')).toBeVisible();
+      await expect(retryPage.locator('#national-month')).toHaveValue(failedPeriod);
+      await expect.poll(() => expectedAppLogs).toBe(1);
+      assert.equal(injectedRequests, 1);
+      injectingFailure = false;
+      await retryPage.unroute(routePattern);
+      await retryPage.locator('#national-retry').click();
+      await assertNationalMonth(failedPeriod, retryPage);
+      await retryPage.close();
+    });
     await check('mobile touch can inspect both chart series without page overflow', async () => {
       const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
       monitor(mobile);
-      await mobile.goto(`${baseURL}#commodities`);
+      await mobile.goto(`${baseURL}#critical`);
       await ready(mobile);
       await openCommodity('crude_oil', mobile);
       const slider = mobile.locator('#intel-trade-chart .chart-frame');

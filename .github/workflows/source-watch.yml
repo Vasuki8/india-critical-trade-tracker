@@ -142,6 +142,19 @@ jobs:
               'revision_range': revision_range,
           })
           PY
+      - name: Fill missing national merchandise months
+        run: |
+          national_latest=$(uv run python -c 'from scripts.ingest_tradestat import latest_period_from_status; print(latest_period_from_status())')
+          uv run python scripts/ingest_national.py --start-period 2018-01 --end-period "$national_latest"
+      - name: Refresh latest national merchandise release
+        if: steps.decision.outputs.source_changed == 'true'
+        run: uv run python scripts/ingest_national.py --latest --force
+      - name: Refresh revised-final national merchandise history
+        if: steps.decision.outputs.refresh_revisions == 'true'
+        run: |
+          uv run python scripts/ingest_national.py \
+            --start-period "${{ steps.decision.outputs.revision_start }}" \
+            --end-period "${{ steps.decision.outputs.revision_end }}" --force
       - name: Ingest latest critical-commodity USD month
         if: steps.decision.outputs.ingest_usd == 'true'
         run: uv run python scripts/ingest_tradestat.py --latest --trade-type both --value-type usd --year-type calendar --no-build-dashboard
@@ -175,6 +188,7 @@ jobs:
           node --check assets/js/app.js
           node --check assets/js/intelligence.js
           node --check assets/js/portfolio.js
+          node --check assets/js/national.js
       - name: Ignore timestamp-only source check
         if: steps.decision.outputs.ingest_usd != 'true' && steps.decision.outputs.ingest_quantity != 'true' && steps.decision.outputs.refresh_revisions != 'true'
         run: git checkout -- data/source_status.json
@@ -183,7 +197,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/source_status.json data/dashboard.json data/revision_summary.json data/observations/
+          git add data/source_status.json data/dashboard.json data/revision_summary.json data/observations/ data/national/
           if [[ -d data/intelligence ]]; then
             git add data/intelligence/
           fi
@@ -194,6 +208,6 @@ jobs:
             echo "No tracked data change"
             exit 0
           fi
-          git commit -m "data: update TradeStat critical commodities"
+          git commit -m "data: update national and critical commodity trade"
           git pull --rebase origin main
           git push origin HEAD:main
