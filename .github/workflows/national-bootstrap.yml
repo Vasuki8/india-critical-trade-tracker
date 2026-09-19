@@ -1,12 +1,6 @@
 name: Bootstrap national trade data
 
 on:
-  push:
-    branches: [feat/general-trade-dashboard]
-    paths:
-      - .github/workflows/national-bootstrap.yml
-      - src/tracker/national.py
-      - scripts/ingest_national.py
   workflow_dispatch:
     inputs:
       start_period:
@@ -52,7 +46,7 @@ jobs:
       - name: Restore validated observations from a failed bootstrap
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NATIONAL_RECOVERY_RUN: ${{ inputs.recovery_run_id || '35407485051' }}
+          NATIONAL_RECOVERY_RUN: ${{ inputs.recovery_run_id }}
         run: |
           if [[ -z "$NATIONAL_RECOVERY_RUN" ]]; then
             exit 0

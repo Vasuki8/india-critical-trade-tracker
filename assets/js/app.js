@@ -91,7 +91,7 @@ function uiIcon(name) {
   return `<svg class="icon" aria-hidden="true"><use href="#icon-${name}"/></svg>`;
 }
 
-const viewLabels = { overview: 'Overview', commodities: 'Commodities', sources: 'Data & methodology' };
+const viewLabels = { overview: 'Overview', commodities: 'Commodities', partners: 'Trade partners', critical: 'Critical commodities', sources: 'Data & methodology' };
 let currentView = null;
 
 function navigateTracker(view, { updateHash = true, focus = true } = {}) {
@@ -258,7 +258,7 @@ async function main() {
     document.querySelector('#balance-foot').innerHTML = `${dashboard.summary.balance === null || dashboard.summary.balance === undefined ? 'Balance unavailable' : dashboard.summary.balance < 0 ? 'Net import deficit' : dashboard.summary.balance > 0 ? 'Net export surplus' : 'Balanced trade'}<span class="metric-secondary">YTD ${usdMillions(dashboard.summary.ytd_balance)}</span>`;
     const observed = dashboard.summary.observed_commodity_count ?? dashboard.commodities.length;
     document.querySelector('#coverage-foot').innerHTML = `<strong>${observed} / ${master.commodities.length}</strong> with monthly observations<span class="metric-secondary">${new Set(master.commodities.map(c => c.category)).size} strategic categories</span>`;
-    document.querySelector('#as-of').textContent = periodLabel(dashboard.as_of) || 'Awaiting data';
+    document.querySelector('#critical-as-of').textContent = periodLabel(dashboard.as_of) || 'Awaiting data';
     document.querySelector('#snapshot-period').textContent = periodLabel(dashboard.as_of);
     window.trackerDashboard = dashboard;
     window.renderPortfolioHistory?.(dashboard);
@@ -266,9 +266,9 @@ async function main() {
     renderCommodities(master, dashboard);
   } catch (err) {
     fatal.hidden = false;
-    fatal.innerHTML = `The tracker could not load its data. Please retry or check your connection. <button type="button" class="ghost-button" id="retry-data">Retry loading</button>`;
+    fatal.innerHTML = `The critical watchlist could not load its data. Please retry or check your connection. <button type="button" class="ghost-button" id="retry-data">Retry loading</button>`;
     document.querySelector('#retry-data').onclick = main;
-    document.querySelector('#as-of').textContent = 'Unavailable';
+    document.querySelector('#critical-as-of').textContent = 'Unavailable';
     document.querySelector('#snapshot-period').textContent = 'Unavailable';
     document.querySelector('#commodity-grid').setAttribute('aria-busy', 'false');
     document.querySelector('#commodity-grid').innerHTML = '<div class="card empty-state"><h2>Commodity data unavailable</h2><p>Use Retry loading above to try again.</p></div>';

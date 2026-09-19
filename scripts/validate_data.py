@@ -4,6 +4,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src.tracker.national import validate_national_data
 from src.tracker.mapping_quality import (
     mapping_status_counts,
     quantity_mapping_count,
@@ -17,7 +18,7 @@ def main() -> int:
     master = load_json(ROOT / "data" / "commodities.json")
     dashboard = load_json(ROOT / "data" / "dashboard.json")
 
-    errors = []
+    errors = validate_national_data(ROOT / "data" / "national")
     errors.extend(validate_commodity_master(master))
     errors.extend(validate_mapping_quality(master))
     errors.extend(validate_dashboard(dashboard))
@@ -28,6 +29,16 @@ def main() -> int:
             print(f" - {error}")
         return 1
 
+    national = load_json(ROOT / "data" / "national" / "dashboard.json")
+    national_coverage = national["coverage"]
+    print(
+        f"OK: national merchandise as_of={national['as_of']}; "
+        f"months={national_coverage['period_count']}; "
+        f"chapters={national_coverage['chapter_count']}; "
+        f"partners={national_coverage['partner_count']}; "
+        f"history_gaps={len(national_coverage['missing_periods'])}; "
+        f"source_warning_periods={len(national_coverage['warning_periods'])}"
+    )
     history_rows = sum(len(rows) for rows in dashboard.get("commodity_history", {}).values())
     status_counts = mapping_status_counts(master)
     exact_hs8 = status_counts.get("hs8_validated", 0)

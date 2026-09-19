@@ -9,6 +9,7 @@ on:
       - data/dashboard.json
       - data/source_status.json
       - 'data/intelligence/**'
+      - 'data/national/**'
       - tests/ui_smoke.cjs
       - .github/workflows/ui-checks.yml
   pull_request:
@@ -19,6 +20,7 @@ on:
       - data/dashboard.json
       - data/source_status.json
       - 'data/intelligence/**'
+      - 'data/national/**'
       - tests/ui_smoke.cjs
       - .github/workflows/ui-checks.yml
   workflow_dispatch:
