@@ -411,7 +411,8 @@ async function waitForServer() {
       await expect(chart.locator('.chart-frame')).toHaveAttribute('aria-valuemax', String(Math.min(12, lastMonth - firstMonth + 1)));
       await expect(chart.locator('.chart-readout-period')).toHaveText(periodLabel(historicalPeriod));
       const selected = nationalSnapshot(historicalPeriod);
-      const expected = await page.evaluate(summary => [usdMillions(summary.imports), usdMillions(summary.exports)], selected.summary);
+      // Chart inspection keeps two decimal places; headline KPI cards use one.
+      const expected = await page.evaluate(summary => [chartValueLabel(summary.imports), chartValueLabel(summary.exports)], selected.summary);
       assert.deepEqual(await chart.locator('.chart-readout-value').allTextContents(), expected);
       await page.locator('#national-month').selectOption(national.as_of);
       await assertNationalMonth(national.as_of);
