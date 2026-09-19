@@ -3,10 +3,11 @@ from __future__ import annotations
 import copy
 import json
 import pytest
+from bs4 import BeautifulSoup
 
 from scripts import ingest_national
 from src.tracker.national import (
-    ENDPOINTS, PREFIXES, NationalDataError, build_month_snapshot,
+    ENDPOINTS, PREFIXES, VALUE_KEYS, NationalDataError, build_month_snapshot,
     build_national_dashboard, build_payload, iter_periods, parse_report,
     semantic_fingerprint, validate_national_data, validate_observation,
     write_observation,
@@ -58,6 +59,23 @@ def report_html(kind="chapters", trade_type="import", period="2026-07"):
 def observation(period="2026-07"):
     reports = [parse_report(report_html(kind, trade_type, period), kind=kind, trade_type=trade_type, period=period, retrieved_at="2026-09-19T07:00:00+00:00") for kind, trade_type in ENDPOINTS]
     return {"schema_version": 1, "scope": "merchandise", "period": period, "status": "ok", "value_unit": "USD million", "year_type": "calendar", "reports": reports}
+
+
+def altered_amount(html, kind, field, delta, row_index=2):
+    soup = BeautifulSoup(html, "html.parser")
+    cells = soup.find("table", id="example1").find_all("tr")[row_index].find_all("td")
+    cell = cells[(3 if kind == "chapters" else 2) + VALUE_KEYS.index(field)]
+    cell.string = f"{float(cell.get_text().replace(',', '')) + delta:.2f}"
+    return str(soup)
+
+
+def observation_with_partner_ytd_warning(period="2024-04", field="cumulative_value", total_delta=0):
+    doc = observation(period)
+    html = altered_amount(report_html("partners", "import", period), "partners", field, -76.77)
+    if total_delta:
+        html = altered_amount(html, "partners", field, total_delta, row_index=-1)
+    doc["reports"][2] = parse_report(html, kind="partners", trade_type="import", period=period)
+    return doc
 
 
 @pytest.mark.parametrize("kind,trade_type", ENDPOINTS)
@@ -187,6 +205,79 @@ def test_validation_checks_published_coverage(tmp_path, key, value):
 def test_national_validation_requires_verified_data(tmp_path):
     build_national_dashboard(tmp_path)
     assert any("at least one complete" in error for error in validate_national_data(tmp_path))
+
+
+@pytest.mark.parametrize("period,field", [("2024-04", "cumulative_value"), ("2025-04", "cumulative_previous_year_value")])
+def test_partner_ytd_source_discrepancy_is_preserved_and_explicitly_warned(tmp_path, period, field):
+    doc = observation_with_partner_ytd_warning(period, field)
+    validate_observation(doc)
+    warning = doc["reports"][2]["reconciliation_warnings"][0]
+    assert warning["code"] == "partner_cumulative_rows_do_not_reconcile"
+    assert warning["difference"] == -76.77
+    assert warning["rounding_tolerance"] == 0.015
+    assert warning["field"] == field
+    assert warning["period"] == period
+    assert "Jan–Apr 2024" in warning["message"]
+    assert warning["reported_total"] == doc["reports"][2]["totals"][field]
+    assert abs(warning["sum_of_rows"] - warning["reported_total"] + 76.77) < 1e-9
+    write_observation(doc, tmp_path)
+    dashboard = build_national_dashboard(tmp_path)
+    assert dashboard["coverage"]["warning_periods"] == [period]
+    assert dashboard["reconciliation_warnings"] == [warning]
+    snapshot = json.loads((tmp_path / "months" / f"{period}.json").read_text())
+    assert snapshot["provenance"]["reconciliation_warnings"] == [warning]
+    assert snapshot["summary"]["ytd_imports"] == 210
+    assert snapshot["summary"]["imports"] == 30
+    assert all("ytd_imports" not in row for row in snapshot["partners"])
+    assert validate_national_data(tmp_path) == []
+
+
+@pytest.mark.parametrize("kind,field", [
+    ("partners", "value"), ("partners", "previous_year_value"),
+    ("chapters", "value"), ("chapters", "previous_year_value"),
+    ("chapters", "cumulative_value"), ("chapters", "cumulative_previous_year_value"),
+])
+def test_source_warning_never_relaxes_displayed_monthly_or_chapter_ytd_validation(kind, field):
+    html = altered_amount(report_html(kind), kind, field, -1)
+    with pytest.raises(NationalDataError, match="do not reconcile"):
+        parse_report(html, kind=kind, trade_type="import", period="2026-07")
+
+
+def test_partner_ytd_warning_does_not_relax_national_total_crosscheck():
+    doc = observation_with_partner_ytd_warning(total_delta=1)
+    with pytest.raises(NationalDataError, match="totals disagree"):
+        validate_observation(doc)
+
+
+@pytest.mark.parametrize("change", ["remove", "alter"])
+def test_report_warning_metadata_must_match_actual_source_discrepancy(change):
+    doc = observation_with_partner_ytd_warning()
+    if change == "remove":
+        del doc["reports"][2]["reconciliation_warnings"]
+    else:
+        doc["reports"][2]["reconciliation_warnings"][0]["difference"] = 0
+    with pytest.raises(NationalDataError, match="warnings are missing or stale"):
+        validate_observation(doc)
+
+
+def test_dashboard_warning_metadata_cannot_be_removed(tmp_path):
+    write_observation(observation_with_partner_ytd_warning(), tmp_path)
+    dashboard = build_national_dashboard(tmp_path)
+    dashboard["reconciliation_warnings"] = []
+    (tmp_path / "dashboard.json").write_text(json.dumps(dashboard))
+    assert any("warnings are missing or stale" in error for error in validate_national_data(tmp_path))
+
+
+def test_corrected_official_source_clears_warning_and_archives_prior_report(tmp_path):
+    original = observation_with_partner_ytd_warning()
+    write_observation(original, tmp_path)
+    original_hash = semantic_fingerprint(original)
+    assert write_observation(observation("2024-04"), tmp_path)
+    dashboard = build_national_dashboard(tmp_path)
+    assert dashboard["reconciliation_warnings"] == []
+    assert dashboard["coverage"]["warning_periods"] == []
+    assert (tmp_path / f"revisions/2024-04/{original_hash}.json").exists()
+    assert validate_national_data(tmp_path) == []
 
 
 def test_cli_resumes_complete_months_and_keeps_completed_month_when_next_fails(tmp_path, monkeypatch):

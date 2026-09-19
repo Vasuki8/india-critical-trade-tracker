@@ -18,6 +18,10 @@ on:
         description: Last month (YYYY-MM; blank uses the monitored latest month)
         required: false
         type: string
+      recovery_run_id:
+        description: Optional failed bootstrap run ID with a national-bootstrap-recovery artifact
+        required: false
+        type: string
       force:
         description: Refresh existing months and archive semantic revisions
         default: false
@@ -25,6 +29,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: tradestat-data-writer
@@ -44,6 +49,36 @@ jobs:
       - run: uv sync --dev
       - name: Check national parser and data contracts
         run: uv run pytest tests/test_national.py -q
+      - name: Restore validated observations from a failed bootstrap
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NATIONAL_RECOVERY_RUN: ${{ inputs.recovery_run_id || '35407485051' }}
+        run: |
+          if [[ -z "$NATIONAL_RECOVERY_RUN" ]]; then
+            exit 0
+          fi
+          [[ "$NATIONAL_RECOVERY_RUN" =~ ^[0-9]+$ ]]
+          gh run download "$NATIONAL_RECOVERY_RUN" --repo "$GITHUB_REPOSITORY" \
+            --name national-bootstrap-recovery --dir "$RUNNER_TEMP/national-recovery"
+          uv run python - <<'PY'
+          import json, os, shutil
+          from pathlib import Path
+          from src.tracker.national import validate_observation
+          source = Path(os.environ['RUNNER_TEMP']) / 'national-recovery' / 'observations'
+          target = Path('data/national/observations')
+          target.mkdir(parents=True, exist_ok=True)
+          copied = 0
+          for path in sorted(source.glob('*.json')):
+              observation = json.loads(path.read_text(encoding='utf-8'))
+              validate_observation(observation)
+              if path.stem != observation['period']:
+                  raise ValueError('Recovery observation filename/period mismatch')
+              destination = target / path.name
+              if not destination.exists():
+                  shutil.copyfile(path, destination)
+                  copied += 1
+          print(f'Restored {copied} complete national months; existing observations preserved')
+          PY
       - name: Fetch complete national merchandise months
         env:
           NATIONAL_START: ${{ inputs.start_period || '2018-01' }}

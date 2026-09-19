@@ -179,7 +179,7 @@ def _validate_headers(headers: list[str], *, kind: str, period: str) -> None:
         raise NationalDataError("National report growth columns changed")
 
 
-def _validate_report(report: dict[str, Any]) -> None:
+def _validate_report(report: dict[str, Any]) -> list[dict[str, Any]]:
     kind, trade_type = _query_identity(report.get("kind"), report.get("trade_type"))
     period = report.get("period")
     period_parts(period)
@@ -220,15 +220,40 @@ def _validate_report(report: dict[str, Any]) -> None:
     # Each rounded row and the rounded official total may differ by half a unit
     # in the last displayed decimal place; do not use a percentage tolerance.
     tolerance = (len(rows) + 1) * 0.005 + 1e-7
+    warnings = []
     for key in AMOUNT_KEYS:
-        difference = abs(math.fsum(row[key] for row in rows) - totals[key])
-        if difference > tolerance:
-            raise NationalDataError(f"National {kind} {trade_type} {key} rows do not reconcile: difference {difference:.6f}, rounding tolerance {tolerance:.6f}")
+        row_sum = math.fsum(row[key] for row in rows)
+        difference = row_sum - totals[key]
+        if abs(difference) > tolerance:
+            if kind != "partners" or key not in {"cumulative_previous_year_value", "cumulative_value"}:
+                raise NationalDataError(f"National {kind} {trade_type} {key} rows do not reconcile: difference {abs(difference):.6f}, rounding tolerance {tolerance:.6f}")
+            # The official Apr-Dec 2024 country reports (and the same 2024
+            # comparison columns in 2025) contain a source YTD discrepancy.
+            # Both monthly breakdowns still reconcile. Preserve the source's
+            # unused partner YTD fields and make the discrepancy explicit;
+            # never correct them or relax monthly/chapter validation. The
+            # observation-level guard below still reconciles *all* published
+            # national totals, including YTD, against the chapter reports.
+            year, month = period_parts(period)
+            comparison_year = year - 1 if key == "cumulative_previous_year_value" else year
+            warnings.append({
+                "code": "partner_cumulative_rows_do_not_reconcile",
+                "period": period, "kind": kind, "trade_type": trade_type, "field": key,
+                "reported_total": totals[key], "sum_of_rows": _rounded(row_sum),
+                "difference": _rounded(difference), "rounding_tolerance": round(tolerance - 1e-7, 6),
+                "value_unit": VALUE_UNIT,
+                "message": (
+                    f"Official partner {trade_type} rows for Jan–{MONTH_NAMES[month - 1]} {comparison_year} "
+                    f"differ from the published year-to-date total by USD {abs(difference):,.2f} million. "
+                    "This discrepancy affects the source’s partner year-to-date breakdown."
+                ),
+            })
     if totals["value"] <= 0 or totals["cumulative_value"] <= 0:
         raise NationalDataError("National totals must be positive for a published merchandise month")
     source = report.get("source") or {}
     if not source.get("retrieved_at") or source.get("url") != BASE_URL + ENDPOINTS[(kind, trade_type)]:
         raise NationalDataError("National report is missing its official source provenance")
+    return warnings
 
 
 def parse_report(
@@ -296,7 +321,9 @@ def parse_report(
             "checksum_sha256": semantic_fingerprint({"headers": headers, "rows": rows, "totals": totals}),
         },
     }
-    _validate_report(report)
+    warnings = _validate_report(report)
+    if warnings:
+        report["reconciliation_warnings"] = warnings
     return report
 
 
@@ -315,7 +342,9 @@ def validate_observation(observation: dict[str, Any]) -> None:
     for report in reports:
         if report.get("period") != observation["period"]:
             raise NationalDataError("National report period does not match its observation")
-        _validate_report(report)
+        expected_warnings = _validate_report(report)
+        if report.get("reconciliation_warnings", []) != expected_warnings:
+            raise NationalDataError("National report reconciliation warnings are missing or stale")
     for trade_type in ("import", "export"):
         chapters = report_map[("chapters", trade_type)]["totals"]
         partners = report_map[("partners", trade_type)]["totals"]
@@ -355,6 +384,8 @@ def fetch_month(client: TradeStatClient, period: str) -> dict[str, Any]:
         report = fetch_report(client, kind=kind, trade_type=trade_type, period=period)
         reports.append(report)
         print(f"OK national {period} {kind} {trade_type}: {len(report['rows'])} rows", flush=True)
+        for warning in report.get("reconciliation_warnings", []):
+            print(f"SOURCE WARNING national {period} {warning['field']}: {warning['message']}", flush=True)
     observation = {
         "schema_version": SCHEMA_VERSION, "scope": SCOPE, "period": period,
         "status": "ok", "value_unit": VALUE_UNIT, "year_type": "calendar", "reports": reports,
@@ -418,12 +449,18 @@ def build_month_snapshot(observation: dict[str, Any]) -> dict[str, Any]:
             })
         snapshot[kind] = merged
     sources = [report["source"] for report in observation["reports"]]
+    warnings = [warning for report in observation["reports"] for warning in report.get("reconciliation_warnings", [])]
     snapshot["provenance"] = {
         "provider": PROVIDER, "system": SYSTEM,
         "retrieved_at": max(source["retrieved_at"] for source in sources),
         "last_updated": sources[0].get("last_updated"),
         "reports": [{"kind": report["kind"], "trade_type": report["trade_type"], **report["source"]} for report in observation["reports"]],
-        "reconciliation": "Official chapter and country totals agree; published rows reconcile within display rounding.",
+        "reconciliation": (
+            "Official chapter and country national totals agree; monthly rows and chapter year-to-date rows reconcile within display rounding. "
+            + ("Some source partner year-to-date rows differ from the published totals; see reconciliation warnings." if warnings
+               else "Partner year-to-date rows also reconcile within display rounding.")
+        ),
+        "reconciliation_warnings": warnings,
     }
     return snapshot
 
@@ -440,6 +477,7 @@ def _coverage(snapshots: list[dict[str, Any]]) -> dict[str, Any]:
         "chapter_count": len(latest["chapters"]) if latest else 0,
         "partner_count": len(latest["partners"]) if latest else 0,
         "source_first_period": "2018-01",
+        "warning_periods": [snapshot["period"] for snapshot in snapshots if snapshot["provenance"].get("reconciliation_warnings")],
     }
 
 
@@ -471,6 +509,7 @@ def build_national_dashboard(output_root: Path, source_status: dict[str, Any] | 
         "monthly": [snapshot["summary"] for snapshot in snapshots],
         "source": source,
         "coverage": _coverage(snapshots),
+        "reconciliation_warnings": [warning for snapshot in snapshots for warning in snapshot["provenance"]["reconciliation_warnings"]],
     }
     _write_json(output_root / "dashboard.json", dashboard, compact=True)
     return dashboard
@@ -510,6 +549,9 @@ def validate_national_data(output_root: Path) -> list[str]:
         expected_coverage = _coverage([observations[period] for period in periods])
         if dashboard.get("coverage") != expected_coverage:
             raise NationalDataError("dashboard coverage counts or missing periods differ from stored observations")
+        expected_warnings = [warning for period in periods for warning in observations[period]["provenance"]["reconciliation_warnings"]]
+        if dashboard.get("reconciliation_warnings") != expected_warnings:
+            raise NationalDataError("dashboard reconciliation warnings are missing or stale")
         source = dashboard.get("source") or {}
         if source.get("value_unit") != VALUE_UNIT or source.get("year_type") != "calendar":
             raise NationalDataError("dashboard source unit or year type is incorrect")
