@@ -420,7 +420,7 @@ async function waitForServer() {
     });
     await check('portfolio chart keyboard and selected-range totals work together', async () => {
       await view('critical');
-      await page.locator('#critical-portfolio summary').click();
+      await page.locator('#critical-portfolio > summary').click();
       await chartKeyboard('portfolio-history-chart');
       await page.locator('#portfolio-range').selectOption('12');
       await expect(page.locator('#portfolio-history-kpis')).toContainText('12 months');
