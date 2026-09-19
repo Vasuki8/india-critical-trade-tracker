@@ -38,10 +38,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          # A queued data writer starts from the latest branch data.
+          ref: ${{ github.ref_name }}
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
       - run: uv sync --dev
-      - name: Check national ingestion syntax
-        run: uv run python -m compileall -q src/tracker/national.py scripts/ingest_national.py
+      - name: Check national parser and data contracts
+        run: uv run pytest tests/test_national.py -q
       - name: Fetch complete national merchandise months
         env:
           NATIONAL_START: ${{ inputs.start_period || '2018-01' }}

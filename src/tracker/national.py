@@ -324,8 +324,11 @@ def validate_observation(observation: dict[str, Any]) -> None:
                 raise NationalDataError(f"National chapter and country {trade_type} totals disagree for {key}")
 
 
-def _write_json(path: Path, value: dict[str, Any]) -> None:
-    content = json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n"
+def _write_json(path: Path, value: dict[str, Any], *, compact: bool = False) -> None:
+    content = json.dumps(
+        value, indent=None if compact else 2, separators=(",", ":") if compact else None,
+        ensure_ascii=False, allow_nan=False,
+    ) + "\n"
     if path.exists() and path.read_text(encoding="utf-8") == content:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -382,10 +385,15 @@ def build_month_snapshot(observation: dict[str, Any]) -> dict[str, Any]:
     reports = _report_map(observation)
     imported = reports[("chapters", "import")]["totals"]
     exported = reports[("chapters", "export")]["totals"]
+    previous_trade = _sum_both(imported["previous_year_value"], exported["previous_year_value"])
+    current_trade = _sum_both(imported["value"], exported["value"])
     summary = {
         "period": observation["period"], "imports": imported["value"], "exports": exported["value"],
         "balance": _difference(exported["value"], imported["value"]),
-        "total_trade": _sum_both(imported["value"], exported["value"]),
+        "total_trade": current_trade,
+        "previous_year_imports": imported["previous_year_value"],
+        "previous_year_exports": exported["previous_year_value"],
+        "total_trade_yoy_pct": round((current_trade / previous_trade - 1) * 100, 2) if previous_trade else None,
         "import_yoy_pct": imported["yoy_pct"], "export_yoy_pct": exported["yoy_pct"],
         "ytd_imports": imported["cumulative_value"], "ytd_exports": exported["cumulative_value"],
     }
@@ -420,6 +428,21 @@ def build_month_snapshot(observation: dict[str, Any]) -> dict[str, Any]:
     return snapshot
 
 
+def _coverage(snapshots: list[dict[str, Any]]) -> dict[str, Any]:
+    periods = [snapshot["period"] for snapshot in snapshots]
+    present = set(periods)
+    latest = snapshots[-1] if snapshots else None
+    expected = list(iter_periods(periods[0], periods[-1])) if periods else []
+    return {
+        "first_period": periods[0] if periods else None, "last_period": periods[-1] if periods else None,
+        "period_count": len(periods), "expected_month_count": len(expected),
+        "missing_periods": [period for period in expected if period not in present],
+        "chapter_count": len(latest["chapters"]) if latest else 0,
+        "partner_count": len(latest["partners"]) if latest else 0,
+        "source_first_period": "2018-01",
+    }
+
+
 def build_national_dashboard(output_root: Path, source_status: dict[str, Any] | None = None) -> dict[str, Any]:
     snapshots = []
     for path in sorted((output_root / "observations").glob("*.json")):
@@ -428,10 +451,9 @@ def build_national_dashboard(output_root: Path, source_status: dict[str, Any] | 
         if path.stem != snapshot["period"]:
             raise NationalDataError(f"Observation filename/period mismatch: {path}")
         snapshots.append(snapshot)
-        _write_json(output_root / "months" / f"{snapshot['period']}.json", snapshot)
+        _write_json(output_root / "months" / f"{snapshot['period']}.json", snapshot, compact=True)
     periods = [snapshot["period"] for snapshot in snapshots]
     latest = snapshots[-1] if snapshots else None
-    expected = list(iter_periods(periods[0], periods[-1])) if periods else []
     source_status = source_status or {}
     source = {
         "provider": PROVIDER, "system": SYSTEM, "value_unit": VALUE_UNIT, "year_type": "calendar",
@@ -448,16 +470,9 @@ def build_national_dashboard(output_root: Path, source_status: dict[str, Any] | 
         "as_of": periods[-1] if periods else None,
         "monthly": [snapshot["summary"] for snapshot in snapshots],
         "source": source,
-        "coverage": {
-            "first_period": periods[0] if periods else None, "last_period": periods[-1] if periods else None,
-            "period_count": len(periods), "expected_month_count": len(expected),
-            "missing_periods": [period for period in expected if period not in set(periods)],
-            "chapter_count": len(latest["chapters"]) if latest else 0,
-            "partner_count": len(latest["partners"]) if latest else 0,
-            "source_first_period": "2018-01",
-        },
+        "coverage": _coverage(snapshots),
     }
-    _write_json(output_root / "dashboard.json", dashboard)
+    _write_json(output_root / "dashboard.json", dashboard, compact=True)
     return dashboard
 
 
@@ -482,12 +497,25 @@ def validate_national_data(output_root: Path) -> list[str]:
     try:
         dashboard = json.loads((output_root / "dashboard.json").read_text(encoding="utf-8"))
         periods = sorted(observations)
-        if dashboard.get("scope") != SCOPE or dashboard.get("value_unit") != VALUE_UNIT:
+        if not periods:
+            raise NationalDataError("national dashboard requires at least one complete verified observation")
+        if dashboard.get("schema_version") != SCHEMA_VERSION or dashboard.get("status") != "ok":
+            raise NationalDataError("dashboard schema/status is incorrect")
+        if dashboard.get("scope") != SCOPE or dashboard.get("value_unit") != VALUE_UNIT or dashboard.get("year_type") != "calendar":
             raise NationalDataError("dashboard scope or unit is incorrect")
         if dashboard.get("as_of") != (periods[-1] if periods else None):
             raise NationalDataError("dashboard latest period is incorrect")
         if dashboard.get("monthly") != [observations[period]["summary"] for period in periods]:
             raise NationalDataError("dashboard monthly series is stale or differs from the canonical reports")
+        expected_coverage = _coverage([observations[period] for period in periods])
+        if dashboard.get("coverage") != expected_coverage:
+            raise NationalDataError("dashboard coverage counts or missing periods differ from stored observations")
+        source = dashboard.get("source") or {}
+        if source.get("value_unit") != VALUE_UNIT or source.get("year_type") != "calendar":
+            raise NationalDataError("dashboard source unit or year type is incorrect")
+        expected_urls = {f"{kind}_{trade_type}": BASE_URL + endpoint for (kind, trade_type), endpoint in ENDPOINTS.items()}
+        if source.get("urls") != expected_urls:
+            raise NationalDataError("dashboard source URLs do not identify the official national reports")
         orphan_months = {path.stem for path in (output_root / "months").glob("*.json")} - set(periods)
         if orphan_months:
             raise NationalDataError(f"display snapshots without canonical observations: {sorted(orphan_months)}")
